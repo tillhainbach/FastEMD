@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2BC45E2023872F7A00CBCAFF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC45E1F23872F7A00CBCAFF /* main.cpp */; };
+		2BC463C6238825AD00CBCAFF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463C5238825AD00CBCAFF /* main.cpp */; };
+		2BC463CA2388403F00CBCAFF /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463A92388135000CBCAFF /* demo_FastEMD.cpp */; };
+		2BC463CD2388413000CBCAFF /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */; };
+		2BC463D32388422F00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
+		2BC463D42388434D00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC460DE23873AE500CBCAFF /* emd.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,15 +24,76 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		2BC463B4238813B600CBCAFF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		2BC463C1238825AD00CBCAFF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2BC45E1C23872F7A00CBCAFF /* FastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BC45E1F23872F7A00CBCAFF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = demo_FastEMD.cpp; path = ../demo_FastEMD.cpp; sourceTree = "<group>"; };
+		2BC45E3023872F9500CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
+		2BC45FF323872F9700CBCAFF /* emd_hat_signatures_interface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_signatures_interface.hpp; sourceTree = "<group>"; };
+		2BC45FF423872F9700CBCAFF /* cameraman.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cameraman.txt; sourceTree = "<group>"; };
+		2BC45FF623872F9700CBCAFF /* emd_hat.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emd_hat.hpp; sourceTree = "<group>"; };
+		2BC4601B23872F9700CBCAFF /* CHANGES.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGES.txt; sourceTree = "<group>"; };
+		2BC4603A23872F9700CBCAFF /* flow_utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = flow_utils.hpp; sourceTree = "<group>"; };
+		2BC4603C23872F9700CBCAFF /* EMD_DEFS.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EMD_DEFS.hpp; sourceTree = "<group>"; };
+		2BC4603F23872F9700CBCAFF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		2BC4604223872F9700CBCAFF /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		2BC4604523872F9700CBCAFF /* rice.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rice.txt; sourceTree = "<group>"; };
+		2BC4604823872F9700CBCAFF /* emd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emd.h; sourceTree = "<group>"; };
+		2BC460DE23873AE500CBCAFF /* emd.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = emd.c; sourceTree = "<group>"; };
+		2BC463A92388135000CBCAFF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo_FastEMD.cpp; sourceTree = "<group>"; };
+		2BC463AC2388138900CBCAFF /* emd_hat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat.hpp; sourceTree = "<group>"; };
+		2BC463AE2388138900CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
+		2BC463AF2388138A00CBCAFF /* emd_hat_signatures_interface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_signatures_interface.hpp; sourceTree = "<group>"; };
+		2BC463B0238813A200CBCAFF /* flow_utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = flow_utils.hpp; sourceTree = "<group>"; };
+		2BC463B1238813A200CBCAFF /* EMD_DEFS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMD_DEFS.hpp; sourceTree = "<group>"; };
+		2BC463B6238813B600CBCAFF /* originalFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = originalFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BC463C3238825AD00CBCAFF /* stuff */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stuff; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BC463C5238825AD00CBCAFF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2BC463CF2388422F00CBCAFF /* emd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = emd.c; sourceTree = "<group>"; };
+		2BC463D02388422F00CBCAFF /* emd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emd.h; sourceTree = "<group>"; };
+		2BC463D22388422F00CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
+		2BCE4CBD238E910F00990A02 /* emd_hat_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_impl.hpp; sourceTree = "<group>"; };
+		2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_impl.hpp; sourceTree = "<group>"; };
+		2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = min_cost_flow.hpp; sourceTree = "<group>"; };
+		2BCE4CC0238E925B00990A02 /* min_cost_flow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = min_cost_flow.hpp; sourceTree = "<group>"; };
+		2BCE4CC1238F0FA400990A02 /* emd_hat_impl_new.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_impl_new.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2BC45E1923872F7A00CBCAFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BC463B3238813B600CBCAFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BC463C0238825AD00CBCAFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,7 +106,13 @@
 		2BC45E1323872F7A00CBCAFF = {
 			isa = PBXGroup;
 			children = (
-				2BC45E1E23872F7A00CBCAFF /* FastEMD */,
+				2BC463A82388132800CBCAFF /* original */,
+				2BC4601B23872F9700CBCAFF /* CHANGES.txt */,
+				2BC4603F23872F9700CBCAFF /* README.txt */,
+				2BC4604223872F9700CBCAFF /* LICENSE.txt */,
+				2BC460D92387308100CBCAFF /* Resources */,
+				2BC45E2623872F9500CBCAFF /* FastEMD-3.1 */,
+				2BC463C4238825AD00CBCAFF /* stuff */,
 				2BC45E1D23872F7A00CBCAFF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,16 +121,95 @@
 			isa = PBXGroup;
 			children = (
 				2BC45E1C23872F7A00CBCAFF /* FastEMD */,
+				2BC463B6238813B600CBCAFF /* originalFastEMD */,
+				2BC463C3238825AD00CBCAFF /* stuff */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2BC45E1E23872F7A00CBCAFF /* FastEMD */ = {
+		2BC45E2623872F9500CBCAFF /* FastEMD-3.1 */ = {
 			isa = PBXGroup;
 			children = (
-				2BC45E1F23872F7A00CBCAFF /* main.cpp */,
+				2BC45E3023872F9500CBCAFF /* tictoc.hpp */,
+				2BC463A92388135000CBCAFF /* demo_FastEMD.cpp */,
+				2BC4603C23872F9700CBCAFF /* EMD_DEFS.hpp */,
+				2BCE4CBD238E910F00990A02 /* emd_hat_impl.hpp */,
+				2BCE4CC0238E925B00990A02 /* min_cost_flow.hpp */,
+				2BC4603A23872F9700CBCAFF /* flow_utils.hpp */,
+				2BC45FF323872F9700CBCAFF /* emd_hat_signatures_interface.hpp */,
+				2BC45FF623872F9700CBCAFF /* emd_hat.hpp */,
+				2BCE4CC1238F0FA400990A02 /* emd_hat_impl_new.hpp */,
+				2BC4604623872F9700CBCAFF /* rubner_emd */,
+				2BC460DB238730AF00CBCAFF /* utils */,
 			);
-			path = FastEMD;
+			path = "FastEMD-3.1";
+			sourceTree = "<group>";
+		};
+		2BC4604623872F9700CBCAFF /* rubner_emd */ = {
+			isa = PBXGroup;
+			children = (
+				2BC460DE23873AE500CBCAFF /* emd.c */,
+				2BC4604823872F9700CBCAFF /* emd.h */,
+			);
+			path = rubner_emd;
+			sourceTree = "<group>";
+		};
+		2BC460D92387308100CBCAFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2BC45FF423872F9700CBCAFF /* cameraman.txt */,
+				2BC4604523872F9700CBCAFF /* rice.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2BC460DB238730AF00CBCAFF /* utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		2BC463A82388132800CBCAFF /* original */ = {
+			isa = PBXGroup;
+			children = (
+				2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */,
+				2BC463AF2388138A00CBCAFF /* emd_hat_signatures_interface.hpp */,
+				2BC463B1238813A200CBCAFF /* EMD_DEFS.hpp */,
+				2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */,
+				2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */,
+				2BC463B0238813A200CBCAFF /* flow_utils.hpp */,
+				2BC463AC2388138900CBCAFF /* emd_hat.hpp */,
+				2BC463AE2388138900CBCAFF /* tictoc.hpp */,
+				2BC463CE2388422F00CBCAFF /* rubner_emd */,
+				2BC463D12388422F00CBCAFF /* utils */,
+			);
+			path = original;
+			sourceTree = "<group>";
+		};
+		2BC463C4238825AD00CBCAFF /* stuff */ = {
+			isa = PBXGroup;
+			children = (
+				2BC463C5238825AD00CBCAFF /* main.cpp */,
+			);
+			path = stuff;
+			sourceTree = "<group>";
+		};
+		2BC463CE2388422F00CBCAFF /* rubner_emd */ = {
+			isa = PBXGroup;
+			children = (
+				2BC463CF2388422F00CBCAFF /* emd.c */,
+				2BC463D02388422F00CBCAFF /* emd.h */,
+			);
+			path = rubner_emd;
+			sourceTree = "<group>";
+		};
+		2BC463D12388422F00CBCAFF /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				2BC463D22388422F00CBCAFF /* tictoc.hpp */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +232,40 @@
 			productReference = 2BC45E1C23872F7A00CBCAFF /* FastEMD */;
 			productType = "com.apple.product-type.tool";
 		};
+		2BC463B5238813B600CBCAFF /* originalFastEMD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BC463BA238813B600CBCAFF /* Build configuration list for PBXNativeTarget "originalFastEMD" */;
+			buildPhases = (
+				2BC463B2238813B600CBCAFF /* Sources */,
+				2BC463B3238813B600CBCAFF /* Frameworks */,
+				2BC463B4238813B600CBCAFF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = originalFastEMD;
+			productName = originalFastEMD;
+			productReference = 2BC463B6238813B600CBCAFF /* originalFastEMD */;
+			productType = "com.apple.product-type.tool";
+		};
+		2BC463C2238825AD00CBCAFF /* stuff */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BC463C7238825AD00CBCAFF /* Build configuration list for PBXNativeTarget "stuff" */;
+			buildPhases = (
+				2BC463BF238825AD00CBCAFF /* Sources */,
+				2BC463C0238825AD00CBCAFF /* Frameworks */,
+				2BC463C1238825AD00CBCAFF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = stuff;
+			productName = stuff;
+			productReference = 2BC463C3238825AD00CBCAFF /* stuff */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +276,12 @@
 				ORGANIZATIONNAME = "Till Hainbach";
 				TargetAttributes = {
 					2BC45E1B23872F7A00CBCAFF = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
+					2BC463B5238813B600CBCAFF = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
+					2BC463C2238825AD00CBCAFF = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
 				};
@@ -110,6 +300,8 @@
 			projectRoot = "";
 			targets = (
 				2BC45E1B23872F7A00CBCAFF /* FastEMD */,
+				2BC463B5238813B600CBCAFF /* originalFastEMD */,
+				2BC463C2238825AD00CBCAFF /* stuff */,
 			);
 		};
 /* End PBXProject section */
@@ -119,7 +311,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BC45E2023872F7A00CBCAFF /* main.cpp in Sources */,
+				2BC463D42388434D00CBCAFF /* emd.c in Sources */,
+				2BC463CA2388403F00CBCAFF /* demo_FastEMD.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BC463B2238813B600CBCAFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BC463D32388422F00CBCAFF /* emd.c in Sources */,
+				2BC463CD2388413000CBCAFF /* demo_FastEMD.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BC463BF238825AD00CBCAFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BC463C6238825AD00CBCAFF /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,11 +449,53 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				HEADER_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "";
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
 		2BC45E2523872F7A00CBCAFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				HEADER_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2BC463BB238813B600CBCAFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				HEADER_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2BC463BC238813B600CBCAFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				HEADER_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2BC463C8238825AD00CBCAFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2BC463C9238825AD00CBCAFF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -268,6 +520,24 @@
 			buildConfigurations = (
 				2BC45E2423872F7A00CBCAFF /* Debug */,
 				2BC45E2523872F7A00CBCAFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BC463BA238813B600CBCAFF /* Build configuration list for PBXNativeTarget "originalFastEMD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BC463BB238813B600CBCAFF /* Debug */,
+				2BC463BC238813B600CBCAFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BC463C7238825AD00CBCAFF /* Build configuration list for PBXNativeTarget "stuff" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BC463C8238825AD00CBCAFF /* Debug */,
+				2BC463C9238825AD00CBCAFF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
