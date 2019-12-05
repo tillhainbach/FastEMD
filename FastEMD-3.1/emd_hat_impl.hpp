@@ -92,6 +92,10 @@ struct emd_hat_impl_integral_types
         tictoc timerOperator;
         timerOperator.tic();
 #endif
+        std::for_each(P.begin(), P.end(), [](int n ) {std::cout << n << " ";});
+        std::cout << std::endl;
+        std::for_each(Q.begin(), Q.end(), [](int n ) {std::cout << n << " ";});
+        std::cout << std::endl;
         // creating the b vector that contains all vertexes
         //-------------------------------------------------------
         NODE_T N = static_cast<NODE_T>(P.size());
@@ -147,6 +151,9 @@ struct emd_hat_impl_integral_types
             }
         }
         // Ensuring that the supplier - P, has more mass.
+        std::cout << sum_Q << " " << sum_P << std::endl;
+        std::for_each(b.begin(), b.begin() + 2 * N + 2, [](int n ) {std::cout << n << " ";});
+        std::cout << std::endl;
         bool needToSwapFlow = false;
         NUM_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
         if (sum_Q > sum_P)
@@ -157,7 +164,8 @@ struct emd_hat_impl_integral_types
                         std::bind(std::multiplies<NUM_T>(), std::placeholders::_1, -1));
         }
 
-//        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
+
+        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
     
         // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
         // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
@@ -177,13 +185,17 @@ struct emd_hat_impl_integral_types
         // remove nodes with supply demand of 0
         // and vertexes that are connected only to the
         // threshold vertex
+#if USE_SET
+        std::set< NODE_T > sources_that_flow_not_only_to_thresh;
+        std::set< NODE_T > sinks_that_get_flow_not_only_from_thresh;
+#endif
         std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE  >, MAX_SIG_SIZE > flows{};
 #if USE_EDGE
         std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> cc;
 #else
         std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> c;
 #endif
-
+        std::array<NODE_T, MAX_SIG_SIZE/2> uniqueJs{};
         NODE_T sourcesCounter = 0; // number of sources_that_flow_not_only_to_thresh
         NODE_T sinksCounter = -1; // number of sinks_that_get_flow_not_only_from_thresh
         NODE_T lastJ = 0;
@@ -208,15 +220,17 @@ struct emd_hat_impl_integral_types
                 {
                     continue;
                 }
-                if (j != lastJ)
+                if (uniqueJs[j] != j)
                 {
-                    if(lastJ == 0) pre_flow_cost -= (b[N] * maxC);
-                    for (int k = lastJ + 1; k < j; ++k)
+                    if(uniqueJs[j] == 0) pre_flow_cost -= (b[N] * maxC);
+                    for (int k = uniqueJs[j] + 1; k < j; ++k)
                     { // sink
                         pre_flow_cost -= (b[k + N] * maxC);
                     }
-                    lastJ = j;
+//                    std::cout << sinksCounter << " " j + N << " ";
+                    uniqueJs[j] = j;
                     sinksCounter++;
+                    std::cout << sinksCounter << " " << j + N << " ";
                 }
 #if USE_EDGE
                 cc[sourcesCounter][sinksForNode] = edge<NUM_T>(sinksCounter, Cc[i][j]);
@@ -246,7 +260,16 @@ struct emd_hat_impl_integral_types
                 b[i] = 0;
             }
         } // i
-
+        std::cout << std::endl;
+        for (int i = 0; i < N; ++i)
+        {
+            if (uniqueJs[i] == 0 && b[i + N] != 0)
+            {
+                b[THRESHOLD_NODE] += b[i + N];
+                b[i + N] = 0;
+            }
+        }
+        std::cout << std::endl;
         for (int k = lastJ + 1; k < N; ++k)
         { // sink
             pre_flow_cost -= (b[k + N] * maxC);
@@ -260,8 +283,24 @@ struct emd_hat_impl_integral_types
                 b[shrinkCounter] = b[i];
                 shrinkCounter++;
             }
+            if (i == ARTIFICIAL_NODE)
+            {
+                b[shrinkCounter] = b[i];
+                shrinkCounter++;
+            }
         }
-//        std::cout << sourcesCounter << " " << sinksCounter << std::endl;
+        std::cout << "b after shrink: ";
+        for(auto &elem : b) std::cout << elem << " ";
+        std::cout << std::endl;
+#if USE_SET
+        std::cout << std::endl;
+        std::cout << "printing sets" << std::endl;
+        for(auto & elem : sinks_that_get_flow_not_only_from_thresh) std::cout << elem << " ";
+        std::cout << sinks_that_get_flow_not_only_from_thresh.size() << std::endl;
+        for(auto & elem : sources_that_flow_not_only_to_thresh) std::cout << elem << " ";
+        std::cout << sources_that_flow_not_only_to_thresh.size() << std::endl;
+#endif
+//        std::cout << sinksCounter << " " << sourcesCounter << std::endl;
         NODE_T ccSize = sourcesCounter + sinksCounter + 3;
         // update the edge._to values to new node names:
 //        for(auto &node : cc)
@@ -364,6 +403,9 @@ struct emd_hat_impl_integral_types
         //====================================================
 
         #ifndef NDEBUG
+//        for (int i = 0; i < )
+        std::for_each(b.begin(), b.begin() + ccSize, [](int n ) {std::cout << n << " ";});
+        std::cout << std::endl;
         NUM_T DEBUG_sum_b = 0;
         for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];
         assert(DEBUG_sum_b == 0);

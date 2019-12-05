@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <random>
 #ifdef COMPUTE_RUBNER_VERSION
 #include "emd.h"
 #endif
@@ -46,17 +47,27 @@ readImageErrLabel:
     
 } // readImage
 //--------------------------------------------------------------------------------------------
-#define RAND_MAX 20
 void changeVectors(std::vector<int> & v1, std::vector<int> & v2)
 {
-    std::srand(2);
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<int> dis(0, 50);
     std::array< int, 2 > sign = {-1,1};
-    int idx = rand() % 2 == 0;
-    int m = rand();
-    std::for_each(v1.begin(), v1.end(), [&](int &n) {return n = n + sign[idx] * m;});
-    idx = rand() % 2 == 0;
-    m = rand();
-    std::for_each(v2.begin(), v2.end(), [&](int &n) {return n = n + sign[idx] * m;});
+    std::vector <int> v{ 27, 50, 33, 4};
+
+//    for (int i = 0; i < 4; ++i)
+//    {
+//        v[i] = dis(gen);
+//        std::cout << v[i] << std::endl;
+//    }
+    int idx = v[0] % 2 == 0;
+    int m = v[1] * sign[idx];
+    std::cout << v[1] << " " << sign[idx] << std::endl;
+//    std::transform(v1.begin(), v1.end(), v1.begin(), std::bind(s))
+    std::for_each(v1.begin(), v1.end(), [&](int &n) {return n = std::min(255, std::max(0, n + m));});
+    idx = v[2] % 2 == 0;
+    m = v[3] * sign[idx];
+    std::for_each(v2.begin(), v2.end(), [&](int &n) {return n = std::min(255, std::max(0, n + m));});
 }
 
 
@@ -165,8 +176,8 @@ int main( int argc, char* argv[]) {
     int emd_hat_gd_metric_val = 0;
     for (int i = 0; i < ITER; i++)
     {
-//        changeVectors(v1, v2);
-        emd_hat_gd_metric_val = emd_hat_gd_metric<int>()(v2, v1, cost_mat,THRESHOLD);
+        changeVectors(v1, v2);
+        emd_hat_gd_metric_val = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
     }
     timer.toc();
     std::cout << "emd_hat_gd_metric time in seconds: " << timer.totalTimeSec() << std::endl;
