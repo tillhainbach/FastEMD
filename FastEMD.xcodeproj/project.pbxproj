@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B3E8B372398014D00CE5FAF /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */; };
 		2BC463C6238825AD00CBCAFF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463C5238825AD00CBCAFF /* main.cpp */; };
 		2BC463CA2388403F00CBCAFF /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463A92388135000CBCAFF /* demo_FastEMD.cpp */; };
-		2BC463CD2388413000CBCAFF /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */; };
 		2BC463D32388422F00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
 		2BC463D42388434D00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC460DE23873AE500CBCAFF /* emd.c */; };
 /* End PBXBuildFile section */
@@ -45,8 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo_FastEMD.cpp; sourceTree = "<group>"; };
 		2BC45E1C23872F7A00CBCAFF /* FastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = demo_FastEMD.cpp; path = ../demo_FastEMD.cpp; sourceTree = "<group>"; };
 		2BC45E3023872F9500CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
 		2BC45FF323872F9700CBCAFF /* emd_hat_signatures_interface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_signatures_interface.hpp; sourceTree = "<group>"; };
 		2BC45FF423872F9700CBCAFF /* cameraman.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cameraman.txt; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 		2BC463A82388132800CBCAFF /* original */ = {
 			isa = PBXGroup;
 			children = (
-				2BC45E2F23872F9500CBCAFF /* demo_FastEMD.cpp */,
+				2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */,
 				2BC463AF2388138A00CBCAFF /* emd_hat_signatures_interface.hpp */,
 				2BC463B1238813A200CBCAFF /* EMD_DEFS.hpp */,
 				2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */,
@@ -321,7 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BC463D32388422F00CBCAFF /* emd.c in Sources */,
-				2BC463CD2388413000CBCAFF /* demo_FastEMD.cpp in Sources */,
+				2B3E8B372398014D00CE5FAF /* demo_FastEMD.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

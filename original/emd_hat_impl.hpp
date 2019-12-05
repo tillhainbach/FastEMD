@@ -102,7 +102,7 @@ struct emd_hat_impl_integral_types {
     // Ensuring that the supplier - P, have more mass.
     std::vector<NUM_T> P;
     std::vector<NUM_T> Q;
-//    std::vector< std::vector<NUM_T> > C(Cc);
+    std::vector< std::vector<NUM_T> > C(Cc);
     NUM_T abs_diff_sum_P_sum_Q;
     NUM_T sum_P= 0;
     NUM_T sum_Q= 0;

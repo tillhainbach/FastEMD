@@ -396,17 +396,17 @@ struct emd_hat_impl_integral_types
 //        tictoc timer;
 //        timer.tic();
 #endif
-//        min_cost_flow<NUM_T> mcf;
+        min_cost_flow<NUM_T> mcf;
 //#if USE_VECTOR
 //        NUM_T mcf_dist = mcf(bb, cc, flows);
 //#else
-//        NUM_T mcf_dist = mcf(b, ccSize, cc, flows);
+        NUM_T mcf_dist = mcf(b, ccSize, cc, flows);
 //#endif
 //#if TIME
 //        timer.toc();
 //        std::cout << "min_cost_flow time == " << timer.totalTime<std::chrono::microseconds>() << std::endl;
 //#endif
-        NUM_T mcf_dist = 0;
+//        NUM_T mcf_dist = 0;
 
 //    if (FLOW_TYPE != NO_FLOW) {
 //        for (NODE_T new_name_from=0; new_name_from<flows.size(); ++new_name_from) {

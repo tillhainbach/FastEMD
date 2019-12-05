@@ -147,16 +147,17 @@ int main( int argc, char* argv[]) {
     //-----------------------------------------------
     std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
     std::vector<int>v2 (im2.begin(), im2.begin() + (N*N));
-#define ITER 1000
+#define ITER 1
     std::cout << "I am doing stuff for " << ITER << " times..." << std::endl;
     tictoc timer;
     timer.tic();
-    int emd_hat_gd_metric_val;
+    int emd_hat_gd_metric_val = 0;
     for (int i = 0; i < ITER; i++){
-    emd_hat_gd_metric_val= emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
+    emd_hat_gd_metric_val = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
     }
     timer.toc();
     std::cout << "emd_hat_gd_metric time in seconds: " << timer.totalTimeSec() << std::endl;
+    std::cerr << "emd_hat_gd_metric_val == " << emd_hat_gd_metric_val << std::endl;
 
 //    timer.clear();
 //    timer.tic();

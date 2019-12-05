@@ -10,6 +10,7 @@
 #include <vector>
 #include <array>
 #include <set>
+#include <numeric>
 
 typedef int NODE_T;
 typedef int NUM_T;
@@ -146,17 +147,15 @@ int main(int argc, const char * argv[]) {
         
 //        std::cout << "done!" << std::endl;
     
-    std::array<int, 6> b{0,1,2,3,4,5};
+    std::array<edge<int>, 2> b{edge<int>(1,1), edge<int>(2,2)};
+    std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    std::cout << b[0]._cost << std::endl;
+    std::swap(b[0], b[1]);
+    std::cout << b[0]._cost << std::endl;
     
-    for(int elem : b)
-        std::cout << elem << " ";
-    std::cout << std::endl;
-    
-    std::swap_ranges(b.begin(), b.begin() + 3, b.begin() + 3);
-    
-    for(int elem : b)
-        std::cout << elem << " ";
-    std::cout << std::endl;
+//    auto myLambda = [](int n, edge<int> node) {return n + node._to * node._cost;};
+//    int s = std::accumulate(b.begin(), b.end(), 0, myLambda);
+//    std::cout << s << std::endl;
     
 //    int N = 36;
 //    std::array<int, 80> b{};
