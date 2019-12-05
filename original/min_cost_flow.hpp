@@ -59,7 +59,7 @@ struct edge3 {
 template<typename NUM_T>
 struct edgeCompareByDist {
     bool operator()(const edge3<NUM_T>& a, const edge3<NUM_T>& b) {
-        return a._dist<b._dist;
+        return a._dist > b._dist;
     }
 };
 //------------------------------------------------------------------------------
@@ -334,9 +334,10 @@ private:
         //----------------------------------------------------------------
         std::vector<NODE_T> finalNodesFlg(_num_nodes, false);
 //        std::cout << "path_c; ";
+        int Qsize = Q.size();
         do {
-            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
-            std::cout << std::endl;
+//            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+//            std::cout << std::endl;
             NODE_T u = Q[0]._to;
 //            std::cout << u << " ";
             d[u]= Q[0]._dist; // final distance
@@ -345,11 +346,12 @@ private:
                 l = u;
                 break;
             }
-            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
-            std::cout << std::endl;
-            heap_remove_first(Q, _nodes_to_Q);
-            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
-            std::cout << std::endl;
+//            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
+//            std::cout << std::endl;
+            
+            heap_remove_first(Q, _nodes_to_Q, Qsize);
+//            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+//            std::cout << std::endl;
 //            std::pop_heap(Qq.begin(), Qq.begin() + _num_nodes, edgeCompareByDist<NUM_T>());
 //            for(auto &elem : Q) std::cout << "{" << elem._to << " : " << elem._dist << "} ";
 //            std::cout << std::endl;
@@ -361,22 +363,22 @@ private:
 //                i++;
 //            }
 //            std::cout << std::endl;
-            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
-            std::cout << std::endl;
+//            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
+//            std::cout << std::endl;
             
             // neighbors of u
-            std::cout << "cost_forward" << std::endl;
+//            std::cout << "cost_forward" << std::endl;
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
                 assert (it->_reduced_cost>=0);
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
-                if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
+                if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
 //                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
                     prev[v]= u;
-                    std::cout << "prev: ";
-                    for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-                    std::cout << std::endl;
+//                    std::cout << "prev: ";
+//                    for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
+//                    std::cout << std::endl;
                 }
             }} //it
 //            std::cout << "cost_backward" << std::endl;
@@ -385,7 +387,7 @@ private:
                     assert (it->_reduced_cost>=0);
                     NUM_T alt= d[u]+it->_reduced_cost;
                     NODE_T v = it->_to;
-                    if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
+                    if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
 //                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
                         prev[v] = u;
@@ -397,7 +399,7 @@ private:
             }} //it
 
             
-        } while (!Q.empty());
+        } while (!(Qsize == 0));
 
 //        std::cout <<  std::endl;
         //tmp_tic_toc.tic();
@@ -464,24 +466,27 @@ private:
         }
     } // heap_decrease_key
     
-    void heap_remove_first(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q)
+    void heap_remove_first(std::vector< edge3<NUM_T> >& Q,
+                           std::vector<NODE_T>& nodes_to_Q, int &Qsize)
     {
-        swap_heap(Q, nodes_to_Q, 0, Q.size() - 1);
-        Q.pop_back();
-        heapify(Q, nodes_to_Q , 0);
+        swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
+//        Q.pop_back();
+        Qsize -= 1;
+        std::cout << std::endl;
+        heapify(Q, nodes_to_Q , 0, Qsize);
     } // heap_remove_first
 
 
 
     void heapify(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q,
-                 NODE_T i) {
+                 NODE_T i, int &Qsize) {
 
         do {
             // TODO: change to loop
             NODE_T l = LEFT(i);
             NODE_T r = RIGHT(i);
             NODE_T smallest;
-            if ( (l < Q.size()) && (Q[l]._dist < Q[i]._dist) )
+            if ( (l < Qsize) && (Q[l]._dist < Q[i]._dist) )
             {
                 smallest = l;
             }
@@ -489,7 +494,7 @@ private:
             {
                 smallest = i;
             }
-            if ( (r < Q.size())&& (Q[r]._dist < Q[smallest]._dist) )
+            if ( (r < Qsize)&& (Q[r]._dist < Q[smallest]._dist) )
             {
                 smallest = r;
             }

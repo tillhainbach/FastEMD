@@ -270,7 +270,8 @@ struct emd_hat_impl_integral_types {
         }}
     }}
     //====================================================    
-
+        std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << n << " ";});
+        std::cout << std::endl;
     #ifndef NDEBUG
     NUM_T DEBUG_sum_bb= 0;
     for (NODE_T i=0; i<bb.size(); ++i) DEBUG_sum_bb+= bb[i];

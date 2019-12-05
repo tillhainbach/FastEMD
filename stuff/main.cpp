@@ -28,6 +28,12 @@ struct edge {
         return *this;
     };
 };
+template<typename NUM_T>
+struct edgeCompareByCost {
+    bool operator()(const edge<NUM_T>& a, const edge<NUM_T>& b) {
+        return a._cost < b._cost;
+    }
+};
 
 void foo(std::array<std::array<edge<int>, 80>, 80 > &cc,
          int sourcesCounter, int sinksCounter, int maxC)
@@ -148,7 +154,18 @@ int main(int argc, const char * argv[]) {
 //        std::cout << "done!" << std::endl;
     
     std::array<edge<int>, 2> b{edge<int>(1,1), edge<int>(2,2)};
-    std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    std::vector<int> v { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    std::vector<edge<int>> d (10);
+    int j = 0;
+    std::for_each(d.begin(), d.end(), [&j](auto &e) {return e._to = j++;});
+    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
+    std::cout << std::endl;
+    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
+    std::make_heap(d.begin(), d.end(), edgeCompareByCost<int>());
+    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
+    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
+    std::cout << std::endl;
+    
     std::cout << b[0]._cost << std::endl;
     std::swap(b[0], b[1]);
     std::cout << b[0]._cost << std::endl;

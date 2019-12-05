@@ -276,7 +276,7 @@ private:
             //----------------------------------------------------------------
             // Making heap (all inf except 0, so we are saving comparisons...)
             //----------------------------------------------------------------
-            std::vector<  edge3<NUM_T>  > Q(_num_nodes);
+            std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  > Q;
             Q[0]._to= from;
             _nodes_to_Q[from] = 0;
             Q[0]._dist= 0;
@@ -302,7 +302,9 @@ private:
             //----------------------------------------------------------------
             // main loop
             //----------------------------------------------------------------
-            std::vector<NODE_T> finalNodesFlg(_num_nodes, false);
+            std::array<NODE_T, MAX_SIG_SIZE> finalNodesFlg;
+            std::fill(finalNodesFlg.begin(), finalNodesFlg.begin() + _num_nodes, false);
+            int Qsize = _num_nodes;
             do
             {
                 NODE_T u = Q[0]._to;
@@ -314,7 +316,7 @@ private:
                     break;
                 }
                 
-                heap_remove_first(Q, _nodes_to_Q);
+                heap_remove_first(Q, _nodes_to_Q, Qsize);
                 
                 // neighbors of u
                 for (auto &it : cost_forward[u])
@@ -324,8 +326,8 @@ private:
                     assert (it._reduced_cost >= 0);
                     NUM_T alt = d[u] + it._reduced_cost;
                     NODE_T v = it._to;
-//                    std::cout << it._to << ": " << _nodes_to_Q[v] << " < " << Q.size() << std::endl;
-                    if ( (_nodes_to_Q[v] < Q.size()) && (alt < Q[_nodes_to_Q[v]]._dist) )
+//                    std::cout << it._to << ": " << _nodes_to_Q[v] << " < " << Qsize << std::endl;
+                    if ( (_nodes_to_Q[v] < Qsize) && (alt < Q[_nodes_to_Q[v]]._dist) )
                     {
 //                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q, _nodes_to_Q, v, alt);
@@ -341,7 +343,7 @@ private:
                         assert (it._reduced_cost>=0);
                         NUM_T alt= d[u]+it._reduced_cost;
                         NODE_T v = it._to;
-                        if ( (_nodes_to_Q[v] < Q.size()) && (alt < Q[_nodes_to_Q[v]]._dist) )
+                        if ( (_nodes_to_Q[v] < Qsize) && (alt < Q[_nodes_to_Q[v]]._dist) )
                         {
 //                            std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                             heap_decrease_key(Q, _nodes_to_Q, v, alt);
@@ -350,13 +352,13 @@ private:
                     }
                 } //it
                 
-            } while (!Q.empty());
+            } while (!(Qsize == 0));
 
 //            std::cout << std::endl;
             //tmp_tic_toc.tic();
             //---------------------------------------------------------------------------------
             // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
-            if(std::any_of(d.begin(), d.end(), [](NUM_T n) {return n != 0;}))
+            if(std::any_of(d.begin(), d.begin() + _num_nodes, [](NUM_T n) {return n != 0;}))
             {
                 for (NODE_T from = 0; from < _num_nodes; ++from)
                 {
@@ -391,7 +393,7 @@ private:
             }
         } // compute_shortest_path
 
-    void heap_decrease_key(std::vector< edge3<NUM_T> >& Q,
+    void heap_decrease_key(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
                            std::vector<NODE_T>& nodes_to_Q,
                            NODE_T v, NUM_T alt)
     {
@@ -404,23 +406,26 @@ private:
         }
     } // heap_decrease_key
     
-    void heap_remove_first(std::vector< edge3<NUM_T> >& Q,
-                           std::vector<NODE_T>& nodes_to_Q)
+    void heap_remove_first(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
+                           std::vector<NODE_T>& nodes_to_Q,
+                           int &Qsize)
     {
-        swap_heap(Q, nodes_to_Q, 0, static_cast<NODE_T>(Q.size() - 1));
-        Q.pop_back();
-        heapify(Q, nodes_to_Q, 0);
+        swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
+//        Q.pop_back();
+        Qsize -= 1 ;
+        heapify(Q, nodes_to_Q, 0, Qsize);
     } // heap_remove_first
 
-    void heapify(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q,
-                 NODE_T i) {
+    void heapify(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q, std::vector<NODE_T>& nodes_to_Q,
+                 NODE_T i, int &Qsize)
+    {
 
         do {
             // TODO: change to loop
             NODE_T l = LEFT(i);
             NODE_T r = RIGHT(i);
             NODE_T smallest;
-            if ( (l < Q.size()) && (Q[l]._dist < Q[i]._dist) )
+            if ( (l < Qsize) && (Q[l]._dist < Q[i]._dist) )
             {
                 smallest = l;
             }
@@ -428,7 +433,7 @@ private:
             {
                 smallest = i;
             }
-            if ( (r < Q.size())&& (Q[r]._dist < Q[smallest]._dist) )
+            if ( (r < Qsize)&& (Q[r]._dist < Q[smallest]._dist) )
             {
                 smallest = r;
             }
@@ -443,7 +448,7 @@ private:
 
 
 
-    void swap_heap(std::vector< edge3<NUM_T> >& Q,
+    void swap_heap(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
                    std::vector<NODE_T>& nodes_to_Q, NODE_T i, NODE_T j)
     {
         edge3<NUM_T> tmp= Q[i];

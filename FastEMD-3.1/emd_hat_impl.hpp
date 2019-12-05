@@ -5,7 +5,7 @@
 #define USE_CC_VECTOR 1
 #define TIME 0
 #define USE_EDGE 1
-#define PRINT 0
+#define PRINT 1
 
 
 //=======================================================================================
@@ -153,9 +153,11 @@ struct emd_hat_impl_integral_types
         {
             needToSwapFlow = true;
             std::swap_ranges(b.begin(), b.begin() + N, b.begin() + N);
+            std::transform(b.begin(), b.begin() + 2 * N + 2, b.begin(),
+                        std::bind(std::multiplies<NUM_T>(), std::placeholders::_1, -1));
         }
 
-//        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
+        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
     
         // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
         // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
@@ -186,86 +188,65 @@ struct emd_hat_impl_integral_types
         NODE_T sinksCounter = -1; // number of sinks_that_get_flow_not_only_from_thresh
         NODE_T lastJ = 0;
         NUM_T pre_flow_cost = 0;
-        if (needToSwapFlow)
+        NUM_T cost = 0;
+        for (NODE_T i = 0; i < N; ++i)
         {
-            for (NODE_T i = 0; i < N; ++i)
+            if (b[i] == 0)
             {
-                if (b[i] == 0)
+                continue;
+            }
+            bool once = false;
+            int sinksForNode = 0;
+            for (NODE_T j = 0; j < N; ++j)
+            {
+                if (b[j + N] == 0)
                 {
                     continue;
                 }
-                for (NODE_T j = 0; j < N; ++j)
-                {
-                    if (b[j + N] == 0)
-                    {
-                        continue;
-                    }
-                    if (Cc[j][i] == maxC)
-                    {
-                        continue;
-                    }
-                }// j
-            }// i
-        }
-        else
-        {
-            for (NODE_T i = 0; i < N; ++i)
-            {
-                if (b[i] == 0)
+                cost = needToSwapFlow ? Cc[j][i] : Cc[i][j];
+                if (cost == maxC)
                 {
                     continue;
                 }
-                bool once = false;
-                int sinksForNode = 0;
-                for (NODE_T j = 0; j < N; ++j)
+                if (j != lastJ)
                 {
-                    if (b[j + N] == 0)
-                    {
-                        continue;
+                    if(lastJ == 0) pre_flow_cost -= (b[N] * maxC);
+                    for (int k = lastJ + 1; k < j; ++k)
+                    { // sink
+                        pre_flow_cost -= (b[k + N] * maxC);
                     }
-                    if (Cc[i][j] == maxC)
-                    {
-                        continue;
-                    }
-                    if (j != lastJ)
-                    {
-                        if(lastJ == 0) pre_flow_cost -= (b[N] * maxC);
-                        for (int k = lastJ + 1; k < j; ++k)
-                        { // sink
-                            pre_flow_cost -= (b[k + N] * maxC);
-                        }
-                        lastJ = j;
-                        sinksCounter++;
-                    }
+                    lastJ = j;
+                    sinksCounter++;
+                }
 #if USE_EDGE
-                    cc[sourcesCounter][sinksForNode] = edge<NUM_T>(sinksCounter, Cc[i][j]);
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(sinksCounter, Cc[i][j]);
 #else
-                    c[sourcesCounter][2 * sinksForNode] = sinksCounter;
-                    c[sourcesCounter][2 * sinksForNode + 1] = Cc[i][j];
+                c[sourcesCounter][2 * sinksForNode] = sinksCounter;
+                c[sourcesCounter][2 * sinksForNode + 1] = cost;
 #endif
-                    sinksForNode++;
-                    once = true;
+                sinksForNode++;
+                once = true;
 #if USE_SET
-                    sources_that_flow_not_only_to_thresh.insert(i);
-                    sinks_that_get_flow_not_only_from_thresh.insert(j + N);
+                sources_that_flow_not_only_to_thresh.insert(i);
+                sinks_that_get_flow_not_only_from_thresh.insert(j + N);
 #endif
-                } // j
-                if(once)
-                {
+            } // j
+            if(once)
+            {
 #if !USE_EDGE
-                    // mark last node
-                    c[sourcesCounter][2 * sinksForNode + 1] = -1;
-                    c[sourcesCounter][2 * sinksForNode + 2] = -1;// to THRESHOLD_NODE´
+                // mark last node
+                c[sourcesCounter][2 * sinksForNode + 1] = -1;
+                c[sourcesCounter][2 * sinksForNode + 2] = -1;// to THRESHOLD_NODE´
 #endif
-                    sourcesCounter++;
-                }
-                else
-                {
-                    b[THRESHOLD_NODE] += b[i];
-                    b[i] = 0;
-                }
-            } // i
-        }
+                sourcesCounter++;
+            }
+            else
+            {
+                b[THRESHOLD_NODE] += b[i];
+                b[i] = 0;
+            }
+        } // i
+
         for (int k = lastJ + 1; k < N; ++k)
         { // sink
             pre_flow_cost -= (b[k + N] * maxC);
@@ -381,7 +362,8 @@ struct emd_hat_impl_integral_types
         }
 #endif
         //====================================================
-
+        std::for_each(b.begin(), b.begin() + ccSize, [](int n) {std::cout << n << " ";});
+        std::cout << std::endl;
         #ifndef NDEBUG
         NUM_T DEBUG_sum_b = 0;
         for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];

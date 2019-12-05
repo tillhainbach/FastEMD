@@ -46,7 +46,18 @@ readImageErrLabel:
     
 } // readImage
 //--------------------------------------------------------------------------------------------
-
+#define RAND_MAX 20
+void changeVectors(std::vector<int> & v1, std::vector<int> & v2)
+{
+    std::srand(2);
+    std::array< int, 2 > sign = {-1,1};
+    int idx = rand() % 2 == 0;
+    int m = rand();
+    std::for_each(v1.begin(), v1.end(), [&](int &n) {return n = n + sign[idx] * m;});
+    idx = rand() % 2 == 0;
+    m = rand();
+    std::for_each(v2.begin(), v2.end(), [&](int &n) {return n = n + sign[idx] * m;});
+}
 
 
 
@@ -152,8 +163,10 @@ int main( int argc, char* argv[]) {
     tictoc timer;
     timer.tic();
     int emd_hat_gd_metric_val = 0;
-    for (int i = 0; i < ITER; i++){
-    emd_hat_gd_metric_val = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
+    for (int i = 0; i < ITER; i++)
+    {
+//        changeVectors(v1, v2);
+        emd_hat_gd_metric_val = emd_hat_gd_metric<int>()(v2, v1, cost_mat,THRESHOLD);
     }
     timer.toc();
     std::cout << "emd_hat_gd_metric time in seconds: " << timer.totalTimeSec() << std::endl;
