@@ -5,7 +5,7 @@
 #define USE_CC_VECTOR 1
 #define TIME 0
 #define USE_EDGE 1
-#define PRINT 1
+#define PRINT 0
 
 
 //=======================================================================================
@@ -157,7 +157,7 @@ struct emd_hat_impl_integral_types
                         std::bind(std::multiplies<NUM_T>(), std::placeholders::_1, -1));
         }
 
-        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
+//        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
     
         // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
         // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
@@ -362,8 +362,7 @@ struct emd_hat_impl_integral_types
         }
 #endif
         //====================================================
-        std::for_each(b.begin(), b.begin() + ccSize, [](int n) {std::cout << n << " ";});
-        std::cout << std::endl;
+
         #ifndef NDEBUG
         NUM_T DEBUG_sum_b = 0;
         for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];
