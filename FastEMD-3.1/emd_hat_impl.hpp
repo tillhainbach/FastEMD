@@ -5,7 +5,7 @@
 #define USE_CC_VECTOR 1
 #define TIME 0
 #define USE_EDGE 1
-#define PRINT 0
+#define PRINT 1
 
 
 //=======================================================================================
@@ -92,10 +92,10 @@ struct emd_hat_impl_integral_types
         tictoc timerOperator;
         timerOperator.tic();
 #endif
-        std::for_each(P.begin(), P.end(), [](int n ) {std::cout << n << " ";});
-        std::cout << std::endl;
-        std::for_each(Q.begin(), Q.end(), [](int n ) {std::cout << n << " ";});
-        std::cout << std::endl;
+//        std::for_each(P.begin(), P.end(), [](int n ) {std::cout << n << " ";});
+//        std::cout << std::endl;
+//        std::for_each(Q.begin(), Q.end(), [](int n ) {std::cout << n << " ";});
+//        std::cout << std::endl;
         // creating the b vector that contains all vertexes
         //-------------------------------------------------------
         NODE_T N = static_cast<NODE_T>(P.size());
@@ -151,9 +151,9 @@ struct emd_hat_impl_integral_types
             }
         }
         // Ensuring that the supplier - P, has more mass.
-        std::cout << sum_Q << " " << sum_P << std::endl;
-        std::for_each(b.begin(), b.begin() + 2 * N + 2, [](int n ) {std::cout << n << " ";});
-        std::cout << std::endl;
+//        std::cout << sum_Q << " " << sum_P << std::endl;
+//        std::for_each(b.begin(), b.begin() + 2 * N + 2, [](int n ) {std::cout << n << " ";});
+//        std::cout << std::endl;
         bool needToSwapFlow = false;
         NUM_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
         if (sum_Q > sum_P)
@@ -165,7 +165,7 @@ struct emd_hat_impl_integral_types
         }
 
 
-        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
+//        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
     
         // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
         // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
@@ -233,7 +233,7 @@ struct emd_hat_impl_integral_types
                     std::cout << sinksCounter << " " << j + N << " ";
                 }
 #if USE_EDGE
-                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(sinksCounter, Cc[i][j]);
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(j, Cc[i][j]);
 #else
                 c[sourcesCounter][2 * sinksForNode] = sinksCounter;
                 c[sourcesCounter][2 * sinksForNode + 1] = cost;
@@ -276,22 +276,22 @@ struct emd_hat_impl_integral_types
         }
         // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
         int shrinkCounter = 0;
-        for (int i = 0; i < 2 * N + 2; ++i)
+        for (int i = 0; i < 2 * N + 1; ++i)
         {
             if (b[i] != 0)
             {
-                b[shrinkCounter] = b[i];
-                shrinkCounter++;
-            }
-            if (i == ARTIFICIAL_NODE)
-            {
+                if (i >= N && uniqueJs[i - N] != 0)
+                {
+                    uniqueJs[i - N] = shrinkCounter;
+                }
                 b[shrinkCounter] = b[i];
                 shrinkCounter++;
             }
         }
-        std::cout << "b after shrink: ";
-        for(auto &elem : b) std::cout << elem << " ";
-        std::cout << std::endl;
+        b[shrinkCounter] = 0;
+//        std::cout << "b after shrink: ";
+//        for(auto &elem : b) std::cout << elem << " ";
+//        std::cout << std::endl;
 #if USE_SET
         std::cout << std::endl;
         std::cout << "printing sets" << std::endl;
@@ -337,8 +337,15 @@ struct emd_hat_impl_integral_types
             {
 #if USE_EDGE
                 if (cc[i][j]._to != -1 && cc[i][j]._cost != -1) continue;
-                cc[i][j] = edge<NUM_T>(ccSize - 2, 0);
-                cc[i][j + 1] = edge<NUM_T>(ccSize - 1, maxC + 1);
+                if (i < sourcesCounter)
+                {
+                    cc[i][j] = edge<NUM_T>(ccSize - 2, 0);
+                    cc[i][j + 1] = edge<NUM_T>(ccSize - 1, maxC + 1);
+                }
+                else
+                {
+                    cc[i][j] = edge<NUM_T>(ccSize - 1, maxC + 1);
+                }
 #else
                 if (i < sourcesCounter &&
                     c[i][2 * j] != REMOVE_NODE_FLAG &&
@@ -365,7 +372,7 @@ struct emd_hat_impl_integral_types
             {
 #if USE_EDGE
                 if (cc[i][j]._to == ccSize - 2) break;
-                cc[i][j]._to += sourcesCounter;
+                cc[i][j]._to = uniqueJs[cc[i][j]._to];
 #else
                 if (c[i][2 * j] == ccSize - 2) break;
                 c[i][2 * j] += sourcesCounter;
@@ -404,8 +411,8 @@ struct emd_hat_impl_integral_types
 
         #ifndef NDEBUG
 //        for (int i = 0; i < )
-        std::for_each(b.begin(), b.begin() + ccSize, [](int n ) {std::cout << n << " ";});
-        std::cout << std::endl;
+//        std::for_each(b.begin(), b.begin() + ccSize, [](int n ) {std::cout << n << " ";});
+//        std::cout << std::endl;
         NUM_T DEBUG_sum_b = 0;
         for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];
         assert(DEBUG_sum_b == 0);

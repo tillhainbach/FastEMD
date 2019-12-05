@@ -62,8 +62,8 @@
             filePath = "original/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "original/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
+            startingLineNumber = "324"
+            endingLineNumber = "324"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "FastEMD-3.1/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "410"
+            endingLineNumber = "410"
             landmarkName = "operator()(POrig, QOrig, P, Q, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -360,7 +360,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "1EBA919B-8675-4853-8302-38F6A6544863"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "original/emd_hat_impl.hpp"
@@ -369,6 +369,38 @@
             startingLineNumber = "291"
             endingLineNumber = "291"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2AA8E165-FC93-466E-95CF-79449364BF54"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FastEMD-3.1/emd_hat_impl.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "420"
+            endingLineNumber = "420"
+            landmarkName = "operator()(POrig, QOrig, P, Q, Cc, extra_mass_penalty, F)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "745EC0D4-E945-4346-BC37-CD59CF3475E5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FastEMD-3.1/emd_hat_impl.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "operator()(POrig, QOrig, P, Q, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
