@@ -255,15 +255,15 @@ public:
                 }} // it
             }} // from
         
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            std::cout << from << ": ";
-            for (auto it : x[from])
-            {
-                std::cout << "{" << it._to << " : " << it._cost << " : " << it._flow << "} ";
-            } // it
-            std::cout << std::endl;
-        }
+//        for (NODE_T from = 0; from < _num_nodes; ++from)
+//        {
+//            std::cout << from << ": ";
+//            for (auto it : x[from])
+//            {
+//                std::cout << "{" << it._to << " : " << it._cost << " : " << it._flow << "} ";
+//            } // it
+//            std::cout << std::endl;
+//        }
             
             
             //tictoc_all_function.toc();
