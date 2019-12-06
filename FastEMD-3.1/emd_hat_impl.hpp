@@ -5,7 +5,7 @@
 #define USE_CC_VECTOR 1
 #define TIME 0
 #define USE_EDGE 1
-#define PRINT 1
+#define PRINT 0
 
 
 //=======================================================================================
@@ -222,15 +222,9 @@ struct emd_hat_impl_integral_types
                 }
                 if (uniqueJs[j] != j)
                 {
-                    if(uniqueJs[j] == 0) pre_flow_cost -= (b[N] * maxC);
-                    for (int k = uniqueJs[j] + 1; k < j; ++k)
-                    { // sink
-                        pre_flow_cost -= (b[k + N] * maxC);
-                    }
-//                    std::cout << sinksCounter << " " j + N << " ";
                     uniqueJs[j] = j;
                     sinksCounter++;
-                    std::cout << sinksCounter << " " << j + N << " ";
+//                    std::cout << sinksCounter << " " << j + N << " ";
                 }
 #if USE_EDGE
                 cc[sourcesCounter][sinksForNode] = edge<NUM_T>(j, Cc[i][j]);
@@ -246,9 +240,12 @@ struct emd_hat_impl_integral_types
 #endif
             } // j
             if(once)
-            {
-#if !USE_EDGE
-                // mark last node
+            { // mark last node
+#if USE_EDGE
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(-1, -1);
+                cc[sourcesCounter][sinksForNode + 1] = edge<NUM_T>(-1, -1);
+#else
+                
                 c[sourcesCounter][2 * sinksForNode + 1] = -1;
                 c[sourcesCounter][2 * sinksForNode + 2] = -1;// to THRESHOLD_NODE´
 #endif
@@ -260,19 +257,15 @@ struct emd_hat_impl_integral_types
                 b[i] = 0;
             }
         } // i
-        std::cout << std::endl;
         for (int i = 0; i < N; ++i)
         {
             if (uniqueJs[i] == 0 && b[i + N] != 0)
             {
+                //TODO: fix pre_flow_cost
+                pre_flow_cost -= (b[i + N] * maxC);
                 b[THRESHOLD_NODE] += b[i + N];
                 b[i + N] = 0;
             }
-        }
-        std::cout << std::endl;
-        for (int k = lastJ + 1; k < N; ++k)
-        { // sink
-            pre_flow_cost -= (b[k + N] * maxC);
         }
         // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
         int shrinkCounter = 0;
@@ -333,7 +326,7 @@ struct emd_hat_impl_integral_types
         }
         for(NODE_T i = 0; i < ccSize - 2; ++i)
         {
-            for(NODE_T j = 0; j < sinksCounter + 1; ++j)
+            for(NODE_T j = 0; j < sinksCounter + 2; ++j)
             {
 #if USE_EDGE
                 if (cc[i][j]._to != -1 && cc[i][j]._cost != -1) continue;
@@ -368,7 +361,7 @@ struct emd_hat_impl_integral_types
         // update sink names ([sourcesCounter; sourcesCounter + sinksCounter))
         for (NODE_T i = 0; i < sourcesCounter; ++i)
         {
-            for (NODE_T j = 0; j < sinksCounter; ++j)
+            for (NODE_T j = 0; j < sinksCounter + 1; ++j)
             {
 #if USE_EDGE
                 if (cc[i][j]._to == ccSize - 2) break;
@@ -469,6 +462,7 @@ struct emd_hat_impl_integral_types
 //    {
 //        transform_flow_to_regular(*F, POrig, QOrig);
 //    }
+//    std::cout << pre_flow_cost << " + " << mcf_dist << " + " << (abs_diff_sum_P_sum_Q * extra_mass_penalty) << std::endl;
     NUM_T my_dist =
         pre_flow_cost + // pre-flowing on cases where it was possible
         mcf_dist + // solution of the transportation problem
