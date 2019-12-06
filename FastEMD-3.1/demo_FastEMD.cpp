@@ -191,7 +191,7 @@ int main( int argc, char* argv[]) {
     std::cout << "emd_hat_gd_metric time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
     std::cerr << "emd_hat_gd_metric_val == " << emdValues[0] << std::endl;
     std::ofstream output;
-    output.open("output.txt");
+    output.open("outputMyVersion.txt");
     for (auto &value : emdValues) output << value << std::endl;
     output.close();
     

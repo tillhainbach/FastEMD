@@ -10,6 +10,8 @@
 #include <vector>
 #include <array>
 #include <set>
+#include <random>
+#include <fstream>
 #include <numeric>
 
 typedef int NODE_T;
@@ -148,27 +150,64 @@ void clear(std::array< std::array<edge<int>, 80>, 80> &cc)
     }
 }
 
+// generate 1 million random 4-tuple
+void generate4Tuple(std::vector <int> &v)
+{
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<int> dis(0, 50);
+    v = {dis(gen), dis(gen), dis(gen), dis(gen)};
+}
+
 int main(int argc, const char * argv[]) {
 
+    
+    std::ifstream is("quadruples.txt");
+    std::istream_iterator<double> start(is), end;
+    std::vector<int> numbers(start, end);
+    std::cout << "Read " << numbers.size() << " numbers" << std::endl;
+
+    // print the numbers to stdout
+    std::cout << "numbers read in:\n";
+    for (auto n = numbers.begin(); n != numbers.begin() + 4; ++n ) std::cout << *n << " ";
+//    std::copy(numbers.begin(), numbers.end(),
+//              std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
+    
+    
+//    std::ifstream myfile;
+//    std::string line;
+//    std::vector<int> v;
+//    myfile.open ("quadruples.txt");
+//    int b;
+//    getline(myfile, line);
+//    std::cout << line << " ";
+//    for (int i = 0; i < 1e6; ++i)
+//    {
+//        generate4Tuple(v);
+//        for(auto &number : v) myfile << number << "\t";
+//        myfile << std::endl;
+//    }
+//    myfile.close();
         
 //        std::cout << "done!" << std::endl;
     
-    std::array<edge<int>, 2> b{edge<int>(1,1), edge<int>(2,2)};
-    std::vector<int> v { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    std::vector<edge<int>> d (10);
-    int j = 0;
-    std::for_each(d.begin(), d.end(), [&j](auto &e) {return e._to = j++;});
-    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
-    std::cout << std::endl;
-    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
-    std::make_heap(d.begin(), d.end(), edgeCompareByCost<int>());
-    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
-    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
-    std::cout << std::endl;
-    
-    std::cout << b[0]._cost << std::endl;
-    std::swap(b[0], b[1]);
-    std::cout << b[0]._cost << std::endl;
+//    std::array<edge<int>, 2> b{edge<int>(1,1), edge<int>(2,2)};
+//    std::vector<int> v { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//    std::vector<edge<int>> d (10);
+//    int j = 0;
+//    std::for_each(d.begin(), d.end(), [&j](auto &e) {return e._to = j++;});
+//    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
+//    std::cout << std::endl;
+//    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
+//    std::make_heap(d.begin(), d.end(), edgeCompareByCost<int>());
+//    std::cout <<  std::is_heap(d.begin(), d.end(), edgeCompareByCost<int>()) << std::endl;
+//    std::for_each(d.begin(), d.end(), [](auto &e) {std::cout << "{" << e._to << " : " << e._cost << "} ";});
+//    std::cout << std::endl;
+//
+//    std::cout << b[0]._cost << std::endl;
+//    std::swap(b[0], b[1]);
+//    std::cout << b[0]._cost << std::endl;
     
 //    auto myLambda = [](int n, edge<int> node) {return n + node._to * node._cost;};
 //    int s = std::accumulate(b.begin(), b.end(), 0, myLambda);
