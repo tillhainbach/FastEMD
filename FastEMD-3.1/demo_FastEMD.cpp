@@ -48,26 +48,26 @@ readImageErrLabel:
     
 } // readImage
 //--------------------------------------------------------------------------------------------
-void changeVectors(std::vector<int> & v1, std::vector<int> & v2)
+void changeVectors(std::vector<int> & v1, std::vector<int> & v2, std::vector<int> &numbers, int i)
 {
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<int> dis(0, 50);
-    std::array< int, 2 > sign = {-1,1};
-    std::vector <int> v{ 27, 50, 33, 4};
-
+//    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+//    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+//    std::uniform_int_distribution<int> dis(0, 50);
+//    std::vector <int> v{25, 40, 34, 36};
+// { 27, 50, 33, 4};
 //    for (int i = 0; i < 4; ++i)
 //    {
 //        v[i] = dis(gen);
 //        std::cout << v[i] << std::endl;
 //    }
-    int idx = v[0] % 2 == 0;
-    int m = v[1] * sign[idx];
-    std::cout << v[1] << " " << sign[idx] << std::endl;
-//    std::transform(v1.begin(), v1.end(), v1.begin(), std::bind(s))
+    std::vector <int> noise(numbers.begin() + i * 4, numbers.begin() + i * 4 + 4);
+    std::array< int, 2 > sign = {-1,1};
+    int idx = noise[0] % 2 == 0;
+    int m = noise[1] * sign[idx];
+//    std::cout << v[1] << " " << sign[idx] << std::endl;
     std::for_each(v1.begin(), v1.end(), [&](int &n) {return n = std::min(255, std::max(0, n + m));});
-    idx = v[2] % 2 == 0;
-    m = v[3] * sign[idx];
+    idx = noise[2] % 2 == 0;
+    m = noise[3] * sign[idx];
     std::for_each(v2.begin(), v2.end(), [&](int &n) {return n = std::min(255, std::max(0, n + m));});
 }
 
@@ -171,7 +171,11 @@ int main( int argc, char* argv[]) {
     std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
     std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
     long iterations = strtol(argv[1], NULL, 10);
+    std::ifstream is("quadruples.txt");
+    std::istream_iterator<double> start(is), end;
+    std::vector<int> numbers(start, end);
     std::cout << "I am doing stuff for " << iterations << " times..." << std::endl;
+    std::vector <long> emdValues(iterations);
 
     tictoc timer;
     timer.tic();
@@ -179,13 +183,18 @@ int main( int argc, char* argv[]) {
     for (int i = 0; i < iterations; i++)
     {
 //        std::cout << "iter; " << i << "\r";
-        changeVectors(v1, v2);
-        emd_hat_gd_metric_val= emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
+        changeVectors(v1, v2, numbers, i);
+        emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
 
     }
     timer.toc();
     std::cout << "emd_hat_gd_metric time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
-    std::cerr << "emd_hat_gd_metric_val == " << emd_hat_gd_metric_val << std::endl;
+    std::cerr << "emd_hat_gd_metric_val == " << emdValues[0] << std::endl;
+    std::ofstream output;
+    output.open("output.txt");
+    for (auto &value : emdValues) output << value << std::endl;
+    output.close();
+    
 //    timer.clear();
 //    timer.tic();
 //    int emd_hat_val = 0;
