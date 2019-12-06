@@ -91,8 +91,8 @@ public:
                      const std::vector< std::list< edge<NUM_T> > >& c,
                      std::vector< std::list<  edge0<NUM_T>  > >& x) {
 
-        for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
-        std::cout << std::endl;
+//        for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
+//        std::cout << std::endl;
         //tictoc_all_function.tic();
                 
         assert(e.size()==c.size());
@@ -126,15 +126,15 @@ public:
                     r_cost_cap_backward[ it->_to ].push_back( edge2<NUM_T>(from,-it->_cost,0) );
             }} // it
         }} // from
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            std::cout << from << ": ";
-            for (auto &e : r_cost_cap_backward[from])
-            {
-                std::cout << e._to << " ";
-            }
-            std::cout << std::endl;
-        }
+//        for (NODE_T from = 0; from < _num_nodes; ++from)
+//        {
+//            std::cout << from << ": ";
+//            for (auto &e : r_cost_cap_backward[from])
+//            {
+//                std::cout << e._to << " ";
+//            }
+//            std::cout << std::endl;
+//        }
         
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand,supply
@@ -200,9 +200,9 @@ public:
 //            std::cout << "d: ";
 //            for (NODE_T i=0; i<d.size(); ++i) std::cout << d[i]<< " ";
 //            std::cout << std::endl;
-            std::cout << "prev: ";
-            for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-            std::cout << std::endl;
+//            std::cout << "prev: ";
+//            for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
+//            std::cout << std::endl;
 //            std::cout << "path: " << l << " ";
                 to = l;
                 do {
@@ -292,7 +292,7 @@ private:
         //----------------------------------------------------------------
         std::vector<  edge3<NUM_T>  > Q(_num_nodes);
         std::array<  edge3<NUM_T>, 20 > Qq;
-        std::cout << from << ": ";
+//        std::cout << from << ": ";
         Q[0]._to= from;
         Qq[0]._to= from;
         _nodes_to_Q[from] = 0;
@@ -472,7 +472,7 @@ private:
         swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
 //        Q.pop_back();
         Qsize -= 1;
-        std::cout << std::endl;
+//        std::cout << std::endl;
         heapify(Q, nodes_to_Q , 0, Qsize);
     } // heap_remove_first
 
