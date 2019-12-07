@@ -97,7 +97,7 @@ template<typename NUM_T>
 class min_cost_flow {
 
     NODE_T _num_nodes;
-    std::vector<NODE_T> _nodes_to_Q;
+    std::array<NODE_T, MAX_SIG_SIZE> _nodes_to_Q;
 
 //    tictoc tictoc_shortest_path;
 //    tictoc tictoc_while_true;
@@ -120,7 +120,7 @@ public:
 //        tictoc_all_function.tic();
         
         _num_nodes = static_cast<NODE_T>(eSize);
-        _nodes_to_Q.resize(_num_nodes);
+//        _nodes_to_Q.resize(_num_nodes);
         std::array<int, MAX_SIG_SIZE > counters;
         std::fill(counters.begin(), counters.begin() + _num_nodes, 0);
         // init flow
@@ -165,7 +165,7 @@ public:
         } // from
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand, supply
-        NUM_T U = *(std::max_element(e.begin(), e.begin() + _num_nodes));
+//        NUM_T U = *(std::max_element(e.begin(), e.begin() + _num_nodes));
     
         //NUM_T delta = static_cast<NUM_T>(pow(2.0l,ceil(log(static_cast<long double>(U))/log(2.0))));
 
@@ -277,25 +277,25 @@ private:
             // Making heap (all inf except 0, so we are saving comparisons...)
             //----------------------------------------------------------------
             std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  > Q;
-            Q[0]._to= from;
+            Q[0]._to = from;
             _nodes_to_Q[from] = 0;
-            Q[0]._dist= 0;
+            Q[0]._dist = 0;
                     
             NODE_T j = 1;
             // TODO: both of these into a function?
             for (NODE_T i = 0; i<from; ++i)
             {
-                Q[j]._to= i;
-                _nodes_to_Q[i]= j;
+                Q[j]._to = i;
+                _nodes_to_Q[i] = j;
                 Q[j]._dist= std::numeric_limits<NUM_T>::max();
                 ++j;
             }
 
             for (NODE_T i=from+1; i<_num_nodes; ++i)
             {
-                Q[j]._to= i;
-                _nodes_to_Q[i]= j;
-                Q[j]._dist= std::numeric_limits<NUM_T>::max();
+                Q[j]._to = i;
+                _nodes_to_Q[i] = j;
+                Q[j]._dist = std::numeric_limits<NUM_T>::max();
                 ++j;
             }
 
@@ -394,7 +394,7 @@ private:
         } // compute_shortest_path
 
     void heap_decrease_key(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
-                           std::vector<NODE_T>& nodes_to_Q,
+                           std::array<NODE_T, MAX_SIG_SIZE>& nodes_to_Q,
                            NODE_T v, NUM_T alt)
     {
         NODE_T i = nodes_to_Q[v];
@@ -407,7 +407,7 @@ private:
     } // heap_decrease_key
     
     void heap_remove_first(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
-                           std::vector<NODE_T>& nodes_to_Q,
+                           std::array<NODE_T, MAX_SIG_SIZE>& nodes_to_Q,
                            int &Qsize)
     {
         swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
@@ -416,7 +416,7 @@ private:
         heapify(Q, nodes_to_Q, 0, Qsize);
     } // heap_remove_first
 
-    void heapify(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q, std::vector<NODE_T>& nodes_to_Q,
+    void heapify(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q, std::array<NODE_T, MAX_SIG_SIZE>& nodes_to_Q,
                  NODE_T i, int &Qsize)
     {
 
@@ -448,12 +448,12 @@ private:
 
 
 
-    void swap_heap(std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  >& Q,
-                   std::vector<NODE_T>& nodes_to_Q, NODE_T i, NODE_T j)
+    void swap_heap(std::array<  edge3<NUM_T>, MAX_SIG_SIZE  >& Q,
+                   std::array<NODE_T, MAX_SIG_SIZE>& nodes_to_Q, NODE_T i, NODE_T j)
     {
-        edge3<NUM_T> tmp= Q[i];
-        Q[i]= Q[j];
-        Q[j]= tmp;
+        edge3<NUM_T> tmp = Q[i];
+        Q[i] = Q[j];
+        Q[j] = tmp;
         nodes_to_Q[ Q[j]._to ] = j;
         nodes_to_Q[ Q[i]._to ] = i;
     } // swap_heapify

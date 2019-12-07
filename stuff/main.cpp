@@ -162,9 +162,9 @@ void generate4Tuple(std::vector <int> &v)
 int main(int argc, const char * argv[]) {
 
     
-    std::ifstream is("quadruples.txt");
+    std::ifstream is("outputMyVersion.txt");
     std::istream_iterator<double> start(is), end;
-    std::vector<int> numbers(start, end);
+    std::vector<int> myVersion(start, end);
     std::cout << "Read " << numbers.size() << " numbers" << std::endl;
 
     // print the numbers to stdout
