@@ -39,14 +39,15 @@ template<typename NUM_T,FLOW_TYPE_T FLOW_TYPE>
 NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::operator()(const std::vector<NUM_T>& Pc, const std::vector<NUM_T>& Qc,
                                                      const std::vector< std::vector<NUM_T> >& C,
                                                      NUM_T extra_mass_penalty,
-                                                     std::vector< std::vector<NUM_T> >* F)
+                                                     std::vector< std::vector<NUM_T> >* F,
+                                                     NUM_T maxC)
 {
 
     if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
         
     assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
 
-    return emd_hat_impl<NUM_T,FLOW_TYPE>()(Pc,Qc,Pc,Qc,C,extra_mass_penalty,F);
+    return emd_hat_impl<NUM_T,FLOW_TYPE>()(Pc,Qc,Pc,Qc,C,extra_mass_penalty,F, maxC);
     
 } // emd_hat_gd_metric
 
@@ -86,7 +87,8 @@ struct emd_hat_impl_integral_types
                      const std::vector<NUM_T>& P, const std::vector<NUM_T>& Q,
                      const std::vector< std::vector<NUM_T> >& Cc,
                      NUM_T extra_mass_penalty,
-                     std::vector< std::vector<NUM_T> >* F)
+                     std::vector< std::vector<NUM_T> >* F,
+                     NUM_T maxC)
     {
 #if TIME
         tictoc timerOperator;
@@ -101,18 +103,20 @@ struct emd_hat_impl_integral_types
         NODE_T N = static_cast<NODE_T>(P.size());
         assert(Q.size() == N);
         //-------------------------------------------------------
-        NUM_T maxC = 0;
         const int REMOVE_NODE_FLAG = -1;         // as I'm using -1 as a special flag !!!
-        for (NODE_T i = 0; i < N; ++i)
+        if(maxC == -1)
         {
-            for (NODE_T j = 0; j < N; ++j)
+            for (NODE_T i = 0; i < N; ++i)
             {
-                assert(Cc[i][j] >= 0);
-                if ( Cc[i][j] > maxC ) maxC = Cc[i][j];
+                for (NODE_T j = 0; j < N; ++j)
+                {
+                    assert(Cc[i][j] >= 0);
+                    if ( Cc[i][j] > maxC ) maxC = Cc[i][j];
+                }
             }
         }
         std::array<NUM_T, MAX_SIG_SIZE > b{};
-        size_t bSize = 2 * N + 2;
+//        size_t bSize = 2 * N + 2;
         const NODE_T THRESHOLD_NODE = 2 * N;
         const NODE_T ARTIFICIAL_NODE = 2 * N + 1; // need to be last !
         // Assuming metric property we can pre-flow 0-cost edges
