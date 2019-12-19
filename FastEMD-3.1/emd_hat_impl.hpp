@@ -493,8 +493,9 @@ struct emd_hat_impl<int,FLOW_TYPE> {
         const std::vector<NUM_T>& P, const std::vector<NUM_T>& Q,
         const std::vector< std::vector<NUM_T> >& C,
         NUM_T extra_mass_penalty,
-        std::vector< std::vector<NUM_T> >* F) {
-        return emd_hat_impl_integral_types<NUM_T,FLOW_TYPE>()(POrig, QOrig, P, Q, C, extra_mass_penalty, F);
+        std::vector< std::vector<NUM_T> >* F,
+        NUM_T maxC) {
+        return emd_hat_impl_integral_types<NUM_T,FLOW_TYPE>()(POrig, QOrig, P, Q, C, extra_mass_penalty, F, maxC);
     }
     
 }; // emd_hat_impl<int>

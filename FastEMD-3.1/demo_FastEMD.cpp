@@ -111,7 +111,7 @@ int main( int argc, char* argv[]) {
                 for (unsigned int r2=0; r2<im1_R; ++r2) {
                     ++i;
                     cost_mat[i][j]= std::min(THRESHOLD,static_cast<int>(COST_MULT_FACTOR*sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2))));
-                    if (cost_mat[i][j]>max_cost_mat) max_cost_mat= cost_mat[i][j];
+                    if (cost_mat[i][j]>max_cost_mat) max_cost_mat = cost_mat[i][j];
                    
                 }
             }
@@ -184,7 +184,7 @@ int main( int argc, char* argv[]) {
     {
 //        std::cout << "iter; " << i << "\r";
         changeVectors(v1, v2, numbers, i);
-        emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
+        emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD, NULL, max_cost_mat);
 
     }
     timer.toc();
