@@ -244,6 +244,7 @@ int main( int argc, char* argv[]) {
     
     
 // Copyright (c) 2009-2012, Ofir Pele
+// Copyright (c) 2019, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
