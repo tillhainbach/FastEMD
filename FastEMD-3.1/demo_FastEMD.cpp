@@ -48,6 +48,26 @@ readImageErrLabel:
     
 } // readImage
 //--------------------------------------------------------------------------------------------
+#ifdef COMPUTE_RUBNER_VERSION
+void changeSignatures(signature_t *Psig, signature_t *Qsig, std::vector<int> &numbers, int i)
+{
+    std::vector <int> noise(numbers.begin() + i * 4, numbers.begin() + i * 4 + 4);
+    std::array< int, 2 > sign = {-1,1};
+    int idx = noise[0] % 2 == 0;
+    float m = static_cast<float>(noise[1] * sign[idx]);
+    for(int k = 0; k < Psig->n; ++k)
+    {
+        Psig->Weights[k] = std::min<float>(255, std::max<float>(0, Psig->Weights[k] + m));
+    }
+    idx = noise[2] % 2 == 0;
+    m = static_cast<float>(noise[3] * sign[idx]);
+    for(int k = 0; k < Psig->n; ++k)
+    {
+        Qsig->Weights[k] = std::min<float>(255, std::max<float>(0, Qsig->Weights[k] + m));
+    }
+}
+#endif
+
 void changeVectors(std::vector<int> & v1, std::vector<int> & v2, std::vector<int> &numbers, int i)
 {
 //    std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -149,25 +169,6 @@ int main( int argc, char* argv[]) {
     //-----------------------------------------------
 
     //-----------------------------------------------
-    // Convert to FastEMD with Rubner's interface
-    //-----------------------------------------------
-    signature_tt<int> Psig2;
-    signature_tt<int> Qsig2;
-    Psig2.n= im1_R*im1_C;
-    Qsig2.n= im1_R*im1_C;
-    Psig2.Features= new feature_tt[im1_R*im1_C];
-    Qsig2.Features= new feature_tt[im1_R*im1_C];
-    {for (unsigned int i=0; i<im1_R*im1_C; ++i) {
-        Psig2.Features[i]= i;
-        Qsig2.Features[i]= i;
-    }}
-    Psig2.Weights= new int[im1_R*im1_C];
-    Qsig2.Weights= new int[im1_R*im1_C];
-    {for (unsigned int i=0; i<im1_R*im1_C; ++i) {
-        Psig2.Weights[i]= im1[i];
-        Qsig2.Weights[i]= im2[i];
-    }}
-    //-----------------------------------------------
     std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
     std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
     long iterations = strtol(argv[1], NULL, 10);
@@ -179,41 +180,20 @@ int main( int argc, char* argv[]) {
 
     tictoc timer;
     timer.tic();
-    int emd_hat_gd_metric_val = 0;
+//    int emd_hat_gd_metric_val = 0;
     for (int i = 0; i < iterations; i++)
     {
 //        std::cout << "iter; " << i << "\r";
         changeVectors(v1, v2, numbers, i);
-        emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD, NULL, max_cost_mat);
-
+        emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD, NULL, max_cost_mat);
     }
     timer.toc();
-    std::cout << "emd_hat_gd_metric time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
+    std::cout << "emd_hat_gd_metric time in µs: " << timer.totalTime<std::chrono::seconds>() << std::endl;
     std::cerr << "emd_hat_gd_metric_val == " << emdValues[0] << std::endl;
     std::ofstream output;
     output.open("outputMyVersion.txt");
     for (auto &value : emdValues) output << value << std::endl;
     output.close();
-    
-//    timer.clear();
-//    timer.tic();
-//    int emd_hat_val = 0;
-//    for (int i = 0; i < ITER; i++){
-//        emd_hat_val= emd_hat<int>()(v1,v2, cost_mat,THRESHOLD);
-//    }
-//    timer.toc();
-//    std::cout << "emd_hat time in seconds: " << timer.totalTimeSec() << std::endl;
-
-//    timer.clear();
-//    timer.tic();
-//    int emd_hat_signatures_interface_val = 0;
-//    for (int i = 0; i < ITER; i++){
-//    emd_hat_signatures_interface_val= emd_hat_signature_interface<int>(&Psig2, &Qsig2, cost_mat_dist_int,-1);
-//    }
-//    timer.toc();
-//    std::cout << "emd_hat_signatures_interface time in seconds: " << timer.totalTimeSec() << std::endl;
-
-    
 
     #ifdef COMPUTE_RUBNER_VERSION
     timer.clear();
@@ -228,12 +208,14 @@ int main( int argc, char* argv[]) {
         std::swap(sumSmall,sumBig);
     }
     int emd_rubner_val = 0;
-    for (int i = 0; i < ITER; i++){
-    emd_rubner_val= static_cast<int>((sumSmall*emd(&Psig, &Qsig, cost_mat_dist, NULL, NULL)) +
+    for (int i = 0; i < iterations; i++)
+    {
+        changeSignatures(&Psig, &Qsig, numbers, i);
+        emd_rubner_val = static_cast<int>((sumSmall*emd(&Psig, &Qsig, cost_mat_dist, NULL, NULL)) +
                                              (sumBig-sumSmall)*max_cost_mat);
     }
     timer.toc();
-    std::cout << "emd_rubner time in seconds: " << timer.totalTimeSec() << std::endl;
+    std::cout << "emd_rubner time in seconds: " << timer.totalTime<std::chrono::seconds>() << std::endl;
     #endif
     
     #ifdef COMPUTE_RUBNER_VERSION
@@ -242,10 +224,6 @@ int main( int argc, char* argv[]) {
     delete[] Psig.Weights;
     delete[] Qsig.Weights;
     #endif
-    delete[] Psig2.Features;
-    delete[] Qsig2.Features;
-    delete[] Psig2.Weights;
-    delete[] Qsig2.Weights;
 
 //    if (emd_hat_gd_metric_val != emd_hat_val||
 //        emd_hat_gd_metric_val != emd_hat_signatures_interface_val
