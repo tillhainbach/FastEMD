@@ -26,7 +26,7 @@ public:
     
     template <class resolution>
     long long totalTime() {
-        return std::chrono::duration_cast<std::chrono::microseconds>(_elapsed).count();
+        return std::chrono::duration_cast<resolution>(_elapsed).count();
     }
 };
 
