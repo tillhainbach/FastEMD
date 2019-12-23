@@ -1,8 +1,8 @@
 #ifndef MIN_COST_FLOW_HXX
 #define MIN_COST_FLOW_HXX
-#endif
 #define USE_ARRAY 1
-#define USE_EDGE 1
+#define USE_EDGE 0
+#define USE_ARR 1
 #define MAX_SIG_SIZE 80
 
 #include <vector>
@@ -96,8 +96,9 @@ template<typename NUM_T, typename NODE_T>
 void printFlow(
 #if USE_EDGE
                std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#else
-               std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &x,
+#endif
+#if USE_ARR
+               std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
 #endif
                NODE_T num_nodes)
 {
@@ -110,14 +111,15 @@ void printFlow(
             if (node._to == -1 && node._cost == -1) break;
             std::cout << "[" << node._to << " : " << node._cost << " : " << node._flow << "] ";
         }
-#else
+#endif
+#if USE_ARR
         bool lastNode = false;
         for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
         {
 
-            NODE_T to = x[i][j];
-            NUM_T cost = x[i][j + 1];
-            NUM_T flow = x[i][j + 2];
+            NODE_T to = xx[i][j];
+            NUM_T cost = xx[i][j + 1];
+            NUM_T flow = xx[i][j + 2];
             std::cout << "[" << to << " : " << cost << " : " << flow << "] ";
             if ((i < num_nodes - 1 && to == num_nodes - 1) ||
                 (i == num_nodes - 1 && to == num_nodes - 2))
@@ -134,8 +136,9 @@ template<typename NUM_T, typename NODE_T>
 void printCostBackward(
 #if USE_EDGE
               std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#else
-              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &x,
+#endif
+#if USE_ARR
+              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
 #endif
               NODE_T num_nodes)
 {
@@ -148,13 +151,14 @@ void printCostBackward(
             if (node._to == -1 && node._reduced_cost == -1) break;
             std::cout << "[" << node._to << " : " << node._reduced_cost << " : " << node._residual_capacity << "] ";
         }
-#else
+#endif
+#if USE_ARR
         for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
         {
 
-            NODE_T to = x[i][j];
-            NUM_T reduced_cost = x[i][j + 1];
-            NUM_T residual_capacity = x[i][j + 2];
+            NODE_T to = xx[i][j];
+            NUM_T reduced_cost = xx[i][j + 1];
+            NUM_T residual_capacity = xx[i][j + 2];
             std::cout << "[" << to << " : " << reduced_cost << " : " << residual_capacity << "] ";
             if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
         }
@@ -167,8 +171,9 @@ template<typename NUM_T, typename NODE_T>
 void printCostForward(
 #if USE_EDGE
               std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#else
-              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &x,
+#endif
+#if USE_ARR
+              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
 #endif
               NODE_T num_nodes)
 {
@@ -181,12 +186,13 @@ void printCostForward(
             if (node._to == -1 && node._reduced_cost == -1) break;
             std::cout << "[" << node._to << " : " << node._reduced_cost << "] ";
         }
-#else
+#endif
+#if USE_ARR
         for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
         {
 
-            NODE_T to = x[i][j];
-            NUM_T reduced_cost = x[i][j + 1];
+            NODE_T to = xx[i][j];
+            NUM_T reduced_cost = xx[i][j + 1];
             std::cout << "[" << to << " : " << reduced_cost << "] ";
             if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
         }
@@ -215,15 +221,16 @@ public:
     // c[i] - edges that goes from node i. first is the second nod
     // x - the flow is returned in it
     NUM_T operator()(
-                     std::array<NUM_T, MAX_SIG_SIZE>& e, const size_t eSize,
+                     std::array<NUM_T, MAX_SIG_SIZE>& e,
 #if USE_EDGE
                      const std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >,MAX_SIG_SIZE >& c,
-                     std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x
-#else
-                     const std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& c,
-                     std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x
+                     std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
 #endif
-                     )
+#if USE_ARR
+                     const std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cc,
+                     std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& xx,
+#endif
+                     const size_t eSize)
     {
         //for (NODE_T i = 0; i < e.size(); ++i) cout << e[i]<< " ";
         //cout << endl;
@@ -231,8 +238,14 @@ public:
         
         _num_nodes = static_cast<NODE_T>(eSize);
 //        _nodes_to_Q.resize(_num_nodes);
+#if USE_EDGE
         std::array<int, MAX_SIG_SIZE > counters;
         std::fill(counters.begin(), counters.begin() + _num_nodes, 0);
+#endif
+#if USE_ARR
+        std::array<int, MAX_SIG_SIZE > counters_arr;
+        std::fill(counters_arr.begin(), counters_arr.begin() + _num_nodes, 0);
+#endif
         // init flow
         for (NODE_T from = 0; from < _num_nodes; ++from)
         {
@@ -244,22 +257,24 @@ public:
                 x[node._to][counters[node._to]] = edge0<NUM_T>(from, -node._cost, 0);
                 counters[from]++;
                 counters[node._to]++;
-#else
+            }
+#endif
+#if USE_ARR
             for (int i = 0; i < _num_nodes * 2; i += 2)
             {
-                NODE_T to = c[from][i];
-                NUM_T cost = c[from][i + 1];
-                x[from][counters[from]] = to;
-                x[from][counters[from] + 1] = cost;
-                x[from][counters[from] + 2] = 0;
-                x[to][counters[to]] = from;
-                x[to][counters[to] + 1] = -cost;
-                x[to][counters[to] + 2] = 0;
-                counters[from] += 3;
-                counters[to] += 3;
+                NODE_T to = cc[from][i];
+                NUM_T cost = cc[from][i + 1];
+                xx[from][counters_arr[from]] = to;
+                xx[from][counters_arr[from] + 1] = cost;
+                xx[from][counters_arr[from] + 2] = 0;
+                xx[to][counters_arr[to]] = from;
+                xx[to][counters_arr[to] + 1] = -cost;
+                xx[to][counters_arr[to] + 2] = 0;
+                counters_arr[from] += 3;
+                counters_arr[to] += 3;
                 if (to == _num_nodes - 1 || (from == _num_nodes - 1 && to == _num_nodes - 2)) break;
-#endif
             } // node
+#endif
         } // from
 
 //        printFlow<NUM_T, NODE_T>(x, _num_nodes);
@@ -269,7 +284,8 @@ public:
         // Note that for forward edges the residual capacity is infinity
 #if USE_EDGE
         std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> r_cost_forward;
-//#else
+#endif
+#if USE_ARR
         std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_forward_arr;
 #endif
         for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -280,33 +296,33 @@ public:
             {
                 if (node._to == -1 && node._cost == -1) break;
                 r_cost_forward[from][i] = edge1<NUM_T>(node._to, node._cost);
-                NODE_T to = node._to;
-                NUM_T cost = node._cost;
-                r_cost_forward_arr[from][2 * i] = to;
-                r_cost_forward_arr[from][2 * i + 1] = cost;
                 i++;
-#else
+            }
+#endif
+#if USE_ARR
             for (int i = 0; i < _num_nodes * 2; i += 2)
             {
-                NODE_T to = c[from][i];
-                NUM_T cost = c[from][i + 1];
-                r_cost_forward[from][i] = to;
-                r_cost_forward[from][i + 1] = cost;
+                NODE_T to = cc[from][i];
+                NUM_T cost = cc[from][i + 1];
+                r_cost_forward_arr[from][i] = to;
+                r_cost_forward_arr[from][i + 1] = cost;
                 if (to == _num_nodes - 1 || (from == _num_nodes - 1 && to == _num_nodes - 2)) break;
-#endif
             } // node
+#endif
         } // from
             
-        printCostForward<NUM_T, NODE_T>(r_cost_forward, _num_nodes);
+//        printCostForward<NUM_T, NODE_T>(r_cost_forward, _num_nodes);
         
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
 #if USE_EDGE
         std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE > r_cost_cap_backward;
-//#else
-        std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_cap_backward_arr;
-#endif
         std::fill(counters.begin(), counters.begin() + _num_nodes, 0);
+#endif
+#if USE_ARR
+        std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_cap_backward_arr;
+        std::fill(counters_arr.begin(), counters_arr.begin() + _num_nodes, 0);
+#endif
         for (NODE_T from = 0; from < _num_nodes; ++from)
         {
 #if USE_EDGE
@@ -314,29 +330,27 @@ public:
             {
                 if (node._to == -1 && node._cost == -1) break;
                 r_cost_cap_backward[node._to][counters[node._to]] = edge2<NUM_T>(from, -node._cost, 0);
-                NODE_T to = node._to;
-                NUM_T cost = node._cost;
-                r_cost_cap_backward_arr[to][3 * counters[to]] = from;
-                r_cost_cap_backward_arr[to][3 * counters[to] + 1] = -cost;
-                r_cost_cap_backward_arr[to][3 * counters[to] + 2] = 0;
                 counters[node._to]++;
+            }
                 
-#else
+#endif
+#if USE_ARR
             for (int i = 0; i < _num_nodes * 2; i += 2)
             {
-                NODE_T to = c[from][i];
-                NUM_T cost = c[from][i + 1];
+                NODE_T to = cc[from][i];
+                NUM_T cost = cc[from][i + 1];
 
-                r_cost_cap_backward[to][counters[to]] = from;
-                r_cost_cap_backward[to][counters[to] + 1] = -cost;
-                r_cost_cap_backward[to][counters[to] + 2] = 0;
-                counters[to] += 3;
+                r_cost_cap_backward_arr[to][counters_arr[to]] = from;
+                r_cost_cap_backward_arr[to][counters_arr[to] + 1] = -cost;
+                r_cost_cap_backward_arr[to][counters_arr[to] + 2] = 0;
+                counters_arr[to] += 3;
                 if (to == _num_nodes - 1 || (from == _num_nodes - 1 && to == _num_nodes - 2)) break;
-#endif
             } // node
+#endif
         } // from
+//                printCostBackward<NUM_T, NODE_T>(r_cost_cap_backward, _num_nodes);
             
-            
+#if USE_EDGE && USE_ARR
             for (NODE_T from = 0; from < _num_nodes; ++from)
             {
                 for (NODE_T i = 0; i < _num_nodes; ++i)
@@ -353,10 +367,12 @@ public:
                     if (r_cost_cap_backward[from][i]._to == -1) break;
                     assert(r_cost_cap_backward[from][i]._to == r_cost_cap_backward_arr[from][ 3 * i]);
                     assert(r_cost_cap_backward[from][i]._reduced_cost == r_cost_cap_backward_arr[from][ 3 * i + 1]);
+                    assert(r_cost_cap_backward[from][i]._residual_capacity == r_cost_cap_backward_arr[from][ 3 * i + 2]);
                 }
             }
             
-//        printCostBackward<NUM_T, NODE_T>(r_cost_cap_backward, _num_nodes);
+#endif
+
             
         // Max supply TODO:demand?, given U?, optimization-> min out of demand, supply
 //        NUM_T U = *(std::max_element(e.begin(), e.begin() + _num_nodes));
@@ -365,7 +381,9 @@ public:
 
         std::array< NUM_T, MAX_SIG_SIZE > d;
         std::array< NODE_T, MAX_SIG_SIZE > prev;
+#if USE_EDGE
         NUM_T delta = 1;
+#endif
         NUM_T deltaq = 1;
         while (true)
         { //until we break when S or T is empty
@@ -373,17 +391,26 @@ public:
                                     std::max_element(e.begin(), e.begin() + _num_nodes)));
             NUM_T maxSupply = e[k];
             if (maxSupply == 0) break;
+#if USE_EDGE
             delta = maxSupply;
+#endif
+#if USE_ARR
             deltaq = maxSupply;
+#endif
 //        std::cout << "comput shortest path" << std::endl;
             NODE_T l;
             //tictoc_shortest_path.tic();
-            assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
-            assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
-            compute_shortest_path(d, prev, k, r_cost_forward, r_cost_cap_backward,
-                                  r_cost_forward_arr, r_cost_cap_backward_arr, e, l);
-            assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
-            assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
+            compute_shortest_path(d, prev, k,
+#if USE_EDGE
+                                  r_cost_forward, r_cost_cap_backward,
+#endif
+#if USE_ARR
+                                  r_cost_forward_arr, r_cost_cap_backward_arr,
+#endif
+                                  e, l);
+            
+            
+
             //tictoc_shortest_path.toc();
             
 //        std::cout << "l = " << l << std::endl;
@@ -398,7 +425,6 @@ public:
             {
                 NODE_T from = prev[to];
                 assert(from != to);
-                assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
                                     
                 // residual
 #if USE_EDGE
@@ -407,18 +433,31 @@ public:
                                        [&](auto &e) {return e._to == to;});
                 if (it != r_cost_cap_backward[from].begin() + _num_nodes)
                 {
-                    if (it->_residual_capacity < delta) delta = it->_residual_capacity;
-                }
-//#else
-               auto it_arr = std::find(r_cost_cap_backward_arr[from].begin(),
-                                       r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1,
-                                       to);
-                if (it_arr != r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1)
-                {
-                    if (it_arr[2] < deltaq) deltaq = it_arr[2];
+                    if (it->_to != -1 && it->_residual_capacity < delta) delta = it->_residual_capacity;
                 }
 #endif
+#if USE_ARR
+                for (NODE_T i = 0; i < _num_nodes; ++i)
+                {
+                    auto it_arr = &r_cost_cap_backward_arr[from][3 * i];
+                    if (*it_arr == to)
+                    {
+                        if (it_arr[2] < deltaq) deltaq = it_arr[2];
+                        break;
+                    }
+                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
+                }
+//               auto it_arr = std::find(r_cost_cap_backward_arr[from].begin(),
+//                                       r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1,
+//                                       to);
+//                if (it_arr != r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1)
+//                {
+//                    if (it_arr[2] < deltaq) deltaq = it_arr[2];
+//                }
+#endif
+#if USE_EDGE && USE_ARR
                 assert(delta == deltaq);
+#endif
                 to = from;
             } while (to!=k);
             //---------------------------------------------------------------
@@ -429,19 +468,16 @@ public:
             to = l;
             do
             {
-                assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
                 NODE_T from = prev[to];
                 assert(from != to);
                                     
                 // TODO: might do here O(n) can be done in O(1)
 #if USE_EDGE
                 std::find_if(x[from].begin(), x[from].begin() + _num_nodes, [&](auto &e) {return e._to == to;})->_flow += delta;
-#else
-                std::find(x[from].begin(), x[from].begin() + 3 * (_num_nodes - 1) + 1, to) [2] += delta;
 #endif
-   
-                 assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
-                assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
+#if USE_ARR
+                std::find(xx[from].begin(), xx[from].begin() + 3 * (_num_nodes - 1) + 1, to) [2] += deltaq;
+#endif
                 // update residual for backward edges
 #if USE_EDGE
                 auto it = std::find_if(r_cost_cap_backward[to].begin(),
@@ -453,8 +489,8 @@ public:
                                        r_cost_cap_backward[from].begin() + _num_nodes,
                                        [&](auto &e) {return e._to == to;});
                 if (it != r_cost_cap_backward[from].begin() + _num_nodes) it->_residual_capacity -= delta;
-//#else
-                 assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
+#endif
+#if USE_ARR
                 for (NODE_T i = 0; i < _num_nodes; ++i)
                 {
                     auto it_arr = &r_cost_cap_backward_arr[to][3 * i];
@@ -463,30 +499,20 @@ public:
                         it_arr[2] += deltaq;
                         break;
                     }
+                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
                 }
-                assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
                 for (NODE_T i = 0; i < _num_nodes; ++i)
                 {
-                    auto it_arr = &r_cost_cap_backward_arr[to][3 * i];
+                    auto it_arr = &r_cost_cap_backward_arr[from][3 * i];
                     if (*it_arr == to)
                     {
                         it_arr[2] -= deltaq;
                         break;
                     }
-                    assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
+                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
                 }
-                assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
-//                auto it_arr = std::find(r_cost_cap_backward_arr[to].begin(),
-//                                    r_cost_cap_backward_arr[to].begin() + 3 * (_num_nodes - 1) + 1,
-//                                    from);
-//                if (it_arr != r_cost_cap_backward_arr[to].begin() + 3 * (_num_nodes - 1) + 1) it_arr[2] += deltaq;
-//
-//                it_arr = std::find(r_cost_cap_backward_arr[from].begin(),
-//                               r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1,
-//                               to);
-//                if (it_arr != r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1) it_arr[2] -= deltaq;
-             assert(r_cost_cap_backward[19][2]._reduced_cost == r_cost_cap_backward_arr[19][ 3 * 2 + 1]);
-               assert(r_cost_forward[0][1]._to == r_cost_forward_arr[0][ 2 * 1]);
+#endif
+#if USE_EDGE && USE_ARR
                 for (NODE_T from = 0; from < _num_nodes; ++from)
                 {
                     for (NODE_T i = 0; i < _num_nodes; ++i)
@@ -509,8 +535,14 @@ public:
 #endif
 
                 // update e
+#if USE_EDGE && !USE_ARR
                 e[to] += delta;
                 e[from] -= delta;
+#endif
+#if USE_ARR
+                e[to] += deltaq;
+                e[from] -= deltaq;
+#endif
                 to = from;
             } while (to != k);
             //---------------------------------------------------------------------------------
@@ -528,21 +560,23 @@ public:
             {
                 if (it._to == -1 && it._cost == -1 && it._flow == -1) break;
                     dist += (it._cost*it._flow);
-#else
+            }
+#endif
+#if USE_ARR
             bool lastNode = false;
             for (int j = 0;  j < _num_nodes * 3; j += 3)
             {
 
                 if (lastNode) break;
-                NODE_T to = x[from][j];
-                NUM_T cost = x[from][j + 1];
-                NUM_T flow = x[from][j + 2];
+                NODE_T to = xx[from][j];
+                NUM_T cost = xx[from][j + 1];
+                NUM_T flow = xx[from][j + 2];
                 dist += cost * flow;
                 if ((from < _num_nodes - 1 && to == _num_nodes - 1) ||
                     (from == _num_nodes - 1 && to == _num_nodes - 2))
                     lastNode = true;
-#endif
             } // it
+#endif
         } // from
         return dist;
     } // operator()
@@ -555,30 +589,32 @@ private:
     void compute_shortest_path(std::array< NUM_T, MAX_SIG_SIZE >& d,
                                std::array< NODE_T, MAX_SIG_SIZE >& prev,
                                NODE_T from,
-//#if USE_EDGE
+#if USE_EDGE
                                std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cost_forward,
                                std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cost_backward,
-//#else
+#endif
+#if USE_ARR
                                std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cost_forward_arr,
                                std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cost_backward_arr,
-//#endif
+#endif
                                const std::array<NUM_T, MAX_SIG_SIZE>& e,
                                NODE_T& l)
         {
             //----------------------------------------------------------------
             // Making heap (all inf except 0, so we are saving comparisons...)
             //----------------------------------------------------------------
-//#if USE_EDGE
+#if USE_EDGE
             std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  > Q;
             Q[0]._to = from;
             Q[0]._dist = 0;
             NODE_T j = 1;
-//#else
+#endif
+#if USE_ARR
             std::array< NUM_T, MAX_SIG_SIZE> Qq;
             Qq[0] = from;
             Qq[1] = 0;
             NODE_T jq = 2;
-//#endif
+#endif
             _nodes_to_Q[from] = 0;
             _nodes_to_Qq[from] = 0;
             
@@ -586,32 +622,34 @@ private:
             // TODO: both of these into a function?
             for (NODE_T i = 0; i < from; ++i)
             {
+#if USE_EDGE
                 _nodes_to_Q[i] = j;
-                _nodes_to_Qq[i] = jq;
-//#if USE_EDGE
                 Q[j]._to = i;
                 Q[j]._dist = std::numeric_limits<NUM_T>::max();
                 ++j;
-//#else
+#endif
+#if USE_ARR
+                _nodes_to_Qq[i] = jq;
                 Qq[jq] = i;
                 Qq[jq + 1] = std::numeric_limits<NUM_T>::max();
                 jq += 2;
-//#endif
+#endif
             }
 
             for (NODE_T i = from + 1; i < _num_nodes; ++i)
             {
+#if USE_EDGE
                 _nodes_to_Q[i] = j;
-                _nodes_to_Qq[i] = jq;
-//#if USE_EDGE
                 Q[j]._to = i;
                 Q[j]._dist = std::numeric_limits<NUM_T>::max();
                 ++j;
-//#else
+#endif
+#if USE_ARR
+                _nodes_to_Qq[i] = jq;
                 Qq[jq] = i;
                 Qq[jq + 1] = std::numeric_limits<NUM_T>::max();
                 jq += 2;
-//#endif
+#endif
             }
 
             //----------------------------------------------------------------
@@ -624,10 +662,18 @@ private:
             
             do
             {
-                NODE_T u = Q[0]._to;
+                NODE_T u = 0;
+#if USE_EDGE
+                u = Q[0]._to;
                 d[u] = Q[0]._dist; // final distance
+#endif
+#if USE_ARR
+                u = Qq[0];
+                d[u] = Qq[1]; // final distance
+#endif
                 
-                std::cout << u << " ";
+                
+//                std::cout << u << " ";
                 finalNodesFlg[u] = true;
                 if (e[u] < 0)
                 {
@@ -638,83 +684,109 @@ private:
 //                for (int i = 0; i < Qsize; ++i)
 //                    std::cout << "[" << Q[i]._to << " : " << Q[i]._dist << "]";
 //                std::cout << std::endl;
-//#else
-//                for (int i = 0; i < Qsize; i += 2)
-//                    std::cout << "[" << Q[i] << " : " << Q[i + 1] << "]";
+//#endif
+//#if USE_ARR
+//                for (int i = 0; i < Qqsize; i += 2)
+//                    std::cout << "[" << Qq[i] << " : " << Qq[i + 1] << "]";
 //                std::cout << std::endl;
 //#endif
+#if USE_EDGE
                 heap_remove_first(Q, _nodes_to_Q, Qsize);
+#endif
+#if USE_ARR
                 heap_remove_first_arr(Qq, _nodes_to_Qq, Qqsize);
-//                assert(_nodes_to_Q == _nodes_to_Qq);
+#endif
+
+#if USE_EDGE && USE_ARR
                 assert(Qsize == Qqsize/2);
                 for(NODE_T i = 0; i < _num_nodes; ++i)
                 {
                     assert(Q[i]._to == Qq[2 * i] && Q[i]._dist == Qq[2 * i + 1]);
                     assert(_nodes_to_Q[i] == _nodes_to_Qq[i]/2);
                 }
+#endif
                 
                 // neighbors of u
                 for (NODE_T i = 0; i < _num_nodes; ++i)
                 {
+#if USE_EDGE
                     const auto &it = cost_forward[u][i];
-                    auto itq = &cost_forward_arr[u][2 * i];
                     if (it._to == -1) break;
                     assert (it._reduced_cost >= 0);
-                    assert (itq[1] >= 0);
                     NUM_T alt = d[u] + it._reduced_cost;
                     NODE_T v = it._to;
-                    NUM_T altq = d[u] + itq[1];
-                    NODE_T vq = *itq;
-//                  std::cout << it._to << ": " << _nodes_to_Q[v] << " < " << Qsize << std::endl;
                     if ( (_nodes_to_Q[v] < Qsize) && (alt < Q[_nodes_to_Q[v]]._dist) )
                     {
                         heap_decrease_key(Q, _nodes_to_Q, v, alt);
                         prev[v]= u;
                     }
+#endif
+#if USE_ARR
+                    
+                    auto itq = &cost_forward_arr[u][2 * i];
+                    assert (itq[1] >= 0);
+                    NUM_T altq = d[u] + itq[1];
+                    NODE_T vq = *itq;
+//                  std::cout << it._to << ": " << _nodes_to_Q[v] << " < " << Qsize << std::endl;
             
                     if ( (_nodes_to_Qq[vq] < Qqsize) && (altq < Qq[_nodes_to_Qq[vq] + 1]) )
                     {
                         heap_decrease_key_arr(Qq, _nodes_to_Qq, vq, altq);
+                        prev[vq]= u;
                     }
+                    if (*itq == _num_nodes - 1 || (from == _num_nodes - 1 && *itq == _num_nodes - 2)) break;
+#endif
+#if USE_EDGE && USE_ARR
                     assert(Qsize == Qqsize/2);
                     for(NODE_T i = 0; i < _num_nodes; ++i)
                     {
                         assert(Q[i]._to == Qq[2 * i] && Q[i]._dist == Qq[2 * i + 1]);
                         assert(_nodes_to_Q[i] == _nodes_to_Qq[i]/2);
                     }
+#endif
                 } //it
                         
-#if USE_EDGE
                 for (NODE_T i = 0; i < _num_nodes; ++i)
                 {
+#if USE_EDGE
                     const auto &it = cost_backward[u][i];
-                    auto itq = &cost_backward_arr[u][3 * i];
                     if (it._to == -1) break;
                     if (it._residual_capacity > 0)
                     {
                         assert (it._reduced_cost>=0);
                         NUM_T alt = d[u] + it._reduced_cost;
                         NODE_T v = it._to;
-                        assert (itq[1] >= 0);
-                        NUM_T altq = d[u] + itq[1];
-                        NODE_T vq = *itq;
                         if ( (_nodes_to_Q[v] < Qsize) && (alt < Q[_nodes_to_Q[v]]._dist) )
                         {
                             heap_decrease_key(Q, _nodes_to_Q, v, alt);
                             prev[v] = u;
                         }
+                    }
+                    
+#endif
+#if USE_ARR
+                    auto itq = &cost_backward_arr[u][3 * i];
+                    if (itq[2] > 0)
+                    {
+                        assert (itq[1] >= 0);
+                        NUM_T altq = d[u] + itq[1];
+                        NODE_T vq = *itq;
                         if ( (_nodes_to_Qq[vq] < Qqsize) && (altq < Qq[_nodes_to_Qq[vq] + 1]) )
                         {
                             heap_decrease_key_arr(Qq, _nodes_to_Qq, vq, altq);
+                            prev[vq] = u;
                         }
-                        assert(Qsize == Qqsize/2);
-                        for(NODE_T i = 0; i < _num_nodes; ++i)
-                        {
-                            assert(Q[i]._to == Qq[2 * i] && Q[i]._dist == Qq[2 * i + 1]);
-                            assert(_nodes_to_Q[i] == _nodes_to_Qq[i]/2);
-                        }
-                            
                     }
+                    if (*itq == _num_nodes - 1 || (from == _num_nodes - 1 && *itq == _num_nodes - 2)) break;
+#endif
+#if USE_EDGE && USE_ARR
+                    assert(Qsize == Qqsize/2);
+                    for(NODE_T i = 0; i < _num_nodes; ++i)
+                    {
+                        assert(Q[i]._to == Qq[2 * i] && Q[i]._dist == Qq[2 * i + 1]);
+                        assert(_nodes_to_Q[i] == _nodes_to_Qq[i]/2);
+                    }
+#endif
                 }
                 
             } while (!(Qsize == 0));
@@ -729,6 +801,7 @@ private:
                 {
                     for (NODE_T i = 0; i < _num_nodes; ++i)
                     {
+#if USE_EDGE
                         auto &it = cost_forward[from][i];
                         if (it._to == -1 && it._reduced_cost == -1) break;
                         if (finalNodesFlg[from])
@@ -739,6 +812,8 @@ private:
                         {
                             it._reduced_cost -= d[it._to] - d[l];
                         }
+#endif
+#if USE_ARR
                         auto itq = &cost_forward_arr[from][2 * i];
                         if (finalNodesFlg[from])
                         {
@@ -748,6 +823,9 @@ private:
                         {
                             itq[1] -= d[*itq] - d[l];
                         }
+                        if (*itq == _num_nodes - 1 || (from == _num_nodes - 1 && *itq == _num_nodes - 2)) break;
+#endif
+#if USE_EDGE && USE_ARR
                         for (NODE_T k = 0; k < _num_nodes; ++k)
                         {
                             for (NODE_T m = 0; i < _num_nodes; ++m)
@@ -757,30 +835,16 @@ private:
                                 assert(cost_forward[k][m]._reduced_cost == cost_forward_arr[k][ 2 * m + 1]);
                             }
                         }
+#endif
                     }
                 }
-//                for (NODE_T from = 0; from < _num_nodes; ++from)
-//                {
-//                    for (auto it = cost_forward_arr[from].begin(); it != cost_forward_arr[from].end(); it += 2)
-//                    {
-//
-//                        if (finalNodesFlg[from])
-//                        {
-//                            it[1] += d[from] - d[l];
-//                        }
-//                        if (finalNodesFlg[*it])
-//                        {
-//                            it[1] -= d[*it] - d[l];
-//                        }
-//                        if (*it == _num_nodes - 1 || (from == _num_nodes - 1 && *it == _num_nodes - 2)) break;
-//                    }
-//                }
                 
                 // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
                 for (NODE_T from = 0; from < _num_nodes; ++from)
                 {
                     for (NODE_T i = 0; i < _num_nodes; ++i)
                     {
+#if USE_EDGE
                         auto &it = cost_backward[from][i];
                         if (it._to == -1 && it._reduced_cost == -1) break;
                         if (finalNodesFlg[from])
@@ -791,6 +855,8 @@ private:
                         {
                             it._reduced_cost -= d[it._to] - d[l];
                         }
+#endif
+#if USE_ARR
                         auto itq = &cost_backward_arr[from][3 * i];
                         if (finalNodesFlg[from])
                         {
@@ -800,6 +866,9 @@ private:
                         {
                             itq[1] -= d[*itq] - d[l];
                         }
+                        if (*itq == _num_nodes - 1 || (from == _num_nodes - 1 && *itq == _num_nodes - 2)) break;
+#endif
+#if USE_EDGE && USE_ARR
                         for (NODE_T k = 0; k < _num_nodes; ++k)
                         {
                             for (NODE_T m = 0; i < _num_nodes; ++m)
@@ -809,28 +878,12 @@ private:
                                 assert(cost_backward[k][m]._reduced_cost == cost_backward_arr[k][ 3 * m + 1]);
                             }
                         }
+#endif
                     }
                 }
-                assert(cost_backward[19][2]._reduced_cost == cost_backward_arr[19][ 3 * 2 + 1]);
-                
-//                for (NODE_T from = 0; from < _num_nodes; ++from)
-//                {
-//                    for (int i = 0; i < 3 * (_num_nodes - 1) + 1; i += 3)
-//                    {
-//                        auto it = &cost_backward_arr[from][i];
-//                        if (finalNodesFlg[from])
-//                        {
-//                            it[1] += d[from] - d[l];
-//                        }
-//                        if (finalNodesFlg[*it])
-//                        {
-//                            it[1] -= d[*it] - d[l];
-//                        }
-//                        if (*it == _num_nodes - 1 || (from == _num_nodes - 1 && *it == _num_nodes - 2)) break;
-//                    }// it
-//                }
             } // if...
-            std::cout << "checking..." << std::endl;
+#if USE_EDGE && USE_ARR
+//            std::cout << "checking..." << std::endl;
             for (NODE_T from = 0; from < _num_nodes; ++from)
             {
                 for (NODE_T i = 0; i < _num_nodes; ++i)
@@ -850,7 +903,7 @@ private:
                 }
             }
             
-            
+#endif
             
             
         } // compute_shortest_path
@@ -917,7 +970,8 @@ private:
         nodes_to_Q[ Q[j]._to ] = j;
         nodes_to_Q[ Q[i]._to ] = i;
     } // swap_heapify
-//#else
+#endif
+#if USE_ARR
     void heap_decrease_key_arr(std::array< NUM_T, MAX_SIG_SIZE >& Q,
                            std::array< NODE_T, MAX_SIG_SIZE> & nodes_to_Q,
                            NODE_T v, NUM_T alt)

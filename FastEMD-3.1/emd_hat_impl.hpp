@@ -2,9 +2,9 @@
 #define EMD_HAT_IMPL_HPP
 #define USE_SET 0
 #define USE_VECTOR 0
-#define USE_CC_VECTOR 1
+#define USE_CC_VECTOR 0
 #define TIME 0
-#define PRINT 1
+#define PRINT 0
 
 
 //=======================================================================================
@@ -191,9 +191,10 @@ struct emd_hat_impl_integral_types
 #if USE_EDGE
         std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE  >, MAX_SIG_SIZE > flows{};
         std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> cc;
-#else
+#endif
+#if USE_ARR
         std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> c;
-        std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> flows;
+        std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> flows_arr;
 #endif
         std::array<NODE_T, MAX_SIG_SIZE/2> uniqueJs{};
         NODE_T sourcesCounter = 0; // number of sources_that_flow_not_only_to_thresh
@@ -227,9 +228,10 @@ struct emd_hat_impl_integral_types
 //                    std::cout << sinksCounter << " " << j + N << " ";
                 }
 #if USE_EDGE
-                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(j, Cc[i][j]);
-#else
-                c[sourcesCounter][2 * sinksForNode] = sinksCounter;
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(j, cost);
+#endif
+#if USE_ARR
+                c[sourcesCounter][2 * sinksForNode] = j;
                 c[sourcesCounter][2 * sinksForNode + 1] = cost;
 #endif
                 sinksForNode++;
@@ -240,8 +242,8 @@ struct emd_hat_impl_integral_types
 #if USE_EDGE
                 cc[sourcesCounter][sinksForNode] = edge<NUM_T>(REMOVE_NODE_FLAG, REMOVE_NODE_FLAG);
                 cc[sourcesCounter][sinksForNode + 1] = edge<NUM_T>(REMOVE_NODE_FLAG, REMOVE_NODE_FLAG);
-#else
-                
+#endif
+#if USE_ARR
                 c[sourcesCounter][2 * sinksForNode + 1] = REMOVE_NODE_FLAG;
                 c[sourcesCounter][2 * sinksForNode + 2] = REMOVE_NODE_FLAG;// to THRESHOLD_NODE´
 #endif
@@ -297,7 +299,8 @@ struct emd_hat_impl_integral_types
         {
 #if USE_EDGE
             cc[ccSize - 2][i - sourcesCounter] = edge<NUM_T>(i, maxC);
-#else
+#endif
+#if USE_ARR
             c[ccSize - 2][2 * (i - sourcesCounter)] = i;
             c[ccSize - 2][2 * (i - sourcesCounter) + 1] = maxC;
 #endif
@@ -307,7 +310,8 @@ struct emd_hat_impl_integral_types
         {
 #if USE_EDGE
             cc[ccSize - 1][i] = edge<NUM_T>(i, maxC + 1);
-#else
+#endif
+#if USE_ARR
             c[ccSize - 1][2 * i] = i;
             c[ccSize - 1][2 * i + 1] = maxC + 1;
 #endif
@@ -327,7 +331,8 @@ struct emd_hat_impl_integral_types
                 {
                     cc[i][j] = edge<NUM_T>(ccSize - 1, maxC + 1);
                 }
-#else
+#endif
+#if USE_ARR
                 if (i < sourcesCounter)
                 {
                     if (c[i][2 * j] != REMOVE_NODE_FLAG && c[i][2 * j + 1] != REMOVE_NODE_FLAG) continue;
@@ -348,7 +353,8 @@ struct emd_hat_impl_integral_types
         // add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
 #if USE_EDGE
         cc[ccSize - 2][sinksCounter + 1] = edge<NUM_T>(ccSize - 1, maxC + 1);// to ARTIFICAL_NODE
-#else
+#endif
+#if USE_ARR
         c[ccSize - 2][2 * sinksCounter + 2] = ccSize - 1;
         c[ccSize - 2][2 * sinksCounter + 3] = maxC + 1;
 #endif
@@ -360,15 +366,17 @@ struct emd_hat_impl_integral_types
 #if USE_EDGE
                 if (cc[i][j]._to == ccSize - 2) break;
                 cc[i][j]._to = uniqueJs[cc[i][j]._to];
-#else
+#endif
+#if USE_ARR
                 if (c[i][2 * j] == ccSize - 2) break;
-                c[i][2 * j] += sourcesCounter;
+                c[i][2 * j] = uniqueJs[c[i][2 * j]];
 #endif
             }
         }
 
         //====================================================
-#if PRINT && !USE_EDGE
+
+#if PRINT && USE_ARR
         for (NODE_T i = 0; i < ccSize; ++i)
         {
             std::cout << i << ": ";
@@ -394,6 +402,17 @@ struct emd_hat_impl_integral_types
             std::cout << std::endl;
         }
 #endif
+#if USE_EDGE && USE_ARR
+        for (NODE_T from = 0; from <  ccSize; ++from)
+        {
+            for (NODE_T i = 0; i <  ccSize; ++i)
+            {
+                if (cc[from][i]._to == -1) break;
+                assert(cc[from][i]._to == c[from][ 2 * i]);
+                assert(cc[from][i]._cost == c[from][ 2 * i + 1]);
+            }
+        }
+#endif
         //====================================================
 
         #ifndef NDEBUG
@@ -417,11 +436,14 @@ struct emd_hat_impl_integral_types
 //#if USE_VECTOR
 //        NUM_T mcf_dist = mcf(bb, cc, flows);
 //#else
+        NUM_T mcf_dist = mcf(b,
 #if USE_EDGE
-        NUM_T mcf_dist = mcf(b, ccSize, cc, flows);
-#else
-        NUM_T mcf_dist = mcf(b, ccSize, c, flows);
+                             cc, flows,
 #endif
+#if USE_ARR
+                             c, flows_arr,
+#endif
+                             ccSize);
 //#endif
 //#if TIME
 //        timer.toc();

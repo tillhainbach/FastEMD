@@ -181,10 +181,10 @@ int main( int argc, char* argv[]) {
     tictoc timer;
     timer.tic();
 //    int emd_hat_gd_metric_val = 0;
-    //    for (int i = 0; i < iterations; i++)
-    for (int i = 7; i < 8; i++)
+    for (int i = 0; i < iterations; i++)
+//    for (int i = 60; i < 67; i++)
     {
-        std::cout << "iter; " << i << "\r";
+//        std::cout << "iter: " << i << " \r";
         changeVectors(v1, v2, numbers, i);
         emdValues[i] = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD, NULL, max_cost_mat);
     }
