@@ -160,19 +160,20 @@ void generate4Tuple(std::vector <int> &v)
 }
 
 int main(int argc, const char * argv[]) {
-
+    std::array<int, 6> a{};
     
-    std::ifstream is("outputMyVersion.txt");
-    std::istream_iterator<double> start(is), end;
-    std::vector<int> myVersion(start, end);
-    std::cout << "Read " << numbers.size() << " numbers" << std::endl;
-
-    // print the numbers to stdout
-    std::cout << "numbers read in:\n";
-    for (auto n = numbers.begin(); n != numbers.begin() + 4; ++n ) std::cout << *n << " ";
-//    std::copy(numbers.begin(), numbers.end(),
-//              std::ostream_iterator<int>(std::cout, " "));
-    std::cout << std::endl;
+    
+//    std::ifstream is("outputMyVersion.txt");
+//    std::istream_iterator<double> start(is), end;
+//    std::vector<int> myVersion(start, end);
+//    std::cout << "Read " << numbers.size() << " numbers" << std::endl;
+//
+//    // print the numbers to stdout
+//    std::cout << "numbers read in:\n";
+//    for (auto n = numbers.begin(); n != numbers.begin() + 4; ++n ) std::cout << *n << " ";
+////    std::copy(numbers.begin(), numbers.end(),
+////              std::ostream_iterator<int>(std::cout, " "));
+//    std::cout << std::endl;
     
     
 //    std::ifstream myfile;

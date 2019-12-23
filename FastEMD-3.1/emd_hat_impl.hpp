@@ -4,8 +4,7 @@
 #define USE_VECTOR 0
 #define USE_CC_VECTOR 1
 #define TIME 0
-#define USE_EDGE 1
-#define PRINT 0
+#define PRINT 1
 
 
 //=======================================================================================
@@ -115,7 +114,7 @@ struct emd_hat_impl_integral_types
                 }
             }
         }
-        std::array<NUM_T, MAX_SIG_SIZE > b{};
+        std::array<NUM_T, MAX_SIG_SIZE > b;
 //        size_t bSize = 2 * N + 2;
         const NODE_T THRESHOLD_NODE = 2 * N;
         const NODE_T ARTIFICIAL_NODE = 2 * N + 1; // need to be last !
@@ -189,15 +188,12 @@ struct emd_hat_impl_integral_types
         // remove nodes with supply demand of 0
         // and vertexes that are connected only to the
         // threshold vertex
-#if USE_SET
-        std::set< NODE_T > sources_that_flow_not_only_to_thresh;
-        std::set< NODE_T > sinks_that_get_flow_not_only_from_thresh;
-#endif
-        std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE  >, MAX_SIG_SIZE > flows{};
 #if USE_EDGE
+        std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE  >, MAX_SIG_SIZE > flows{};
         std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> cc;
 #else
         std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> c;
+        std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE> flows;
 #endif
         std::array<NODE_T, MAX_SIG_SIZE/2> uniqueJs{};
         NODE_T sourcesCounter = 0; // number of sources_that_flow_not_only_to_thresh
@@ -238,20 +234,16 @@ struct emd_hat_impl_integral_types
 #endif
                 sinksForNode++;
                 once = true;
-#if USE_SET
-                sources_that_flow_not_only_to_thresh.insert(i);
-                sinks_that_get_flow_not_only_from_thresh.insert(j + N);
-#endif
             } // j
             if(once)
             { // mark last node
 #if USE_EDGE
-                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(-1, -1);
-                cc[sourcesCounter][sinksForNode + 1] = edge<NUM_T>(-1, -1);
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(REMOVE_NODE_FLAG, REMOVE_NODE_FLAG);
+                cc[sourcesCounter][sinksForNode + 1] = edge<NUM_T>(REMOVE_NODE_FLAG, REMOVE_NODE_FLAG);
 #else
                 
-                c[sourcesCounter][2 * sinksForNode + 1] = -1;
-                c[sourcesCounter][2 * sinksForNode + 2] = -1;// to THRESHOLD_NODE´
+                c[sourcesCounter][2 * sinksForNode + 1] = REMOVE_NODE_FLAG;
+                c[sourcesCounter][2 * sinksForNode + 2] = REMOVE_NODE_FLAG;// to THRESHOLD_NODE´
 #endif
                 sourcesCounter++;
             }
@@ -289,14 +281,6 @@ struct emd_hat_impl_integral_types
 //        std::cout << "b after shrink: ";
 //        for(auto &elem : b) std::cout << elem << " ";
 //        std::cout << std::endl;
-#if USE_SET
-        std::cout << std::endl;
-        std::cout << "printing sets" << std::endl;
-        for(auto & elem : sinks_that_get_flow_not_only_from_thresh) std::cout << elem << " ";
-        std::cout << sinks_that_get_flow_not_only_from_thresh.size() << std::endl;
-        for(auto & elem : sources_that_flow_not_only_to_thresh) std::cout << elem << " ";
-        std::cout << sources_that_flow_not_only_to_thresh.size() << std::endl;
-#endif
 //        std::cout << sinksCounter << " " << sourcesCounter << std::endl;
         NODE_T ccSize = sourcesCounter + sinksCounter + 3;
         // update the edge._to values to new node names:
@@ -333,7 +317,7 @@ struct emd_hat_impl_integral_types
             for(NODE_T j = 0; j < sinksCounter + 2; ++j)
             {
 #if USE_EDGE
-                if (cc[i][j]._to != -1 && cc[i][j]._cost != -1) continue;
+                if (cc[i][j]._to != REMOVE_NODE_FLAG && cc[i][j]._cost != REMOVE_NODE_FLAG) continue;
                 if (i < sourcesCounter)
                 {
                     cc[i][j] = edge<NUM_T>(ccSize - 2, 0);
@@ -344,13 +328,19 @@ struct emd_hat_impl_integral_types
                     cc[i][j] = edge<NUM_T>(ccSize - 1, maxC + 1);
                 }
 #else
-                if (i < sourcesCounter &&
-                    c[i][2 * j] != REMOVE_NODE_FLAG &&
-                     c[i][2 * j + 1] != REMOVE_NODE_FLAG) continue;
-                c[i][2 * j] = ccSize - 2;
-                c[i][2 * j + 1] = 0;// to THRESHOLD_NODE
-                c[i][2 * j + 2] = ccSize - 1;
-                c[i][2 * j + 3] = maxC;// to ARTIFICAL_NODE
+                if (i < sourcesCounter)
+                {
+                    if (c[i][2 * j] != REMOVE_NODE_FLAG && c[i][2 * j + 1] != REMOVE_NODE_FLAG) continue;
+                    c[i][2 * j] = ccSize - 2;
+                    c[i][2 * j + 1] = 0;// to THRESHOLD_NODE
+                    c[i][2 * j + 2] = ccSize - 1;
+                    c[i][2 * j + 3] = maxC + 1;// to ARTIFICAL_NODE
+                }
+                else
+                {
+                    c[i][2 * j] = ccSize - 1;
+                    c[i][2 * j + 1] = maxC + 1;// to ARTIFICAL_NODE
+                }
 #endif
                 break;
             }
@@ -396,7 +386,7 @@ struct emd_hat_impl_integral_types
         for (NODE_T i = 0; i < ccSize; ++i)
         {
             std::cout << i << ": ";
-            for (auto &edge : cc[i])
+            for (const auto &edge : cc[i])
             {
                 if (edge._to == -1 && edge._cost == -1) break;
                 std::cout << "[" << edge._to << " : " << edge._cost << "] ";
@@ -427,7 +417,11 @@ struct emd_hat_impl_integral_types
 //#if USE_VECTOR
 //        NUM_T mcf_dist = mcf(bb, cc, flows);
 //#else
+#if USE_EDGE
         NUM_T mcf_dist = mcf(b, ccSize, cc, flows);
+#else
+        NUM_T mcf_dist = mcf(b, ccSize, c, flows);
+#endif
 //#endif
 //#if TIME
 //        timer.toc();
