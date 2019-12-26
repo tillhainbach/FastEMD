@@ -159,13 +159,13 @@ struct emd_hat_impl_integral_types
                 b[i] = b[i + N] = 0;
             }
         }
-        std::cout << "non zero source nodes: ";
-        std::for_each(nonZeroSourceNodes.begin(), nonZeroSourceNodes.begin() + nonZeroSourceCounter, [](NODE_T node){std::cout << node << " ";});
-        std::cout << std::endl;
-        
-        std::cout << "non zero sink nodes: ";
-        std::for_each(nonZeroSinkNodes.begin(), nonZeroSinkNodes.begin() + nonZeroSinkCounter, [](NODE_T node){std::cout << node << " ";});
-        std::cout << std::endl;
+//        std::cout << "non zero source nodes: ";
+//        std::for_each(nonZeroSourceNodes.begin(), nonZeroSourceNodes.begin() + nonZeroSourceCounter, [](NODE_T node){std::cout << node << " ";});
+//        std::cout << std::endl;
+//        
+//        std::cout << "non zero sink nodes: ";
+//        std::for_each(nonZeroSinkNodes.begin(), nonZeroSinkNodes.begin() + nonZeroSinkCounter, [](NODE_T node){std::cout << node << " ";});
+//        std::cout << std::endl;
         // Ensuring that the supplier - P, has more mass.
 //        std::cout << sum_Q << " " << sum_P << std::endl;
 //        std::for_each(b.begin(), b.begin() + 2 * N + 2, [](int n ) {std::cout << n << " ";});
@@ -214,21 +214,26 @@ struct emd_hat_impl_integral_types
         NODE_T sinksCounter = -1; // number of sinks_that_get_flow_not_only_from_thresh
         NUM_T pre_flow_cost = 0;
         NUM_T cost = 0;
-        for (NODE_T i = 0; i < N; ++i)
+//        for (NODE_T i = 0; i < N; ++i)
+//        {
+        for(auto it4i = nonZeroSourceNodes.begin(); it4i != nonZeroSourceNodes.begin() + nonZeroSourceCounter; ++it4i)
         {
-            
-            if (b[i] == 0)
-            {
-                continue;
-            }
+            int i = *it4i;
+//            if (b[i] == 0)
+//            {
+//                continue;
+//            }
             bool once = false;
             int sinksForNode = 0;
-            for (NODE_T j = 0; j < N; ++j)
+//            for (NODE_T j = 0; j < N; ++j)
+//            {
+            for(auto it4j = nonZeroSinkNodes.begin(); it4j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++it4j)
             {
-                if (b[j + N] == 0)
-                {
-                    continue;
-                }
+                int j = *it4j;
+//                if (b[j + N] == 0)
+//                {
+//                    continue;
+//                }
                 cost = needToSwapFlow ? Cc[j][i] : Cc[i][j];
                 if (cost == maxC)
                 {
