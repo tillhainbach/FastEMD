@@ -121,7 +121,10 @@ struct emd_hat_impl_integral_types
         // Assuming metric property we can pre-flow 0-cost edges
         NUM_T sum_P = 0;
         NUM_T sum_Q = 0;
-        
+        std::array<NODE_T, MAX_SIG_SIZE> nonZeroSourceNodes{};
+        std::array<NODE_T, MAX_SIG_SIZE> nonZeroSinkNodes{};
+        NODE_T nonZeroSinkCounter = 0;
+        NODE_T nonZeroSourceCounter = 0;
         for (NODE_T i = 0; i < N; ++i)
         {
             if (P[i] < Q[i])
@@ -133,6 +136,8 @@ struct emd_hat_impl_integral_types
                 sum_Q += Q[i] - P[i];
                 b[i] = 0;
                 b[i + N] = P[i] - Q[i];
+                nonZeroSinkNodes[nonZeroSinkCounter++] = i;
+//                ++nonZeroSinkCounter;
             }
             else if (P[i] > Q [i])
             {
@@ -143,6 +148,7 @@ struct emd_hat_impl_integral_types
                 sum_P += P[i] - Q[i];
                 b[i] = P[i] - Q[i];
                 b[i + N] = 0;
+                nonZeroSourceNodes[nonZeroSourceCounter++] = i;
             }
             else // P[i] == Q[i]
             {
@@ -153,6 +159,13 @@ struct emd_hat_impl_integral_types
                 b[i] = b[i + N] = 0;
             }
         }
+        std::cout << "non zero source nodes: ";
+        std::for_each(nonZeroSourceNodes.begin(), nonZeroSourceNodes.begin() + nonZeroSourceCounter, [](NODE_T node){std::cout << node << " ";});
+        std::cout << std::endl;
+        
+        std::cout << "non zero sink nodes: ";
+        std::for_each(nonZeroSinkNodes.begin(), nonZeroSinkNodes.begin() + nonZeroSinkCounter, [](NODE_T node){std::cout << node << " ";});
+        std::cout << std::endl;
         // Ensuring that the supplier - P, has more mass.
 //        std::cout << sum_Q << " " << sum_P << std::endl;
 //        std::for_each(b.begin(), b.begin() + 2 * N + 2, [](int n ) {std::cout << n << " ";});
@@ -203,6 +216,7 @@ struct emd_hat_impl_integral_types
         NUM_T cost = 0;
         for (NODE_T i = 0; i < N; ++i)
         {
+            
             if (b[i] == 0)
             {
                 continue;
