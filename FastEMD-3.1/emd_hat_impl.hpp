@@ -199,7 +199,6 @@ struct emd_hat_impl_integral_types
         std::array<NODE_T, MAX_SIG_SIZE/2> uniqueJs{};
         NODE_T sourcesCounter = 0; // number of sources_that_flow_not_only_to_thresh
         NODE_T sinksCounter = -1; // number of sinks_that_get_flow_not_only_from_thresh
-        NODE_T lastJ = 0;
         NUM_T pre_flow_cost = 0;
         NUM_T cost = 0;
         for (NODE_T i = 0; i < N; ++i)
@@ -259,7 +258,6 @@ struct emd_hat_impl_integral_types
         {
             if (uniqueJs[i] == 0 && b[i + N] != 0)
             {
-                //TODO: fix pre_flow_cost
                 pre_flow_cost -= (b[i + N] * maxC);
                 b[THRESHOLD_NODE] += b[i + N];
                 b[i + N] = 0;
@@ -280,20 +278,9 @@ struct emd_hat_impl_integral_types
             }
         }
         b[shrinkCounter] = 0;
-//        std::cout << "b after shrink: ";
-//        for(auto &elem : b) std::cout << elem << " ";
-//        std::cout << std::endl;
-//        std::cout << sinksCounter << " " << sourcesCounter << std::endl;
+
         NODE_T ccSize = sourcesCounter + sinksCounter + 3;
-        // update the edge._to values to new node names:
-//        for(auto &node : cc)
-//        {
-//            for(auto &e : node)
-//            {
-//                if(e._to == -1 && e._cost == -1) break;
-//                e._to += sourcesCounter;
-//            }
-//        }
+
         // add THRESHOLD_NODE
         for (NODE_T i = sourcesCounter; i <= sourcesCounter + sinksCounter; ++i)
         {
