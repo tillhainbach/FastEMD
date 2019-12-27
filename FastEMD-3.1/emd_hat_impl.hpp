@@ -158,6 +158,7 @@ struct emd_hat_impl_integral_types
                 sum_P += P[i] - Q[i];
                 b[i] = P[i] - Q[i];
                 b[i + N] = 0;
+//                std::cout << nonZeroSourceCounter << " " << i << " " << b[i] << std::endl;
                 nonZeroSourceNodes[nonZeroSourceCounter++] = i;
             }
             else // P[i] == Q[i]
@@ -169,6 +170,7 @@ struct emd_hat_impl_integral_types
                 b[i] = b[i + N] = 0;
             }
         }
+//        std::cout << std::endl;
 #if PRINT
         std::string msg = "non-zero source nodes: ";
         printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
@@ -186,10 +188,17 @@ struct emd_hat_impl_integral_types
             std::swap_ranges(b.begin(), b.begin() + N, b.begin() + N);
             std::transform(b.begin(), b.begin() + 2 * N + 2, b.begin(),
                         std::bind(std::multiplies<NUM_T>(), std::placeholders::_1, -1));
+            std::swap(nonZeroSourceCounter, nonZeroSinkCounter);
+            std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
+#if PRINT
+        std::cout << "needToSwapFlow" << std::endl;
+        std::string msg = "non-zero source nodes: ";
+        printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
+        
+        msg = "non-zero sink nodes: ";
+        printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
+#endif
         }
-
-
-//        if (needToSwapFlow) std::cout << "needToSwapFlow" << std::endl;
     
         // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
         // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
@@ -200,7 +209,10 @@ struct emd_hat_impl_integral_types
 //        b[ARTIFICIAL_NODE] = 0;
         // + 1 because b[ARTIFICIAL_NODE] == 0;
         //-------------------------------------------------------
-    
+#if PRINT
+        std::string msg2 = "start b: ";
+        printArray<NODE_T, MAX_SIG_SIZE>(b, msg2, 2 * N + 1);
+#endif
         if (extra_mass_penalty == -1) extra_mass_penalty = maxC;
 
         //=============================================================
@@ -259,7 +271,11 @@ struct emd_hat_impl_integral_types
                 c[sourcesCounter][2 * sinksForNode + 1] = REMOVE_NODE_FLAG;
                 c[sourcesCounter][2 * sinksForNode + 2] = REMOVE_NODE_FLAG;// to THRESHOLD_NODE´
 #endif
-                b[sourcesCounter++] = b[*i];
+                std::cout << *i << " ";
+                std::cout << b[*i] << " ";
+                b[sourcesCounter] = b[*i];
+                std::cout << b[sourcesCounter] << std::endl;
+                sourcesCounter++;
             }
             else
             {
@@ -270,13 +286,15 @@ struct emd_hat_impl_integral_types
 #if PRINT
         msg = "uniqueJs: ";
         printArray<NODE_T, MAX_SIG_SIZE/2>(uniqueJs, msg, N);
+        msg = "bs: ";
+        printArray<NODE_T, MAX_SIG_SIZE>(b, msg, 2 * N + 1);
 #endif
         // calculate pre_flow_cost & add weight to THRESHOLD_NODE
         // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
         int shrinkCounter = sourcesCounter;
         for(auto j = nonZeroSinkNodes.begin(); j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++j)
         {
-            if (uniqueJs[*j] == 0) // && b[i + N] != 0)
+            if (uniqueJs[*j] == 0 && b[*j + N] != 0)
             {
                 pre_flow_cost -= (b[*j + N] * maxC);
                 b[THRESHOLD_NODE] += b[*j + N];
@@ -284,16 +302,19 @@ struct emd_hat_impl_integral_types
             else // (uniqueJs[*j] != 0)
             {
                 uniqueJs[*j] = shrinkCounter;
+                b[shrinkCounter++] = b[*j + N];
             }
-            b[shrinkCounter++] = b[*j + N];
         }
 #if PRINT
+        std::cout << "sources: " << sourcesCounter << " sinks: " << sinksCounter << std::endl;
         msg = "uniqueJs: ";
         printArray<NODE_T, MAX_SIG_SIZE/2>(uniqueJs, msg, N);
 #endif
         NODE_T ccSize = sourcesCounter + sinksCounter + 3;
         b[ccSize - 2] = b[THRESHOLD_NODE]; //THREHOLD_NODE weight;
         b[ccSize - 1] = 0; //Artificialnode;
+        
+        
         // add THRESHOLD_NODE
         for (NODE_T i = sourcesCounter; i <= sourcesCounter + sinksCounter; ++i)
         {
@@ -320,7 +341,7 @@ struct emd_hat_impl_integral_types
         // add edges from sources to THRESHOLD_NODE and ARTIFICIAL_NODE
         for(NODE_T i = 0; i < sourcesCounter; ++i)
         {
-            for(NODE_T j = 0; j < sinksCounter + 1; ++j)
+            for(NODE_T j = 0; j < sinksCounter + 2; ++j)
             {
 #if USE_EDGE
                 if (cc[i][j]._to != REMOVE_NODE_FLAG && cc[i][j]._cost != REMOVE_NODE_FLAG) continue;
@@ -396,6 +417,10 @@ struct emd_hat_impl_integral_types
         //====================================================
 
 #ifndef NDEBUG
+#if PRINT
+        msg = "b: ";
+        printArray<NODE_T, MAX_SIG_SIZE>(b, msg, ccSize);
+#endif
         NUM_T DEBUG_sum_b = 0;
         for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];
         assert(DEBUG_sum_b == 0);
