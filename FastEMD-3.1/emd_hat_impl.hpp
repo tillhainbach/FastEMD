@@ -125,9 +125,9 @@ struct emd_hat_impl_integral_types
             }
         }
         std::array<NUM_T, MAX_SIG_SIZE> b;
-//        size_t bSize = 2 * N + 2;
+
         const NODE_T THRESHOLD_NODE = 2 * N;
-//        const NODE_T ARTIFICIAL_NODE = 2 * N + 1; // needs to be last !
+
         // Assuming metric property we can pre-flow 0-cost edges
         NUM_T sum_P = 0;
         NUM_T sum_Q = 0;
@@ -158,7 +158,6 @@ struct emd_hat_impl_integral_types
                 sum_P += P[i] - Q[i];
                 b[i] = P[i] - Q[i];
                 b[i + N] = 0;
-//                std::cout << nonZeroSourceCounter << " " << i << " " << b[i] << std::endl;
                 nonZeroSourceNodes[nonZeroSourceCounter++] = i;
             }
             else // P[i] == Q[i]
@@ -170,7 +169,7 @@ struct emd_hat_impl_integral_types
                 b[i] = b[i + N] = 0;
             }
         }
-//        std::cout << std::endl;
+
 #if PRINT
         std::string msg = "non-zero source nodes: ";
         printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
@@ -178,8 +177,8 @@ struct emd_hat_impl_integral_types
         msg = "non-zero sink nodes: ";
         printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
 #endif
+        
         // Ensuring that the supplier - P, has more mass.
-
         bool needToSwapFlow = false;
         NUM_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
         if (sum_Q > sum_P)
