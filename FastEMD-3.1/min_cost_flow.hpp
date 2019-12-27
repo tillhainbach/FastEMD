@@ -168,6 +168,40 @@ void printCostBackward(
 }
 
 template<typename NUM_T, typename NODE_T>
+void printCost(
+#if USE_EDGE
+              std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
+#endif
+#if USE_ARR
+              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
+#endif
+              NODE_T num_nodes)
+{
+    for (NODE_T i = 0; i < num_nodes; ++i)
+    {
+        std::cout << i << ": ";
+#if USE_EDGE
+        for (const auto &node : x[i])
+        {
+            if (node._to == -1 && node._reduced_cost == -1) break;
+            std::cout << "[" << node._to << " : " << node._cost << "] ";
+        }
+#endif
+#if USE_ARR
+        for (int j = 0;  j < 2 * num_nodes; j += 2)
+        {
+
+            NODE_T to = xx[i][j];
+            NUM_T reduced_cost = xx[i][j + 1];
+            std::cout << "[" << to << " : " << reduced_cost << "] ";
+            if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
+        }
+#endif
+        std::cout << std::endl;
+    }
+}
+
+template<typename NUM_T, typename NODE_T>
 void printCostForward(
 #if USE_EDGE
               std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
@@ -230,13 +264,13 @@ public:
                      const std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& cc,
                      std::array< std::array< NUM_T, MAX_SIG_SIZE >, MAX_SIG_SIZE >& xx,
 #endif
-                     const size_t eSize)
+                     const NODE_T eSize)
     {
         //for (NODE_T i = 0; i < e.size(); ++i) cout << e[i]<< " ";
         //cout << endl;
 //        tictoc_all_function.tic();
         
-        _num_nodes = static_cast<NODE_T>(eSize);
+        _num_nodes = eSize;
 //        _nodes_to_Q.resize(_num_nodes);
 #if USE_EDGE
         std::array<int, MAX_SIG_SIZE > counters;
@@ -437,23 +471,13 @@ public:
                 }
 #endif
 #if USE_ARR
-                for (NODE_T i = 0; i < _num_nodes; ++i)
+                auto it_arr = findIndex <std::array<std::array<NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE>>
+                        (r_cost_cap_backward_arr, _num_nodes, from, to);
+                if (it_arr != r_cost_cap_backward_arr[from].end())
                 {
-                    auto it_arr = &r_cost_cap_backward_arr[from][3 * i];
-                    if (*it_arr == to)
-                    {
-                        if (it_arr[2] < deltaq) deltaq = it_arr[2];
-                        break;
-                    }
-                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
+                    if (it_arr[2] < deltaq) deltaq = it_arr[2];
                 }
-//               auto it_arr = std::find(r_cost_cap_backward_arr[from].begin(),
-//                                       r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1,
-//                                       to);
-//                if (it_arr != r_cost_cap_backward_arr[from].begin() + 3 * (_num_nodes - 1) + 1)
-//                {
-//                    if (it_arr[2] < deltaq) deltaq = it_arr[2];
-//                }
+
 #endif
 #if USE_EDGE && USE_ARR
                 assert(delta == deltaq);
@@ -476,7 +500,7 @@ public:
                 std::find_if(x[from].begin(), x[from].begin() + _num_nodes, [&](auto &e) {return e._to == to;})->_flow += delta;
 #endif
 #if USE_ARR
-                std::find(xx[from].begin(), xx[from].begin() + 3 * (_num_nodes - 1) + 1, to) [2] += deltaq;
+                findIndex <std::array<std::array<NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE>> (xx, _num_nodes, from, to)[2] += deltaq;
 #endif
                 // update residual for backward edges
 #if USE_EDGE
@@ -491,26 +515,13 @@ public:
                 if (it != r_cost_cap_backward[from].begin() + _num_nodes) it->_residual_capacity -= delta;
 #endif
 #if USE_ARR
-                for (NODE_T i = 0; i < _num_nodes; ++i)
-                {
-                    auto it_arr = &r_cost_cap_backward_arr[to][3 * i];
-                    if (*it_arr == from)
-                    {
-                        it_arr[2] += deltaq;
-                        break;
-                    }
-                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
-                }
-                for (NODE_T i = 0; i < _num_nodes; ++i)
-                {
-                    auto it_arr = &r_cost_cap_backward_arr[from][3 * i];
-                    if (*it_arr == to)
-                    {
-                        it_arr[2] -= deltaq;
-                        break;
-                    }
-                    if (*it_arr == _num_nodes - 1 || (from == _num_nodes - 1 && *it_arr == _num_nodes - 2)) break;
-                }
+                auto it_arr = findIndex <std::array<std::array<NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE>>
+                (r_cost_cap_backward_arr, _num_nodes, to, from);
+                if (it_arr != r_cost_cap_backward_arr[to].end()) it_arr [2] += deltaq;
+
+                it_arr = findIndex <std::array<std::array<NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE>>
+                        (r_cost_cap_backward_arr, _num_nodes, from, to);
+                if (it_arr != r_cost_cap_backward_arr[from].end()) it_arr [2] -= deltaq;
 #endif
 #if USE_EDGE && USE_ARR
                 for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -972,6 +983,23 @@ private:
     } // swap_heapify
 #endif
 #if USE_ARR
+    template <typename T>
+    auto findIndex(T &input, NODE_T _num_nodes, NODE_T node, NODE_T value)
+    {
+        auto it_arr = input[node].end();
+        for (NODE_T i = 0; i < _num_nodes; ++i)
+        {
+            it_arr = &input[node][3 * i];
+            if (*it_arr == value) break;
+            if (*it_arr == _num_nodes - 1 || (node == _num_nodes - 1 && *it_arr == _num_nodes - 2))
+            {
+                it_arr = input[node].end();
+                break;
+            }
+        }
+        return it_arr;
+    }
+    
     void heap_decrease_key_arr(std::array< NUM_T, MAX_SIG_SIZE >& Q,
                            std::array< NODE_T, MAX_SIG_SIZE> & nodes_to_Q,
                            NODE_T v, NUM_T alt)
