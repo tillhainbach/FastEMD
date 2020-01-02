@@ -85,7 +85,11 @@ template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE>
 struct emd_hat_impl {
         
 }; // emd_hat_impl
-
+// TODO: change implementation to a class
+// the design might be as follows:
+// class member are all arrays / vectors so they are intianited only ones
+// an instance of mcf is also a member
+// pre-flow P and Q this reduces the amount of cost calculations
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Main implementation
@@ -185,17 +189,17 @@ struct emd_hat_impl_integral_types
         {
             needToSwapFlow = true;
             std::swap_ranges(b.begin(), b.begin() + N, b.begin() + N);
-            std::transform(b.begin(), b.begin() + 2 * N + 2, b.begin(),
+            std::transform(b.begin(), b.begin() + 2 * N + 1, b.begin(),
                         std::bind(std::multiplies<NUM_T>(), std::placeholders::_1, -1));
             std::swap(nonZeroSourceCounter, nonZeroSinkCounter);
             std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
 #if PRINT
-        std::cout << "needToSwapFlow" << std::endl;
-        std::string msg = "non-zero source nodes: ";
-        printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
-        
-        msg = "non-zero sink nodes: ";
-        printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
+            std::cout << "needToSwapFlow" << std::endl;
+            std::string msg = "non-zero source nodes: ";
+            printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
+            
+            msg = "non-zero sink nodes: ";
+            printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
 #endif
         }
     
@@ -205,8 +209,7 @@ struct emd_hat_impl_integral_types
         // edges had the cost of zero)
         // This also makes sum of b zero.
         b[THRESHOLD_NODE] = -abs_diff_sum_P_sum_Q;
-//        b[ARTIFICIAL_NODE] = 0;
-        // + 1 because b[ARTIFICIAL_NODE] == 0;
+
         //-------------------------------------------------------
 #if PRINT
         std::string msg2 = "start b: ";
@@ -235,26 +238,27 @@ struct emd_hat_impl_integral_types
         NUM_T cost = 0;
         for(auto i = nonZeroSourceNodes.begin(); i != nonZeroSourceNodes.begin() + nonZeroSourceCounter; ++i)
         {
+            NODE_T ii = ii;
             bool once = false;
             int sinksForNode = 0;
             for(auto j = nonZeroSinkNodes.begin(); j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++j)
             {
-                cost = needToSwapFlow ? Cc[*j][*i] : Cc[*i][*j];
+                NODE_T jj = jj;
+                cost = needToSwapFlow ? Cc[jj][ii] : Cc[ii][jj];
                 if (cost == maxC)
                 {
                     continue;
                 }
-                if (uniqueJs[*j] != *j)
+                if (uniqueJs[jj] != jj)
                 {
-                    uniqueJs[*j] = *j;
+                    uniqueJs[jj] = jj;
                     sinksCounter++;
-//                    std::cout << sinksCounter << " " << j + N << " ";
                 }
 #if USE_EDGE
-                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(*j, cost);
+                cc[sourcesCounter][sinksForNode] = edge<NUM_T>(jj, cost);
 #endif
 #if USE_ARR
-                c[sourcesCounter][2 * sinksForNode] = *j;
+                c[sourcesCounter][2 * sinksForNode] = jj;
                 c[sourcesCounter][2 * sinksForNode + 1] = cost;
 #endif
                 sinksForNode++;
@@ -270,16 +274,12 @@ struct emd_hat_impl_integral_types
                 c[sourcesCounter][2 * sinksForNode + 1] = REMOVE_NODE_FLAG;
                 c[sourcesCounter][2 * sinksForNode + 2] = REMOVE_NODE_FLAG;// to THRESHOLD_NODE´
 #endif
-                std::cout << *i << " ";
-                std::cout << b[*i] << " ";
-                b[sourcesCounter] = b[*i];
-                std::cout << b[sourcesCounter] << std::endl;
+                b[sourcesCounter] = b[ii];
                 sourcesCounter++;
             }
             else
             {
-                b[THRESHOLD_NODE] += b[*i];
-//                b[*i] = 0;
+                b[THRESHOLD_NODE] += b[ii];
             }
         } // i
 #if PRINT
@@ -293,15 +293,16 @@ struct emd_hat_impl_integral_types
         int shrinkCounter = sourcesCounter;
         for(auto j = nonZeroSinkNodes.begin(); j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++j)
         {
-            if (uniqueJs[*j] == 0 && b[*j + N] != 0)
+            NODE_T jj = jj;
+            if (uniqueJs[jj] == 0 && b[jj + N] != 0)
             {
-                pre_flow_cost -= (b[*j + N] * maxC);
-                b[THRESHOLD_NODE] += b[*j + N];
+                pre_flow_cost -= (b[jj + N] * maxC);
+                b[THRESHOLD_NODE] += b[jj + N];
             }
-            else // (uniqueJs[*j] != 0)
+            else // (uniqueJs[jj] != 0)
             {
-                uniqueJs[*j] = shrinkCounter;
-                b[shrinkCounter++] = b[*j + N];
+                uniqueJs[jj] = shrinkCounter;
+                b[shrinkCounter++] = b[jj + N];
             }
         }
 #if PRINT
