@@ -238,12 +238,12 @@ struct emd_hat_impl_integral_types
         NUM_T cost = 0;
         for(auto i = nonZeroSourceNodes.begin(); i != nonZeroSourceNodes.begin() + nonZeroSourceCounter; ++i)
         {
-            NODE_T ii = ii;
+            NODE_T ii = *i;
             bool once = false;
             int sinksForNode = 0;
             for(auto j = nonZeroSinkNodes.begin(); j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++j)
             {
-                NODE_T jj = jj;
+                NODE_T jj = *j;
                 cost = needToSwapFlow ? Cc[jj][ii] : Cc[ii][jj];
                 if (cost == maxC)
                 {
@@ -293,7 +293,7 @@ struct emd_hat_impl_integral_types
         int shrinkCounter = sourcesCounter;
         for(auto j = nonZeroSinkNodes.begin(); j != nonZeroSinkNodes.begin() + nonZeroSinkCounter; ++j)
         {
-            NODE_T jj = jj;
+            NODE_T jj = *j;
             if (uniqueJs[jj] == 0 && b[jj + N] != 0)
             {
                 pre_flow_cost -= (b[jj + N] * maxC);
