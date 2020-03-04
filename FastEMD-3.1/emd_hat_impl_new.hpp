@@ -42,33 +42,22 @@ NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::operator()(const std::vector<NUM_T>& P
     
 } // emd_hat_gd_metric
 
-template<typename NUM_T,FLOW_TYPE_T FLOW_TYPE>
-NUM_T emd_hat<NUM_T,FLOW_TYPE>::operator()(const std::vector<NUM_T>& P, const std::vector<NUM_T>& Q,
-                                           const std::vector< std::vector<NUM_T> >& C,
-                                           NUM_T extra_mass_penalty,
-                                           std::vector< std::vector<NUM_T> >* F)
-{
 
-    if (FLOW_TYPE!=NO_FLOW) fillFWithZeros(*F);
-    return emd_hat_impl<NUM_T,FLOW_TYPE>()(P,Q,P,Q,C,extra_mass_penalty,F);
-
-} // emd_hat
-
-
-//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 // Implementing it for different types
-//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 
 // Blocking instantiation for a non-overloaded template param
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE>
-struct emd_hat_impl {
+struct emd_hat_impl
+{
         
 }; // emd_hat_impl
 
 
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Main implementation
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE>
 struct emd_hat_impl_integral_types
 {
@@ -372,13 +361,15 @@ struct emd_hat_impl<int,FLOW_TYPE> {
 
     typedef int NUM_T;
     
-    NUM_T operator()(
-        const std::vector<NUM_T>& POrig, const std::vector<NUM_T>& QOrig,
-        const std::vector<NUM_T>& P, const std::vector<NUM_T>& Q,
-        const std::vector< std::vector<NUM_T> >& C,
-        NUM_T extra_mass_penalty,
-        std::vector< std::vector<NUM_T> >* F) {
-        return emd_hat_impl_integral_types<NUM_T,FLOW_TYPE>()(POrig, QOrig, P, Q, C, extra_mass_penalty, F);
+    NUM_T operator()(const std::vector<NUM_T>& POrig,
+                     const std::vector<NUM_T>& QOrig,
+                     const std::vector<NUM_T>& P,
+                     const std::vector<NUM_T>& Q,
+                     const std::vector< std::vector<NUM_T> >& C,
+                     NUM_T extra_mass_penalty,
+                     std::vector< std::vector<NUM_T> >* F)
+    {
+        return emd_hat_impl_integral_types<NUM_T,FLOW_TYPE>()(POrig, QOrig, P, Q, C,                                                         extra_mass_penalty, F);
     }
     
 }; // emd_hat_impl<int>

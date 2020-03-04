@@ -4,6 +4,7 @@
 #include <vector>
 #include "EMD_DEFS.hpp"
 #include "flow_utils.hpp"
+#include "min_cost_flow.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
@@ -38,14 +39,26 @@
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-struct emd_hat_gd_metric
+class emd_hat_gd_metric
 {
-    NUM_T operator()(const std::vector<NUM_T>& P,
+public:
+    NUM_T calcDistance(const std::vector<NUM_T>& P,
                      const std::vector<NUM_T>& Q,
                      const std::vector< std::vector<NUM_T> >& C,
                      NUM_T extra_mass_penalty = -1,
                      std::vector< std::vector<NUM_T> >* F = NULL,
                      NUM_T maxC = -1);
+    NUM_T calcDistance(const std::vector<NUM_T>& POrig,
+                          const std::vector<NUM_T>& QOrig,
+                          const std::vector<NUM_T>& P,
+                          const std::vector<NUM_T>& Q,
+                          const std::vector< std::vector<NUM_T> >& Cc,
+                          NUM_T extra_mass_penalty,
+                          std::vector< std::vector<NUM_T> >* F,
+                          NUM_T maxC);
+private:
+    min_cost_flow<NUM_T> mcf;
+    
 };
 
 /// Same as emd_hat_gd_metric, but does not assume metric property for the ground distance (C).

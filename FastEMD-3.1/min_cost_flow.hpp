@@ -243,6 +243,26 @@ class min_cost_flow {
     NODE_T _num_nodes;
     std::array<NODE_T, MAX_SIG_SIZE> _nodes_to_Q;
     std::array<NODE_T, MAX_SIG_SIZE> _nodes_to_Qq;
+    std::array< NUM_T, MAX_SIG_SIZE > d;
+    std::array< NODE_T, MAX_SIG_SIZE > prev;
+    #if USE_EDGE
+            std::array<int, MAX_SIG_SIZE > counters;
+    #endif
+    #if USE_ARR
+            std::array<int, MAX_SIG_SIZE > counters_arr;
+    #endif
+    #if USE_EDGE
+            std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> r_cost_forward;
+    #endif
+    #if USE_ARR
+            std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_forward_arr;
+    #endif
+    #if USE_EDGE
+            std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE > r_cost_cap_backward;
+    #endif
+    #if USE_ARR
+            std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_cap_backward_arr;
+    #endif
 
 //    tictoc tictoc_shortest_path;
 //    tictoc tictoc_while_true;
@@ -273,11 +293,9 @@ public:
         _num_nodes = eSize;
 //        _nodes_to_Q.resize(_num_nodes);
 #if USE_EDGE
-        std::array<int, MAX_SIG_SIZE > counters;
         std::fill(counters.begin(), counters.begin() + _num_nodes, 0);
 #endif
 #if USE_ARR
-        std::array<int, MAX_SIG_SIZE > counters_arr;
         std::fill(counters_arr.begin(), counters_arr.begin() + _num_nodes, 0);
 #endif
         // init flow
@@ -316,12 +334,7 @@ public:
         
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
         // Note that for forward edges the residual capacity is infinity
-#if USE_EDGE
-        std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE> r_cost_forward;
-#endif
-#if USE_ARR
-        std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_forward_arr;
-#endif
+
         for (NODE_T from = 0; from < _num_nodes; ++from)
         {
 #if USE_EDGE
@@ -350,11 +363,9 @@ public:
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
 #if USE_EDGE
-        std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE > r_cost_cap_backward;
         std::fill(counters.begin(), counters.begin() + _num_nodes, 0);
 #endif
 #if USE_ARR
-        std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> r_cost_cap_backward_arr;
         std::fill(counters_arr.begin(), counters_arr.begin() + _num_nodes, 0);
 #endif
         for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -413,8 +424,6 @@ public:
     
         //NUM_T delta = static_cast<NUM_T>(pow(2.0l,ceil(log(static_cast<long double>(U))/log(2.0))));
 
-        std::array< NUM_T, MAX_SIG_SIZE > d;
-        std::array< NODE_T, MAX_SIG_SIZE > prev;
 #if USE_EDGE
         NUM_T delta = 1;
 #endif
@@ -596,6 +605,13 @@ public:
 
 
 private:
+    #if USE_EDGE
+                std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  > Q;
+    #endif
+    #if USE_ARR
+                std::array< NUM_T, MAX_SIG_SIZE> Qq;
+    #endif
+    std::array<NODE_T, MAX_SIG_SIZE> finalNodesFlg;
 
     void compute_shortest_path(std::array< NUM_T, MAX_SIG_SIZE >& d,
                                std::array< NODE_T, MAX_SIG_SIZE >& prev,
@@ -615,13 +631,11 @@ private:
             // Making heap (all inf except 0, so we are saving comparisons...)
             //----------------------------------------------------------------
 #if USE_EDGE
-            std::array<  edge3<NUM_T> ,MAX_SIG_SIZE  > Q;
             Q[0]._to = from;
             Q[0]._dist = 0;
             NODE_T j = 1;
 #endif
 #if USE_ARR
-            std::array< NUM_T, MAX_SIG_SIZE> Qq;
             Qq[0] = from;
             Qq[1] = 0;
             NODE_T jq = 2;
@@ -666,7 +680,6 @@ private:
             //----------------------------------------------------------------
             // main loop
             //----------------------------------------------------------------
-            std::array<NODE_T, MAX_SIG_SIZE> finalNodesFlg;
             std::fill(finalNodesFlg.begin(), finalNodesFlg.begin() + _num_nodes, false);
             int Qsize = _num_nodes;
             int Qqsize = _num_nodes * 2;
