@@ -14,6 +14,7 @@
 #include "utils/types.h"
 #include <type_traits>
 
+//MARK: Base1dContainer 
 template<typename NUM_T, typename INTERFACE_T, int arrSize = 0>
 class Base1dContainer
 {
@@ -26,8 +27,11 @@ public:
     virtual inline NUM_T * ptr() = 0;
     virtual inline NUM_T const * ptr() const = 0;
     
-    inline auto begin(){return data.begin();}
-    inline auto end(){return data.begin() + data.size();}
+    inline auto begin() {return data.begin();}
+    inline auto end() {return data.begin() + _num_nodes;}
+    
+    inline auto begin() const {return data.begin();}
+    inline auto end() const {return data.begin() + _num_nodes;}
     
     inline auto size(){return _num_nodes;}
     inline auto resize(NODE_T _newSize){_num_nodes = _newSize;}
@@ -35,13 +39,18 @@ public:
     inline auto& operator[](NODE_T idx){return ptr()[idx];}
     inline const auto& operator[](NODE_T idx) const
         {return ptr()[idx];}
-            
+    
+    template<typename _T, typename _F, int _s>
+    friend std::ostream& operator<<(std::ostream& os,
+                                    const Base1dContainer<_T, _F, _s>& container);
+    
 protected:
 
     NODE_T _num_nodes;
     typeSelector1d<NUM_T, INTERFACE_T, arrSize> data;
 };
-// ------------------- VertexWeights Class ----------------------
+
+//MARK: Base1dContainerImpl Class
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class Base1dContainerImpl : public Base1dContainer<NUM_T, INTERFACE_T, size>
 {
@@ -65,10 +74,8 @@ public:
     inline NUM_T const * ptr() const
         {return this->data.template ptr<const NUM_T>(0);}
 };
-// ---------------------- Counter Class --------------------------
 
-
-
+//MARK: Counter Class
 template<typename NUM_T, typename INTERFACE_T, int size>
 class Counter : public Base1dContainerImpl<NUM_T, INTERFACE_T, size>
 {
@@ -90,7 +97,7 @@ public:
 };
 
 
-// --------------- Vertex Weights Base Class ----------------------
+//MARK: Vertex Weights Class
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class VertexWeights : public Base1dContainerImpl<NUM_T, INTERFACE_T, size>
 {
@@ -102,7 +109,7 @@ public:
     : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N) {};
     
     template<typename _T>
-    std::tuple<NUM_T, NUM_T, NODE_T, NODE_T>
+    std::tuple<NUM_T, NUM_T>
         fillWeights(const _T& P, const _T& Q,  const NODE_T N,
             Counter<NUM_T, INTERFACE_T, size/2>& nonZeroSourceNodes,
             Counter<NUM_T, INTERFACE_T, size/2>& nonZeroSinkNodes);
@@ -113,10 +120,13 @@ public:
     NUM_T calcPreFlowCost(
             Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
             Counter<NUM_T, INTERFACE_T, size/2>& uniqueJs,
-            NUM_T sourcesCounter, NUM_T maxC, NODE_T costSize);
+            NUM_T maxC, NODE_T costSize);
     
     void swapWeights();
     
+    auto sum() {NUM_T sum = 0; for (auto e: *this) sum += e; return sum;}
+    
+    //MARK: public members
     NODE_T THRESHOLD_NODE;
     NODE_T ARTIFICIAL_NODE;
             
@@ -126,7 +136,7 @@ protected:
     typeSelector1d<INTERFACE_T, NUM_T, size> data;
 };
 
-// ----------------- Vertex Base Class ---------------------------
+//MARK: Vertex Base Class
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class Vertex_Base
 {
@@ -136,6 +146,7 @@ class Vertex_Base
     
 protected:
     NODE_T _num_nodes;
+    unsigned char fields;
     NODE_T THRESHOLD_NODE;
     NODE_T ARTIFICIAL_NODE;
     
@@ -150,6 +161,7 @@ protected:
 public:
     typeSelector2d<NUM_T, INTERFACE_T, size> matrix;
 
+    //MARK: Vertex_Base Initializers
     template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
     Vertex_Base(NODE_T num_nodes, unsigned char _fields,
            std::vector<std::string>& names)
@@ -179,18 +191,29 @@ public:
     , datanames(names)
     , matrix(num_nodes, num_nodes * _fields, 0) {};
     
-    template<typename _T, typename _F, int _s>
-    friend std::ostream& operator<<(std::ostream& os,
-                            const Vertex_Base<_T, _F, _s>& vertex);
     
+    //MARK: getters
     inline virtual NUM_T const * row(NODE_T _row) const = 0;
     inline virtual NUM_T * row(NODE_T _row) = 0;
     
+    inline auto begin(){return matrix.begin();}
+    inline auto end(){return matrix.begin() + _num_nodes;}
+    
     inline auto const rows() const {return _num_nodes;}
     inline auto const cols() const {return _num_nodes * fields;}
-
-    inline auto resize(NODE_T _newSize){_num_nodes = _newSize;}
     
+    inline auto const getFields() const {return fields;}
+
+    //MARK: setters
+    inline void resize(NODE_T _newSize)
+    {
+        _num_nodes = _newSize;
+        ARTIFICIAL_NODE = _newSize - 1;
+        THRESHOLD_NODE = _newSize - 2;
+    }
+    inline void setFields(unsigned char _fields) {fields = _fields;}
+    
+    // MARK: public member functions
     template<typename... Args>
     void fill(const Vertex_Base& input, Args&&... args);
     
@@ -199,9 +222,27 @@ public:
     
     template <class F>
     void forEach(F&& func) const;
+   
+    // break condition for inner loop
+    inline bool breakCondition(NODE_T rowIt, NODE_T colIt) const
+        {return ((rowIt < ARTIFICIAL_NODE && colIt == ARTIFICIAL_NODE) ||
+                (rowIt == ARTIFICIAL_NODE && colIt == THRESHOLD_NODE));}
     
-    inline auto begin(){return matrix.begin();}
-    inline auto end(){return matrix.begin() + _num_nodes;}
+    // returns an iterator to "value" in row "node"
+    inline auto findIndex(NODE_T node, NODE_T value);
+
+    // calculates the residual cost in matrix
+    template<typename... Args>
+    void reduceCost(Args&&... args);
+    
+    //MARK: operator overloading
+    Vertex_Base& operator=(const Vertex_Base& vertex)
+    {
+        matrix = vertex.matrix;
+        _num_nodes = vertex._num_nodes;
+        datanames = vertex.datanames;
+        return *this;
+    }
     
     // std::array + std::vector need be return as reference.
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
@@ -211,27 +252,9 @@ public:
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
     inline auto operator[](NODE_T idx) {return matrix[idx]; }
     
-    // break condition for inner loop
-    inline bool breakCondition(NODE_T rowIt, NODE_T colIt) const
-        {return ((rowIt < ARTIFICIAL_NODE && colIt == ARTIFICIAL_NODE) ||
-                (rowIt == ARTIFICIAL_NODE && colIt == THRESHOLD_NODE));}
-    
-    // returns an iterator to "value" in row "node"
-    inline auto findIndex(NODE_T& node, NODE_T& value);
-
-    // calculates the residual cost in matrix
-    template<typename... Args>
-    void reduceCost(Args&&... args);
-    
-    Vertex_Base& operator=(const Vertex_Base& vertex)
-    {
-        matrix = vertex.matrix;
-        _num_nodes = vertex._num_nodes;
-        datanames = vertex.datanames;
-        return *this;
-    }
-    
-    unsigned char fields;
+    template<typename _T, typename _F, int _s>
+    friend std::ostream& operator<<(std::ostream& os,
+                            const Vertex_Base<_T, _F, _s>& vertex);
     
 private:
     inline virtual void fillCore(
@@ -239,7 +262,7 @@ private:
                     Counter<NUM_T, INTERFACE_T, size>& counters) = 0;
 };
 
-// -------------Vertex partial specialization ----------------------
+//MARK: Vertex partial specialization
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class Vertex : public Vertex_Base<NUM_T, INTERFACE_T, size>
 {
@@ -269,7 +292,7 @@ public:
         {return this->matrix.template ptr<NUM_T>(_row);}
 };
 
-// ------------------- Vertex Subclasses -------------------------
+//MARK: Vertex Subclasses
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class Cost : public Vertex<NUM_T, INTERFACE_T, size>
 {
@@ -357,8 +380,8 @@ public:
     template<class _T2d>
     void fill(
         VertexWeights<NUM_T, INTERFACE_T, size>& weights,
-        Counter<NUM_T, INTERFACE_T, size/2>& sourceNodes,
-        Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
+        const Counter<NUM_T, INTERFACE_T, size/2>& sourceNodes,
+        const Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
         Counter<NUM_T, INTERFACE_T, size/2>& uniqueJs,
         const _T2d& costMatrix, const NUM_T maxC,
         const int REMOVE_NODE_FLAG);

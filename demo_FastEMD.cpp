@@ -2,13 +2,11 @@
 
 
 #include <chrono>
-#include "utils/tictocChrono.hpp"
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
-#include <random>
-#include "emdClassArray.hpp"
+#include "EMDHat.hpp"
 #include "utils/tictocChrono.hpp"
 #include "utils/utils.h"
 
@@ -29,8 +27,14 @@ float cost_mat_dist(feature_t *F1, feature_t *F2) { return cost_mat[*F1][*F2]; }
 
 int main( int argc, char* argv[])
 {
-    //-----------------------------------------------
-    // Read images
+    //MARK: Check if there are enough arguments.
+    if(argc < 2)
+    {
+        std::cerr << "Provide number of iterations!" << std::endl;
+        return 0;
+    }
+
+    //MARK: Read images
     const char* im1_name= "cameraman.txt";
     const char* im2_name= "rice.txt";
     unsigned int im1_R, im1_C, im2_R, im2_C;
@@ -78,14 +82,14 @@ int main( int argc, char* argv[])
     timer.tic();
     Cost<int, ARRAY, 80> dat(80);
     dat[9][7] = 9;
-    FastEMD<int, ARRAY, 80> fastEMD(v1.size() *  2 + 2);
-    std::vector<double> v1d(v1.begin(), v1.end());
-    std::vector<double> v2d(v2.begin(), v2.end());
-    std::vector< std::vector<double> > cost_matd(cost_mat.size());
-    for (int r = 0; r < cost_mat.size(); ++r)
-    {
-        cost_matd[r].assign(cost_mat[r].begin(), cost_mat[r].end());
-    }
+    EMDHat<int, ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
+//    std::vector<double> v1d(v1.begin(), v1.end());
+//    std::vector<double> v2d(v2.begin(), v2.end());
+//    std::vector< std::vector<double> > cost_matd(cost_mat.size());
+//    for (int r = 0; r < cost_mat.size(); ++r)
+//    {
+//        cost_matd[r].assign(cost_mat[r].begin(), cost_mat[r].end());
+//    }
 //    int emd_hat_gd_metric_val = 0;
     for (int i = 0; i < iterations; i++)
 //    for (int i = 60; i < 67; i++)

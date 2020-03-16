@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>TestFastEMD.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>arrayFastEMD.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -27,7 +32,7 @@
 		<key>test2.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>3</integer>
 		</dict>
 		<key>testFastEMD.xcscheme_^#shared#^_</key>
 		<dict>
@@ -73,6 +78,11 @@
 			<true/>
 		</dict>
 		<key>2BC463C2238825AD00CBCAFF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2BC6E90D241C0693002F3797</key>
 		<dict>
 			<key>primary</key>
 			<true/>

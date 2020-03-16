@@ -1,8 +1,5 @@
 #ifndef MIN_COST_FLOW_HXX
 #define MIN_COST_FLOW_HXX
-#define USE_ARRAY 1
-#define USE_EDGE 0
-#define USE_ARR 1
 
 #include <vector>
 #include <limits>
@@ -14,7 +11,7 @@
 #include "utils/EMD_DEFS.hpp"
 #include "utils/tictocChrono.hpp"
 #include "utils/utils.h"
-#include "utils/Vertex.hpp"
+#include "Vertex.hpp"
 
 //------------------------------------------------------------------------------
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>

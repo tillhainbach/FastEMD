@@ -12,7 +12,7 @@
 #include <array>
 //#include <typeinfo>
 #include "utils/types.h"
-#include "utils/Vertex.hpp"
+#include "Vertex.hpp"
 
 
 
@@ -195,14 +195,14 @@ int main(int argc, const char * argv[]) {
     
     Cost<int, OPENCV> cost(4);
     int* p = cost.row(0);
-    for (int i = 0; i < cost.rows() * cost.rows() * cost.fields; ++i)
+    for (int i = 0; i < cost.rows() * cost.rows() * cost.getFields(); ++i)
         *p++ = i;
 
     std::cout << cost << std::endl;
     
     Counter<int, OPENCV, 0> count(4);
     
-    Flow<int, OPENCV> flow(4);
+    ForwardCost<int, OPENCV> flow(4);
 
     flow.fill(cost, count);
     std::cout << flow << std::endl;

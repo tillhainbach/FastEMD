@@ -9,12 +9,10 @@
 #define VERTEX_CPP
 #include "Vertex.hpp"
 
-// ------------ Vertex_Base Weight Implementation -------------------
-//template<typename NUM_T,
-
+//MARK: Vertex Weight Implementation
 template<typename NUM_T, typename INTERFACE_T, int size>
 template<typename _T>
-std::tuple<NUM_T, NUM_T, NODE_T, NODE_T>
+std::tuple<NUM_T, NUM_T>
 VertexWeights<NUM_T, INTERFACE_T, size>::fillWeights(
                 const _T& P, const _T& Q,  const NODE_T N,
                 Counter<NUM_T, INTERFACE_T, size/2> & nonZeroSourceNodes,
@@ -29,31 +27,34 @@ VertexWeights<NUM_T, INTERFACE_T, size>::fillWeights(
         switch (static_cast<unsigned char>(tempSum > 0)) // P[i] > Q[i]
         {
             case 0:
-//                if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = Q[i];
+                switch (static_cast<unsigned char>(tempSum < 0))
+                {
+                    case 0: // P[i] == Q[i]
+//TODO: implement flow     if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = Q[i];
+                        (*this)[i] = (*this)[i + N] = 0;
+                        break;
+
+                    case 1: // P[i] < Q[i]
+//TODO: implement flow  if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = P[i];
+                        sum_Q -= tempSum;
+                        (*this)[i] = 0;
+                        (*this)[i + N] = tempSum;
+                        nonZeroSinkNodes[nonZeroSinkCounter++] = i;
+                        break;
+                } // inner switch
+                break;
+            case 1: // P[i] > Q[i]
+//TODO: implement flow   if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = Q[i];
                 sum_P += tempSum;
                 (*this)[i] = tempSum;
                 (*this)[i + N] = 0;
                 nonZeroSourceNodes[nonZeroSourceCounter++] = i;
                 break;
-            case 1:
-                switch (static_cast<unsigned char>(tempSum < 0))
-                {
-                    case 0: // P[i] == Q[i]
-//                        if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = Q[i];
-                        (*this)[i] = (*this)[i + N] = 0;
-                        break;
-                        
-                    case 1: // P[i] < Q[i]
-//                        if (FLOW_TYPE != NO_FLOW) ((*F)[i][i]) = P[i];
-                        sum_Q += -tempSum;
-                        (*this)[i] = 0;
-                        (*this)[i + N] = tempSum;
-                        nonZeroSinkNodes[nonZeroSinkCounter++] = i;
-                        break;
-                }
-        }
+        } // outer switch
     }
-    return {sum_P, sum_Q, nonZeroSourceCounter, nonZeroSinkCounter};
+    nonZeroSourceNodes.resize(nonZeroSourceCounter);
+    nonZeroSinkNodes.resize(nonZeroSinkCounter);
+    return {sum_P, sum_Q};
 }
 
 template<typename NUM_T, typename INTERFACE_T, int size>
@@ -70,13 +71,13 @@ template<typename NUM_T, typename INTERFACE_T, int size>
 NUM_T VertexWeights<NUM_T, INTERFACE_T, size>::calcPreFlowCost(
                 Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
                 Counter<NUM_T, INTERFACE_T, size/2>& uniqueJs,
-                NUM_T sourcesCounter, NUM_T maxC, NODE_T costSize)
+                NUM_T maxC, NODE_T costSize)
 {
     // calculate pre_flow_cost & add weight to THRESHOLD_NODE
     // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
     auto N = (this->size() - 2)/2;
     auto preFlowCost = 0;
-    int shrinkCounter = sourcesCounter;
+    int shrinkCounter = sinkNodes.size();
     for(auto j : sinkNodes)
     {
         auto weight = (*this)[j + N];
@@ -93,15 +94,15 @@ NUM_T VertexWeights<NUM_T, INTERFACE_T, size>::calcPreFlowCost(
     }
     
     //THREHOLD_NODE weight;
-    (*this)[_num_nodes - 2] = (*this)[THRESHOLD_NODE];
-    THRESHOLD_NODE = _num_nodes - 2;
-    ARTIFICIAL_NODE = _num_nodes - 1;
+    (*this)[this->_num_nodes - 2] = (*this)[this->THRESHOLD_NODE];
+    this->THRESHOLD_NODE = this->_num_nodes - 2;
+    this->ARTIFICIAL_NODE = this->_num_nodes - 1;
     (*this)[ARTIFICIAL_NODE] = 0; //Artificialnode;
     
     return preFlowCost;
 }
 
-// ----------------- Vextex implementation ----------------------
+//MARK: Vextex implementation
 //template<NUM_T>
 //void Vertex_Base< NUM_T, std::vector< std::vector<int> > >::create()
 //{
@@ -138,7 +139,7 @@ NUM_T VertexWeights<NUM_T, INTERFACE_T, size>::calcPreFlowCost(
 //    return this->matrix.template ptr<NUM_T>(_row);
 //}
 
-// ------------------------------------
+//MARK: Vertex Base Implentation
 template<typename NUM_T, typename INTERFACE_T, int size>
 template<class F>
 void Vertex_Base<NUM_T, INTERFACE_T, size>::forEach(F&& func)
@@ -222,7 +223,7 @@ void Vertex_Base<NUM_T, INTERFACE_T, size>::reduceCost(
 }
 
 template<typename NUM_T, typename INTERFACE_T, int size>
-inline auto Vertex_Base<NUM_T, INTERFACE_T, size>::findIndex(NODE_T& node, NODE_T& value)
+inline auto Vertex_Base<NUM_T, INTERFACE_T, size>::findIndex(NODE_T node, NODE_T value)
 {
     auto row = (*this)[node];
     auto it = row.begin();
@@ -234,13 +235,13 @@ inline auto Vertex_Base<NUM_T, INTERFACE_T, size>::findIndex(NODE_T& node, NODE_
     }
     return it;
 }
-// --------------- Cost Implementation -------------------------
+//MARK: --------------- Cost Implementation -------------------------
 template<typename NUM_T, typename INTERFACE_T, int size>
 template<class _T2d>
 void Cost<NUM_T, INTERFACE_T, size>::fill(
         VertexWeights<NUM_T, INTERFACE_T, size>& weights,
-        Counter<NUM_T, INTERFACE_T, size/2>& sourceNodes,
-        Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
+        const Counter<NUM_T, INTERFACE_T, size/2>& sourceNodes,
+        const Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
         Counter<NUM_T, INTERFACE_T, size/2>& uniqueJs,
         const _T2d& costMatrix, const NUM_T maxC,
         const int REMOVE_NODE_FLAG)
@@ -249,16 +250,18 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     NODE_T sourcesCounter = 0;
     // number of sinks_that_get_flow_not_only_from_thresh
     NODE_T sinksCounter = 0;
-    for(auto i : sourceNodes)
+    unsigned char step = this->fields;
+    
+    for(const auto i : sourceNodes)
     {
         bool once = false;
         int sinksForNode = 0;
-        for(auto j : sinkNodes)
+        for(const auto j: sinkNodes)
         { // TODO: is costMatrix really symmetric?
             auto cost = costMatrix[i][j];
             if (cost == maxC) continue;
-            (*this)[sourcesCounter][2 * sinksForNode] = j;
-            (*this)[sourcesCounter][2 * sinksForNode + 1] = cost;
+            (*this)[sourcesCounter][step * sinksForNode] = j;
+            (*this)[sourcesCounter][step * sinksForNode + 1] = cost;
             sinksForNode++;
             once = true;
             if (uniqueJs[j] != j)
@@ -269,8 +272,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
         } // j
         if(once)
         { // mark last node
-            (*this)[sourcesCounter][2 * sinksForNode + 1] = REMOVE_NODE_FLAG;
-            (*this)[sourcesCounter][2 * sinksForNode + 2] = REMOVE_NODE_FLAG;// to THRESHOLD_NODE´
+            (*this)[sourcesCounter][step * sinksForNode] = REMOVE_NODE_FLAG;
             weights[sourcesCounter] = weights[i];
             sourcesCounter++;
         }
@@ -282,23 +284,23 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
 
     NODE_T ccSize = sourcesCounter + sinksCounter + 2;
     this->_num_nodes = ccSize;
+    weights.resize(ccSize);
     
-    
-    // add THRESHOLD_NODE
+    //MARK: add THRESHOLD_NODE
     for (NODE_T i = sourcesCounter; i <= sourcesCounter + sinksCounter; ++i)
     {
 
         (*this)[ccSize - 2][2 * (i - sourcesCounter)] = i;
         (*this)[ccSize - 2][2 * (i - sourcesCounter) + 1] = maxC;
     }
-    // add Artifical_NODE
+    //MARK: add Artifical_NODE
     for (NODE_T i = 0; i < ccSize - 1; ++i)
     {
         (*this)[ccSize - 1][2 * i] = i;
         (*this)[ccSize - 1][2 * i + 1] = maxC + 1;
     }
     
-    // add edges from sources to THRESHOLD_NODE and ARTIFICIAL_NODE
+    //MARK: add edges from sources to THRESHOLD_NODE and ARTIFICIAL_NODE
     for(NODE_T i = 0; i < sourcesCounter; ++i)
     {
         for(NODE_T j = 0; j < sinksCounter + 1; ++j)
@@ -312,20 +314,18 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
         }
     }
 
-    // add edges from sinks to THRESHOLD_NODE and ARTIFICIAL_NODE
+    //MARK: Add edges from sinks to THRESHOLD_NODE and ARTIFICIAL_NODE.
     for(NODE_T i = sourcesCounter; i < ccSize - 2; ++i)
     {
             (*this)[i][0] = ccSize - 1;
             (*this)[i][1] = maxC + 1;// to ARTIFICAL_NODE
     }
 
-    // add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
+    //MARK: Add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
     (*this)[ccSize - 2][2 * sinksCounter + 2] = ccSize - 1;
     (*this)[ccSize - 2][2 * sinksCounter + 3] = maxC + 1;
-#if PRINT
-    printCost<CONVERT_TO_T, NODE_T>(c, ccSize);
-#endif
-    // update sink names ([sourcesCounter; sourcesCounter + sinksCounter))
+    
+    //MARK: Update sink names ([sourcesCounter; sourcesCounter + sinksCounter))
     for (NODE_T i = 0; i < sourcesCounter; ++i)
     {
         for (NODE_T j = 0; j < sinksCounter + 1; ++j)
@@ -334,9 +334,11 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
             (*this)[i][2 * j] = uniqueJs[(*this)[i][2 * j]];
         }
     }
+    
+    std::cout << *this << std::endl;
 }
 
-// ------------ ForwardCost implementation -----------------------
+//MARK: ------------ ForwardCost implementation -----------------------
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void ForwardCost<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
@@ -347,7 +349,7 @@ inline void ForwardCost<NUM_T, INTERFACE_T, size>::fillCore(
 }
 
   
-// ------------------- Flow implementation -----------------------
+//MARK: ------------------- Flow implementation -----------------------
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void Flow<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
@@ -389,7 +391,7 @@ NUM_T Flow<NUM_T, INTERFACE_T, size>::calcDist()
 }
 
 
-// ------------ BackwardCost implementation ----------------------
+//MARK: ------------ BackwardCost implementation ----------------------
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void BackwardCost<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
@@ -403,12 +405,12 @@ inline void BackwardCost<NUM_T, INTERFACE_T, size>::fillCore(
 }
   
 
-// --------------------- operator<< ------------------------------
+//MARK: operator<<
 template<typename NUM_T, typename INTERFACE_T, int size>
 std::ostream& operator<<(std::ostream& os,
                          const Vertex_Base<NUM_T, INTERFACE_T, size>& vertex)
 {
-    // print first line decribing the content of the data:
+    //MARK: print first line decribing the content of the data:
     // eg. "vertex: [to : reduced_cost : residual_capacity]"
     os << "vertex: [";
     for (auto& entry : vertex.datanames)
@@ -430,9 +432,14 @@ std::ostream& operator<<(std::ostream& os,
             break if condition is met and start jump to next row.
         
     */
+    //MARK: Print the actual data.
     NODE_T step = vertex.fields;
     NODE_T numNodes = vertex._num_nodes;
     //iterate over the rows eg. vertex/nodes
+    std::cout << numNodes << std::endl;
+    std::cout << vertex.ARTIFICIAL_NODE << std::endl;
+    std::cout << vertex.THRESHOLD_NODE << std::endl;
+    
     for (NODE_T i = 0; i < numNodes; ++i)
     {
         os << i << ": ";
@@ -440,7 +447,6 @@ std::ostream& operator<<(std::ostream& os,
         // next iterate over the columns eg. data
         for (NODE_T j = 0;  j < numNodes; ++j)
         {
-            if (rowPtr[j * step] == - 1) break;
             os << "[";
             
             // iterate over the channels eg. data entries
@@ -450,10 +456,23 @@ std::ostream& operator<<(std::ostream& os,
                 if (k != step - 1) os << " : ";
             }
             os << "] ";
+    std::cout << vertex.breakCondition(i, j) << std::endl;
+            if (vertex.breakCondition(i, j)) break;
         }
         os << std::endl;
     }
     return os;
 } /* operator<<()*/
+
+template<typename NUM_T, typename INTERFACE_T, int size>
+std::ostream& operator<<(std::ostream& os,
+                         const Base1dContainer<NUM_T, INTERFACE_T, size>& container)
+{
+    for (const auto& e: container)
+    {
+        os << e << ", ";
+    }
+    return os;
+}
 
 #endif

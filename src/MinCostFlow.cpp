@@ -8,7 +8,7 @@
 #ifndef MIN_COST_FLOW_CPP
 #define MIN_COST_FLOW_CPP
 #include <stdio.h>
-#include "MinCostFlowArray.hpp"
+#include "MinCostFlow.hpp"
 
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
@@ -29,7 +29,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
     // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
     // Note that for forward edges the residual capacity is
     // infinity
-    forwardCost.fill(cost);
+    forwardCost.fill(cost, counters);
             
 #if PRINT
     std::cout << forwardCost << std::endl;
@@ -166,7 +166,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
         
         // neighbors of u
         for (auto it = forwardCost[u].begin(), end = forwardCost[u].end();
-             it != end; it += forwardCost.fields)
+             it != end; it += forwardCost.getFields())
         {
             assert (it[1] >= 0);
             CONVERT_TO_T alt = d[u] + it[1];
@@ -181,7 +181,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
         } //it
                 
         for (auto it = backwardCost[u].begin(), end = backwardCost[u].end();
-        it != end; it += backwardCost.fields)
+        it != end; it += backwardCost.getFields())
         {
             NODE_T v = static_cast<NODE_T>(*it);
             if (it[2] > 0)

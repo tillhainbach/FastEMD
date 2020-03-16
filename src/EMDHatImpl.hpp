@@ -1,13 +1,11 @@
 #ifndef EMD_HAT_IMPL_HPP
 #define EMD_HAT_IMPL_HPP
-#define USE_SET 0
-#define USE_VECTOR 0
-#define USE_CC_VECTOR 0
 #define TIME 0
-#define PRINT 0
+#define PRINT 1
+#define DEBUG 1
 
 
-//=======================================================================================
+//=================================================================
 // Implementation stuff
 //=================================================================
 
@@ -23,7 +21,7 @@
      
 template<typename NUM_T, typename INTERFACE_T,
          int size, FLOW_TYPE_T FLOW_TYPE>
-NUM_T FastEMD<NUM_T, INTERFACE_T, size,  FLOW_TYPE>::calcDistance(
+NUM_T EMDHat<NUM_T, INTERFACE_T, size,  FLOW_TYPE>::calcDistance(
                             const std::vector<NUM_T>& P,
                             const std::vector<NUM_T>& Q,
                             const std::vector< std::vector<NUM_T> >& C,
@@ -39,7 +37,7 @@ NUM_T FastEMD<NUM_T, INTERFACE_T, size,  FLOW_TYPE>::calcDistance(
     return this->calcDistanceInt(P, Q, P, Q, C,
                                  extra_mass_penalty, F, maxC);
     
-} // FastEMDArray
+} // EMDHatArray
 
 template<typename _T>
 auto getMaxCost(const _T& costMatrix, const NODE_T N)
@@ -56,9 +54,10 @@ auto getMaxCost(const _T& costMatrix, const NODE_T N)
     return maxCost;
 }
 
+//MARK:: calcDistanceInt
 template<typename NUM_T, typename CONVERT_TO_T, typename INTERFACE_T,
          int size, FLOW_TYPE_T FLOW_TYPE>
-CONVERT_TO_T FastEMD_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
+CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
         size, FLOW_TYPE>::calcDistanceInt(
                      const std::vector<CONVERT_TO_T>& POrig,
                      const std::vector<CONVERT_TO_T>& QOrig,
@@ -69,70 +68,59 @@ CONVERT_TO_T FastEMD_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
                      std::vector< std::vector<CONVERT_TO_T> >* F,
                      CONVERT_TO_T maxC)
 {
-    // creating the b vector that contains all vertexes
+    
     //-------------------------------------------------------
     assert(Q.size() == P.size());
     //-------------------------------------------------------
-    const NODE_T REMOVE_NODE_FLAG = -1; // as I'm using -1 as a special flag !!!
     if(maxC == -1)
     {
-        for (NODE_T i = 0; i < N; ++i)
-        {
-            for (NODE_T j = i; j < N; ++j)
-            { // cost matrix is symmetric so just check upper right half
-                assert(Cc[i][j] >= 0);
-                if ( Cc[i][j] > maxC ) maxC = Cc[i][j];
-            }
-        }
+        maxC = getMaxCost(Cc, P.size());
     }
 
     std::fill(nonZeroSourceNodes.begin(), nonZeroSourceNodes.end(), 0);
     std::fill(nonZeroSinkNodes.begin(), nonZeroSinkNodes.end(), 0);
  
+    //MARK: creating the b vector that contains all vertexes
     // Assuming metric property we can pre-flow 0-cost edges
-    auto [sum_P, sum_Q, nonZeroSourceCounter, nonZeroSinkCounter] =
-    vertexWeights.template fillWeights<std::vector<CONVERT_TO_T>>(P, Q, N,
+    auto [sum_P, sum_Q] =
+        vertexWeights.template fillWeights<std::vector<CONVERT_TO_T>>(P, Q, N,
                                   nonZeroSourceNodes, nonZeroSinkNodes);
     
-#if PRINT && NDEBUG
-    std::string msg = "non-zero source nodes: ";
-    printArray<NODE_T, size>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
+#if PRINT && DEBUG
+    std::cout << "non-zero source nodes: "
+                << nonZeroSourceNodes << std::endl;
     
-    msg = "non-zero sink nodes: ";
-    printArray<NODE_T, size>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
+    std::cout << "non-zero sink nodes: "
+                << nonZeroSinkNodes << std::endl;
 #endif
-    
-    // Ensuring that the supplier - P, has more mass.
-    bool needToSwapFlow = false;
+    //MARK: Ensuring that the supplier - P, has more mass.
     CONVERT_TO_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
     if (sum_Q > sum_P)
     {
-        needToSwapFlow = true;
         vertexWeights.swapWeights();
-        std::swap(nonZeroSourceCounter, nonZeroSinkCounter);
         std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
         
-#if PRINT && NDEBUG
+#if PRINT && DEBUG
         std::cout << "needToSwapFlow" << std::endl;
-        std::string msg = "non-zero source nodes: ";
-        printArray<NODE_T, size>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
+        std::cout << "non-zero source nodes: "
+                    << nonZeroSourceNodes << std::endl;
         
-        msg = "non-zero sink nodes: ";
-        printArray<NODE_T, size>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
+        std::cout << "non-zero sink nodes: "
+                    << nonZeroSinkNodes << std::endl;
 #endif
     }
 
-    // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
-    // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
-    // where incoming edges to the threshold node had the cost of the threshold and outgoing
-    // edges had the cost of zero)
-    // This also makes sum of b zero.
-    vertexWeights[THRESHOLD_NODE] = -abs_diff_sum_P_sum_Q;
+    /* remark*) I put here a deficit of the extra mass, as mass that flows
+     to the threshold node can be absorbed from all sources with cost zero
+     (this is in reverse order from the paper, where incoming edges to the
+     threshold node had the cost of the threshold and outgoing edges had
+     the cost of zero) This also makes sum of b zero. */
+    vertexWeights[vertexWeights.THRESHOLD_NODE] = -abs_diff_sum_P_sum_Q;
 
     //-------------------------------------------------------
-#if PRINT
-    std::string msg2 = "start b: ";
-    printArray<CONVERT_TO_T, size>(b, msg2, 2 * N + 1);
+#if PRINT && DEBUG
+    std::cout << "start b: ";
+    std::cout << vertexWeights << std::endl;
 #endif
     if (extra_mass_penalty == -1) extra_mass_penalty = maxC;
 
@@ -144,86 +132,42 @@ CONVERT_TO_T FastEMD_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     // threshold vertex
 
     
+    //MARK: fill cost matrix
     std::fill(uniqueJs.begin(), uniqueJs.end(), 0);
     cost.fill(vertexWeights, nonZeroSourceNodes,
               nonZeroSinkNodes, uniqueJs, Cc, maxC,
               REMOVE_NODE_FLAG);
     
-    CONVERT_TO_T preFlowCost = vertexWeights.calcPreFlowCost(nonZeroSinkNodes, uniqueJs, nonZeroSourceCounter, maxC, cost.rows());
+    CONVERT_TO_T preFlowCost = vertexWeights.calcPreFlowCost(nonZeroSinkNodes, uniqueJs, maxC, cost.rows());
 
 
-    //====================================================
+#if DEBUG
 #if PRINT
-    printCost<CONVERT_TO_T, NODE_T>(c, ccSize);
-#endif
-
-    //====================================================
-
-#ifndef NDEBUG
-#if PRINT
-    msg = "b: ";
-    printArray<CONVERT_TO_T, size>(b, msg, ccSize);
+    std::cout << "new vertex Weights:"
+                << vertexWeights << std::endl;
 #endif
     CONVERT_TO_T DEBUG_sum_b = 0;
-//    for (NODE_T i = 0; i < ccSize; ++i) DEBUG_sum_b += b[i];
+    DEBUG_sum_b += vertexWeights.sum();
     assert(DEBUG_sum_b == 0);
 #endif
 
-    //-------------------------------------------------------
-
-    
+   
+    //MARK: calculate EMD-Distance
     mcf.resize(cost.rows());
     CONVERT_TO_T mcf_dist = mcf(vertexWeights, cost, flows);
 
-//    if (FLOW_TYPE != NO_FLOW) {
-//        for (NODE_T new_name_from=0; new_name_from<flows.size(); ++new_name_from) {
-//            for (typename std::vector<  edge0<CONVERT_TO_T>  >::const_iterator it= flows[new_name_from].begin(); it!=flows[new_name_from].end(); ++it) {
-//                if (new_name_from==nodes_new_names[THRESHOLD_NODE]||it->_to==nodes_new_names[THRESHOLD_NODE]) continue;
-//                NODE_T i,j;
-//                CONVERT_TO_T flow= it->_flow;
-//                bool reverseEdge= it->_to<new_name_from;
-//                if (!reverseEdge) {
-//                    i= nodes_old_names[new_name_from];
-//                    j= nodes_old_names[it->_to]-N;
-//                } else {
-//                    i= nodes_old_names[it->_to];
-//                    j= nodes_old_names[new_name_from]-N;
-//                }
-//                if (flow!=0&&new_name_from!=nodes_new_names[THRESHOLD_NODE]&&it->_to!=nodes_new_names[THRESHOLD_NODE]) {
-//                    assert(i<N&&j<N);
-//                    if (needToSwapFlow) std::swap(i,j);
-//                    if (!reverseEdge) {
-//                        (*F)[i][j]+= flow;
-//                    } else {
-//                        (*F)[i][j]-= flow;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    if (FLOW_TYPE == WITHOUT_EXTRA_MASS_FLOW)
-//    {
-//        transform_flow_to_regular(*F, POrig, QOrig);
-//    }
-//    std::cout << pre_flow_cost << " + " << mcf_dist << " + " << (abs_diff_sum_P_sum_Q * extra_mass_penalty) << std::endl;
     CONVERT_TO_T my_dist =
         preFlowCost + // pre-flowing on cases where it was possible
         mcf_dist + // solution of the transportation problem
         (abs_diff_sum_P_sum_Q * extra_mass_penalty); // emd-hat extra mass penalty
 
     return my_dist;
-//-------------------------------------------------------
     
-} // emd_hat_impl_integral_types (main implementation) operator()
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+} // EMDHat_Base::calcDistanceInt()
 
-//----------------------------------------------------------------------------------------
-// floating types
-//----------------------------------------------------------------------------------------
-
+//MARK: partial specialization for type double
 template<typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE>
-double FastEMD<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
+double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
                                                     const std::vector<double>& Q,
                                                     const std::vector< std::vector<double> >& C,
                                                     double extra_mass_penalty,
@@ -300,7 +244,7 @@ double FastEMD<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::ve
     }
     
     return dist;
-} // emd_hat_impl<double>
+} // EMDHat::calcDistance()
 //----------------------------------------------------------------------------------------
 #endif
 

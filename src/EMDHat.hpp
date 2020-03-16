@@ -4,7 +4,7 @@
 #include <vector>
 #include "utils/EMD_DEFS.hpp"
 #include "utils/flow_utils.hpp"
-#include "MinCostFlowArray.hpp"
+#include "MinCostFlow.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
@@ -41,21 +41,19 @@
 
 template<typename NUM_T, typename CONVERT_TO_T,
          typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMD_Base
+class EMDHat_Base
 {
 public:
-    FastEMD_Base(const NODE_T _N)
-    : THRESHOLD_NODE(2 * _N)
-    , N(_N)
-    , cost(_N)
-    , flows(_N)
+    EMDHat_Base(const NODE_T _N)
+    : N(_N)
+    , cost(2 * _N + 2)
+    , flows(2 * _N + 2)
     , nonZeroSourceNodes(_N)
     , nonZeroSinkNodes(_N)
     , uniqueJs(_N)
-    , ARTIFICIAL_NODE(THRESHOLD_NODE + 1)
     , REMOVE_NODE_FLAG(-1)
-    , mcf(_N)
-    , vertexWeights(_N)
+    , mcf(2 * _N + 2)
+    , vertexWeights(2 * _N + 2)
     {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
@@ -87,19 +85,17 @@ protected:
     
     // const members
     const NODE_T N;
-    const NODE_T THRESHOLD_NODE;
-    const NODE_T ARTIFICIAL_NODE;
     const NODE_T REMOVE_NODE_FLAG;
 };
 
 template<typename NUM_T, typename INTERFACE_T, int size = 0,
         FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMD :
-    public FastEMD_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>
+class EMDHat :
+    public EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>
 {
 public:
-    FastEMD(const NODE_T _N)
-    : FastEMD_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>(_N)
+    EMDHat(const NODE_T _N)
+    : EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>(_N)
     {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
@@ -112,12 +108,12 @@ public:
 };
 
 template<typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE>
-class FastEMD <double, INTERFACE_T, size, FLOW_TYPE> :
-    public FastEMD_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>
+class EMDHat <double, INTERFACE_T, size, FLOW_TYPE> :
+    public EMDHat_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>
 {
 public:
-    FastEMD(const NODE_T _N)
-    : FastEMD_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>(_N)
+    EMDHat(const NODE_T _N)
+    : EMDHat_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>(_N)
     {};
     
     typedef double NUM_T;
@@ -144,7 +140,7 @@ struct emd_hat
         
 };
 
-#include "emdArrayImpl.hpp"
+#include "EMDHatImpl.hpp"
 
 #endif
 
