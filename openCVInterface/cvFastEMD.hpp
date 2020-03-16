@@ -4,7 +4,7 @@
 #include <vector>
 #include "EMD_DEFS.hpp"
 #include "flow_utils.hpp"
-#include "min_cost_flow.hpp"
+#include "cvMinCostFlow.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
@@ -39,9 +39,17 @@
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class emd_hat_gd_metric
+class FastEMD
 {
 public:
+    FastEMD(NODE_T _N)
+    : N(_N)
+    , REMOVE_NODE_FLAG(-1)
+    , THRESHOLD_NODE(2 * _N)
+    , VertexWeights(1, 2 * _N + 2)
+    , cost(_N)
+    {};
+    
     NUM_T calcDistance(const std::vector<NUM_T>& P,
                      const std::vector<NUM_T>& Q,
                      const std::vector< std::vector<NUM_T> >& C,
@@ -56,8 +64,20 @@ public:
                           NUM_T extra_mass_penalty,
                           std::vector< std::vector<NUM_T> >* F,
                           NUM_T maxC);
+
+    
 private:
+    void fillVertexWeights(cv::InputArray inputP,
+                                cv::InputArray inputQ,
+                                cv::InputArray costMatrix,
+                                int maxC);
+    
     min_cost_flow<NUM_T> mcf;
+    cv::Mat1i VertexWeights;
+    const NODE_T REMOVE_NODE_FLAG;
+    const NODE_T THRESHOLD_NODE = 2 * N;
+    NODE_T N;
+    Cost cost;
     
 };
 
@@ -74,7 +94,7 @@ struct emd_hat
         
 };
 
-#include "emd_hat_impl.hpp"
+#include "cvFastEMDimpl.hpp"
 
 #endif
 

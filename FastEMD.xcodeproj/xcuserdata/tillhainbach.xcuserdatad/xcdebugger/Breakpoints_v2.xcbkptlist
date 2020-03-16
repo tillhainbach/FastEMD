@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "229"
             endingLineNumber = "229"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -32,8 +32,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "230"
             endingLineNumber = "230"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -48,8 +48,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "325"
             endingLineNumber = "325"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -64,8 +64,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "312"
             endingLineNumber = "312"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -80,8 +80,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "209"
             endingLineNumber = "209"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -94,8 +94,8 @@
             filePath = "FastEMD-3.1/demo_FastEMD.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
@@ -112,8 +112,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "279"
             endingLineNumber = "279"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -128,8 +128,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "242"
             endingLineNumber = "242"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -144,8 +144,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "246"
             endingLineNumber = "246"
-            landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
-            landmarkType = "7">
+            landmarkName = "emd_hat_impl_integral_types"
+            landmarkType = "14">
             <Locations>
                <Location
                   uuid = "EB2671C6-0594-48A2-B203-BBB2D414DA90 - 78fc1d18853803c9"
@@ -190,10 +190,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "738"
-            endingLineNumber = "738"
-            landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, cost_forward_arr, cost_backward_arr, e, l)"
-            landmarkType = "7">
+            startingLineNumber = "596"
+            endingLineNumber = "596"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
             <Locations>
                <Location
                   uuid = "899AB542-99FE-4F7B-989D-0F9FF661D645 - 3ad7bc1820903244"
@@ -238,10 +238,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "742"
-            endingLineNumber = "742"
-            landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, cost_forward_arr, cost_backward_arr, e, l)"
-            landmarkType = "7">
+            startingLineNumber = "600"
+            endingLineNumber = "600"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -254,10 +254,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "694"
-            endingLineNumber = "694"
-            landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, cost_forward_arr, cost_backward_arr, e, l)"
-            landmarkType = "7">
+            startingLineNumber = "552"
+            endingLineNumber = "552"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -270,10 +270,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "734"
-            endingLineNumber = "734"
-            landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, cost_forward_arr, cost_backward_arr, e, l)"
-            landmarkType = "7">
+            startingLineNumber = "592"
+            endingLineNumber = "592"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
             <Locations>
                <Location
                   uuid = "A21B9D5E-2C74-47E1-8039-DEAB8D2279A0 - 3ad7bc1820903244"
@@ -318,10 +318,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "350"
-            endingLineNumber = "350"
-            landmarkName = "min_cost_flow"
-            landmarkType = "3">
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -334,10 +334,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
-            landmarkName = "min_cost_flow"
-            landmarkType = "3">
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -350,10 +350,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "491"
-            endingLineNumber = "491"
-            landmarkName = "min_cost_flow"
-            landmarkType = "3">
+            startingLineNumber = "349"
+            endingLineNumber = "349"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -366,10 +366,10 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "751"
-            endingLineNumber = "751"
-            landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, cost_forward_arr, cost_backward_arr, e, l)"
-            landmarkType = "7">
+            startingLineNumber = "609"
+            endingLineNumber = "609"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -382,10 +382,42 @@
             filePath = "FastEMD-3.1/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "456"
-            endingLineNumber = "456"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
+            landmarkName = "edgeCompareByCost"
+            landmarkType = "14">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "30183D2F-84B7-469C-BE4D-05625365D00C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "vectorInterface/MinCostFlowVector.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "min_cost_flow"
             landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5D6C86E5-CFEF-41F1-945F-6C2B96146B9B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "vectorInterface/demo_FastEMD.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "main(argc, argv)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -4,14 +4,13 @@
 #define USE_VECTOR 0
 #define USE_CC_VECTOR 0
 #define TIME 0
-#define PRINT 0
+#define PRINT 1
 
 
 //=======================================================================================
 // Implementation stuff
 //=======================================================================================
 
-#include "min_cost_flow.hpp"
 #include <set>
 #include <array>
 #include <limits>
@@ -19,36 +18,75 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-#include "tictoc.hpp"
+#include "tictocChrono.hpp"
+#include "cvMinCostFlow.hpp"
 
-
-template<typename NUM_T, std::size_t arraySize>
-void printArray(std::array<NUM_T, arraySize>& arr, std::string &msg, size_t end)
-{
-    if (end == -1) end = arr.size();
-    std::cout << msg;
-    std::for_each(arr.begin(), arr.begin() + end, [](NUM_T item){std::cout << item << " ";});
-    std::cout << std::endl;
-}
-
-
-template<typename NUM_T>
-void fillFWithZeros(std::vector< std::vector<NUM_T> >& F)
-{
-    for (NODE_T i = 0; i < F.size(); ++i)
-    {
-        for (NODE_T j = 0; j < F[i].size(); ++j)
-        {
-            F[i][j] = 0;
-        }
-    }
-}
         
 // Forward declarations 
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE> struct emd_hat_impl;
 
+template <typename NUM_T, FLOW_TYPE_T  FLOW_TYPE>
+void FastEMD<NUM_T, FLOW_TYPE>::fillVertexWeights(cv::InputArray inputP,
+                  cv::InputArray inputQ,
+                  cv::InputArray costMatrix,
+                  int maxC)
+    {
+        
+        cv::Mat1i P = inputP.getMat().reshape(1,1); //flatten matrix if needed;
+        cv::Mat1i Q = inputQ.getMat().reshape(1,1); //flatten matrix if needed;
+        cv::Mat cMat = costMatrix.getMat();
+        int* b = VertexWeights.ptr<int>(0);
+        // creating the b vector that contains all vertexes
+        //-------------------------------------------------------
+        assert(Q.total() == N);
+        //-------------------------------------------------------
+
+        // Assuming metric property we can pre-flow 0-cost edges
+        NUM_T sum_P = cv::sum(P)[0];
+        NUM_T sum_Q = cv::sum(Q)[0];
+        
+        if (sum_P < sum_Q) cv::swap(P, Q);
+        
+        cv::Mat temp = P - Q;
+        cv::Rect sources(0, 0, N, 1);
+        cv::Rect sinks(N, 0, N, 1);
+        temp.copyTo(VertexWeights(sources), (P > Q));
+        temp.copyTo(VertexWeights(sinks), (P < Q));
+        VertexWeights(sources).setTo(0, (P <= Q));
+        VertexWeights(sinks).setTo(0, (P >= Q));
+    
+        // remark*) I put here a deficit of the extra mass, as mass that flows to the threshold node
+        // can be absorbed from all sources with cost zero (this is in reverse order from the paper,
+        // where incoming edges to the threshold node had the cost of the threshold and outgoing
+        // edges had the cost of zero)
+        // This also makes sum of b zero.
+        b[THRESHOLD_NODE] = -std::abs(sum_P - sum_Q);
+        b[THRESHOLD_NODE + 1] = 0;
+        
+        std::vector<cv::Point2i> nonZeroSinkNode;
+        std::vector<cv::Point2i> nonZeroSourceNode;
+        cv::findNonZero(VertexWeights(sources), nonZeroSourceNode);
+        cv::findNonZero(VertexWeights(sinks), nonZeroSinkNode);
+        
+        std::vector<cv::Point> vertexesNotFlowingToThreshold;
+        vertexesNotFlowingToThreshold.reserve(nonZeroSinkNode.size() * nonZeroSourceNode.size());
+        for (auto& point : nonZeroSourceNode)
+        {
+            for (auto& p : nonZeroSinkNode)
+            {
+                cv::Point k(point.x, p.x);
+                if (cMat.at<int>(k) != maxC) vertexesNotFlowingToThreshold.push_back(k);
+            }
+        }
+        
+        CV_Assert(cv::sum(VertexWeights)[0] == 0);
+        
+        cost.fillCost(VertexWeights, cMat, N, maxC);
+        std::cout << cost << std::endl;
+};
+
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE>
-NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance(const std::vector<NUM_T>& Pc,
+NUM_T FastEMD<NUM_T,FLOW_TYPE>::calcDistance(const std::vector<NUM_T>& Pc,
                                                      const std::vector<NUM_T>& Qc,
                                                      const std::vector< std::vector<NUM_T> >& C,
                                                      NUM_T extra_mass_penalty,
@@ -59,8 +97,22 @@ NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance(const std::vector<NUM_T>&
     if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
         
     assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
+//    cv::Mat inputP = cv::Mat(1, Pc.size(), CV_32SC1, Pc);
+//    std::cout << inputP << std::endl;
+    
+    cv::Mat Cc(Pc.size(), Qc.size(), CV_32S);
+    for (int i= 0; i < Cc.rows; ++i)
+    {
+        for (int j = 0; j < Cc.cols; ++j)
+        {
+            Cc.at<int>(i, j) = C[i][j];
+        }
+    }
+    
+    
+    FastEMD<NUM_T, FLOW_TYPE>::fillVertexWeights(Pc, Qc, Cc, maxC);
 
-    return emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance
+    return FastEMD<NUM_T,FLOW_TYPE>::calcDistance
     (
         Pc, Qc,Pc,Qc,C,extra_mass_penalty,F, maxC
      );
@@ -68,7 +120,7 @@ NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance(const std::vector<NUM_T>&
 } // emd_hat_gd_metric
 
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE>
-NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance(
+NUM_T FastEMD<NUM_T,FLOW_TYPE>::calcDistance(
                      const std::vector<NUM_T>& POrig, const std::vector<NUM_T>& QOrig,
                      const std::vector<NUM_T>& P, const std::vector<NUM_T>& Q,
                      const std::vector< std::vector<NUM_T> >& Cc,
@@ -144,13 +196,13 @@ NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::calcDistance(
             }
         }
 
-#if PRINT
+//#if PRINT
         std::string msg = "non-zero source nodes: ";
         printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSourceNodes, msg, nonZeroSourceCounter);
         
         msg = "non-zero sink nodes: ";
         printArray<NODE_T, MAX_SIG_SIZE>(nonZeroSinkNodes, msg, nonZeroSinkCounter);
-#endif
+//#endif
         
         // Ensuring that the supplier - P, has more mass.
         bool needToSwapFlow = false;

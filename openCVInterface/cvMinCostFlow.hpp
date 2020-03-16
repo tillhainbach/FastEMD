@@ -13,7 +13,8 @@
 #include <numeric>
 #include "EMD_DEFS.hpp"
 #include <iostream>
-#include "tictoc.hpp"
+#include "tictocChrono.hpp"
+#include "utils/utils.h"
 
 //------------------------------------------------------------------------------
 template<typename NUM_T>
@@ -91,150 +92,7 @@ struct edge3 {
         return *this;
     };
 };
-//-----------------------------------------------------------------------------
-template<typename NUM_T, typename NODE_T>
-void printFlow(
-#if USE_EDGE
-               std::array< std::array< edge0<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#endif
-#if USE_ARR
-               std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
-#endif
-               NODE_T num_nodes)
-{
-    for (NODE_T i = 0; i < num_nodes; ++i)
-    {
-        std::cout << i << ": ";
-#if USE_EDGE
-        for (const auto &node : x[i])
-        {
-            if (node._to == -1 && node._cost == -1) break;
-            std::cout << "[" << node._to << " : " << node._cost << " : " << node._flow << "] ";
-        }
-#endif
-#if USE_ARR
-        bool lastNode = false;
-        for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
-        {
-
-            NODE_T to = xx[i][j];
-            NUM_T cost = xx[i][j + 1];
-            NUM_T flow = xx[i][j + 2];
-            std::cout << "[" << to << " : " << cost << " : " << flow << "] ";
-            if ((i < num_nodes - 1 && to == num_nodes - 1) ||
-                (i == num_nodes - 1 && to == num_nodes - 2))
-            {
-                if (lastNode) break;
-                lastNode = true;
-            }
-        }
-#endif
-        std::cout << std::endl;
-    }
-}
-template<typename NUM_T, typename NODE_T>
-void printCostBackward(
-#if USE_EDGE
-              std::array< std::array< edge2<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#endif
-#if USE_ARR
-              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
-#endif
-              NODE_T num_nodes)
-{
-    for (NODE_T i = 0; i < num_nodes; ++i)
-    {
-        std::cout << i << ": ";
-#if USE_EDGE
-        for (const auto &node : x[i])
-        {
-            if (node._to == -1 && node._reduced_cost == -1) break;
-            std::cout << "[" << node._to << " : " << node._reduced_cost << " : " << node._residual_capacity << "] ";
-        }
-#endif
-#if USE_ARR
-        for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
-        {
-
-            NODE_T to = xx[i][j];
-            NUM_T reduced_cost = xx[i][j + 1];
-            NUM_T residual_capacity = xx[i][j + 2];
-            std::cout << "[" << to << " : " << reduced_cost << " : " << residual_capacity << "] ";
-            if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
-        }
-#endif
-        std::cout << std::endl;
-    }
-}
-
-template<typename NUM_T, typename NODE_T>
-void printCost(
-#if USE_EDGE
-              std::array< std::array< edge<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#endif
-#if USE_ARR
-              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
-#endif
-              NODE_T num_nodes)
-{
-    for (NODE_T i = 0; i < num_nodes; ++i)
-    {
-        std::cout << i << ": ";
-#if USE_EDGE
-        for (const auto &node : x[i])
-        {
-            if (node._to == -1 && node._reduced_cost == -1) break;
-            std::cout << "[" << node._to << " : " << node._cost << "] ";
-        }
-#endif
-#if USE_ARR
-        for (int j = 0;  j < 2 * num_nodes; j += 2)
-        {
-
-            NODE_T to = xx[i][j];
-            NUM_T reduced_cost = xx[i][j + 1];
-            std::cout << "[" << to << " : " << reduced_cost << "] ";
-            if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
-        }
-#endif
-        std::cout << std::endl;
-    }
-}
-
-template<typename NUM_T, typename NODE_T>
-void printCostForward(
-#if USE_EDGE
-              std::array< std::array< edge1<NUM_T>, MAX_SIG_SIZE >, MAX_SIG_SIZE >& x,
-#endif
-#if USE_ARR
-              std::array< std::array< NUM_T, MAX_SIG_SIZE>, MAX_SIG_SIZE> &xx,
-#endif
-              NODE_T num_nodes)
-{
-    for (NODE_T i = 0; i < num_nodes; ++i)
-    {
-        std::cout << i << ": ";
-#if USE_EDGE
-        for (const auto &node : x[i])
-        {
-            if (node._to == -1 && node._reduced_cost == -1) break;
-            std::cout << "[" << node._to << " : " << node._reduced_cost << "] ";
-        }
-#endif
-#if USE_ARR
-        for (int j = 0;  j <= (num_nodes - 1) * 2 * 3; j += 3)
-        {
-
-            NODE_T to = xx[i][j];
-            NUM_T reduced_cost = xx[i][j + 1];
-            std::cout << "[" << to << " : " << reduced_cost << "] ";
-            if (to == num_nodes - 1 || (i == num_nodes - 1 && to == num_nodes - 2)) break;
-        }
-#endif
-        std::cout << std::endl;
-    }
-}
-
+        
 
 //------------------------------------------------------------------------------
 template<typename NUM_T>
@@ -704,16 +562,16 @@ private:
                     l = u;
                     break;
                 }
-//#if USE_EDGE
-//                for (int i = 0; i < Qsize; ++i)
-//                    std::cout << "[" << Q[i]._to << " : " << Q[i]._dist << "]";
-//                std::cout << std::endl;
-//#endif
-//#if USE_ARR
-//                for (int i = 0; i < Qqsize; i += 2)
-//                    std::cout << "[" << Qq[i] << " : " << Qq[i + 1] << "]";
-//                std::cout << std::endl;
-//#endif
+#if USE_EDGE
+                for (int i = 0; i < Qsize; ++i)
+                    std::cout << "[" << Q[i]._to << " : " << Q[i]._dist << "]";
+                std::cout << std::endl;
+#endif
+#if USE_ARR
+                for (int i = 0; i < Qqsize; i += 2)
+                    std::cout << "[" << Qq[i] << " : " << Qq[i + 1] << "]";
+                std::cout << std::endl;
+#endif
 #if USE_EDGE
                 heap_remove_first(Q, _nodes_to_Q, Qsize);
 #endif

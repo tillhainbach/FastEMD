@@ -47,7 +47,7 @@ template<typename NUM_T>
 struct signature_tt {
     int n;                /* Number of features in the signature */
     feature_tt* Features; /* Pointer to the features vector */
-    NUM_T* Weights;         /* Pointer to the weights of the features (Changed from Rubner's)*/
+    NUM_T* Weights;       /* Pointer to the weights of the features (Changed from Rubner's)*/
 };
 
 /// Similar to Rubner's emd interface.

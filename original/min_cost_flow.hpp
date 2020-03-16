@@ -98,7 +98,7 @@ public:
         assert(e.size()==c.size());
         assert(x.size()==c.size());
         
-        _num_nodes= e.size();
+        _num_nodes = static_cast<NODE_T>(e.size());
         _nodes_to_Q.resize(_num_nodes);
         
         // init flow
@@ -313,14 +313,14 @@ private:
             ++j;
         }
 
-        {for (NODE_T i=from+1; i<_num_nodes; ++i) {
+        for (NODE_T i=from+1; i<_num_nodes; ++i) {
             Q[j]._to= i;
             Qq[j]._to= i;
             _nodes_to_Q[i]= j;
             Q[j]._dist= std::numeric_limits<NUM_T>::max();
             Qq[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
-        }}
+        }
 //        for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
 //        std::cout << std::endl;
 
@@ -334,7 +334,7 @@ private:
         //----------------------------------------------------------------
         std::vector<NODE_T> finalNodesFlg(_num_nodes, false);
 //        std::cout << "path_c; ";
-        int Qsize = Q.size();
+        int Qsize = static_cast<int>(Q.size());
         do {
 //            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
 //            std::cout << std::endl;

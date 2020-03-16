@@ -13,15 +13,6 @@
 #include <cmath>
 #include <iostream>
 
-template<typename NUM_T>
-void fillFWithZeros(std::vector< std::vector<NUM_T> >& F) {
-    for (NODE_T i= 0; i<F.size(); ++i) {
-        for (NODE_T j= 0; j<F[i].size(); ++j) {
-            F[i][j]= 0;
-        }
-    }
-}
-        
 // Forward declarations 
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE> struct emd_hat_impl;
 
