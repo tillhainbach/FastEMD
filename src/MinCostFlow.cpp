@@ -7,17 +7,20 @@
 //
 #ifndef MIN_COST_FLOW_CPP
 #define MIN_COST_FLOW_CPP
+
+#define PRINT 1
+#define DEBUG 1
+
 #include <stdio.h>
 #include "MinCostFlow.hpp"
 
+//MARK: Operator()
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
             VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
             const Cost< CONVERT_TO_T, INTERFACE_T, size>& cost,
             Flow< CONVERT_TO_T, INTERFACE_T, size>& flow)
 {
-    this->resize(cost.rows());
-
     // zero the counters:
     std::fill(counters.begin(), counters.end(), 0);
     flow.fill(cost, counters);
@@ -54,7 +57,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
 //    CONVERT_TO_T delta =
 //        static_cast<CONVERT_TO_T>(pow(2.0l,
 //        ceil(log(static_cast<long double>(U))/log(2.0))));
-
+    
     CONVERT_TO_T delta = 1;
     while (true)
     { //until we break when S or T is empty
@@ -64,6 +67,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
         CONVERT_TO_T maxSupply = weights[k];
         if (maxSupply == 0) break;
         delta = maxSupply;
+    
         NODE_T l = compute_shortest_path(weights, k);
         
         //---------------------------------------------------------
@@ -112,8 +116,11 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
     
     CONVERT_TO_T dist = flow.calcDist();
     return dist;
-} // operator()
+}// operator()
 
+
+    
+//MARK: Compute Shortest Path
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
                 const VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
@@ -137,7 +144,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
         j += 2;
     }
 
-    for (NODE_T i = from + 1; i < _num_nodes; ++i)
+    for (NODE_T i = from + 1; i < _nodes_to_Q.size(); ++i)
     {
         _nodes_to_Q[i] = j;
         Q[j] = i;
@@ -229,15 +236,15 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_decrease_key(
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_remove_first()
 {
-    Q.resize(Q.size() - 2);
-    swap_heap(0, Q.size());
+    Q.resize(Q.size() - 1);
+    swap_heap(0, Q.size() * Q.getFields());
     heapify(0);
 } // heap_remove_first
         
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heapify(NODE_T i)
 {
-    assert(i % 2 == 0);
+    assert(i % Q.getFields() == 0);
     NODE_T Qsize = Q.size();
     do {
         // TODO: change to loop

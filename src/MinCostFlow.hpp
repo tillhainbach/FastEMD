@@ -17,7 +17,7 @@
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 class MinCostFlow {
 
-    NODE_T _num_nodes;
+    //NODE_T _num_nodes;
     
     Dist<CONVERT_TO_T, INTERFACE_T, size> Q;
     Counter<CONVERT_TO_T, INTERFACE_T, size> d;
@@ -30,8 +30,8 @@ class MinCostFlow {
 
 public:
     MinCostFlow(NODE_T _N)
-    : _num_nodes(_N)
-    , Q(_N)
+    : Q(_N)
+//    , _num_nodes(_N)
     , d(_N)
     , prev(_N)
     , _nodes_to_Q(_N)
@@ -52,6 +52,7 @@ public:
     
     void resize(NODE_T _newSize)
     {
+//        _num_nodes = _newSize;
         Q.resize(_newSize);
         d.resize(_newSize);
         prev.resize(_newSize);

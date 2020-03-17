@@ -79,6 +79,8 @@
 		2B2DC04F241FBAD70090BD53 /* TestFastEMD.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestFastEMD.mm; sourceTree = "<group>"; };
 		2B2DC051241FBAD70090BD53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo_FastEMD.cpp; sourceTree = "<group>"; };
+		2B40A90524212FC30046360F /* preFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = preFlow.cpp; sourceTree = "<group>"; };
+		2B40A90624212FC30046360F /* preFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preFlow.hpp; sourceTree = "<group>"; };
 		2B6856592415950800261814 /* MinCostFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MinCostFlow.cpp; sourceTree = "<group>"; };
 		2B68565B2416234E00261814 /* Vertex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vertex.cpp; sourceTree = "<group>"; };
 		2B68565C2416234E00261814 /* Vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vertex.hpp; sourceTree = "<group>"; };
@@ -182,6 +184,8 @@
 				2BB70892241452EF00CE4195 /* main.cpp */,
 				2B2DC04F241FBAD70090BD53 /* TestFastEMD.mm */,
 				2B2DC051241FBAD70090BD53 /* Info.plist */,
+				2B40A90524212FC30046360F /* preFlow.cpp */,
+				2B40A90624212FC30046360F /* preFlow.hpp */,
 			);
 			path = test;
 			sourceTree = "<group>";

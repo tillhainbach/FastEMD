@@ -13,6 +13,7 @@
 #include "utils/utils.h"
 #include "utils/types.h"
 #include <type_traits>
+#include <typeinfo>
 
 //MARK: Base1dContainer 
 template<typename NUM_T, typename INTERFACE_T, int arrSize = 0>
@@ -21,7 +22,29 @@ class Base1dContainer
 constexpr static InterfaceRequirement<INTERFACE_T, arrSize> check{};
     
 public:
-    Base1dContainer(NODE_T _N) : _num_nodes(_N) {};
+    
+    template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
+    Base1dContainer(NODE_T _N, std::vector<std::string> _name = {"Container1d"},
+                    unsigned char _fields = 1)
+    : _num_nodes(_N)
+    , fields(_fields)
+    , dataNames({_name}) {};
+    
+    template< class T = INTERFACE_T, std::enable_if_t<isVECTOR<T>, int> = 0>
+    Base1dContainer(NODE_T _N, std::vector<std::string> _name = {"Container1d"},
+                    unsigned char _fields = 1)
+    : _num_nodes(_N)
+    , fields(_fields)
+    , dataNames({_name})
+    , data(_N){};
+    
+    template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
+    Base1dContainer(NODE_T _N, std::vector<std::string> _name = {"Container1d"},
+                    unsigned char _fields = 1)
+    : _num_nodes(_N)
+    , fields(_fields)
+    , dataNames({_name})
+    , data(1, _N){};
 
     //TODO: check if ptr() is really necessary.
     virtual inline NUM_T * ptr() = 0;
@@ -33,10 +56,12 @@ public:
     inline auto begin() const {return data.begin();}
     inline auto end() const {return data.begin() + _num_nodes;}
     
-    inline auto size(){return _num_nodes;}
-    inline auto resize(NODE_T _newSize){_num_nodes = _newSize;}
+    inline auto size() {return _num_nodes;}
+    inline virtual void resize(NODE_T _newSize) {_num_nodes = _newSize;}
     
-    inline auto& operator[](NODE_T idx){return ptr()[idx];}
+    inline const unsigned char getFields() const {return fields;}
+    
+    inline auto& operator[](NODE_T idx) {return ptr()[idx];}
     inline const auto& operator[](NODE_T idx) const
         {return ptr()[idx];}
     
@@ -47,6 +72,8 @@ public:
 protected:
 
     NODE_T _num_nodes;
+    unsigned char fields;
+    std::vector<std::string> dataNames;
     typeSelector1d<NUM_T, INTERFACE_T, arrSize> data;
 };
 
@@ -55,11 +82,13 @@ template<typename NUM_T, typename INTERFACE_T, int size = 0>
 class Base1dContainerImpl : public Base1dContainer<NUM_T, INTERFACE_T, size>
 {
 public:
-    Base1dContainerImpl(NODE_T _N) : Base1dContainer<NUM_T, INTERFACE_T, size>(_N) {};
+    Base1dContainerImpl(NODE_T _N, std::vector<std::string> _name,
+                        unsigned char _fields = 1)
+    : Base1dContainer<NUM_T, INTERFACE_T, size>(_N, _name, _fields) {};
     
-    inline NUM_T * ptr()
+    inline NUM_T * ptr() override
         {return static_cast<NUM_T*>(this->data.data());}
-    inline NUM_T const * ptr() const
+    inline NUM_T const * ptr() const override
         {return static_cast<NUM_T const *>(this->data.data());}
 };
 
@@ -67,11 +96,13 @@ template<typename NUM_T>
 class Base1dContainerImpl<NUM_T, OPENCV>: public Base1dContainer<NUM_T, OPENCV>
 {
 public:
-    Base1dContainerImpl(NODE_T _N) : Base1dContainer<NUM_T, OPENCV>(_N){};
+    Base1dContainerImpl(NODE_T _N, std::vector<std::string> _name,
+                        unsigned char _fields = 1)
+    : Base1dContainer<NUM_T, OPENCV>(_N, _name, _fields){};
     
-    inline NUM_T * ptr()
+    inline NUM_T * ptr() override
         {return this->data.template ptr<NUM_T>(0);}
-    inline NUM_T const * ptr() const
+    inline NUM_T const * ptr() const override
         {return this->data.template ptr<const NUM_T>(0);}
 };
 
@@ -80,20 +111,16 @@ template<typename NUM_T, typename INTERFACE_T, int size>
 class Counter : public Base1dContainerImpl<NUM_T, INTERFACE_T, size>
 {
 public:
-    Counter(NODE_T _N)
-    : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N){};
+    Counter(NODE_T _N, std::string _name = "Counter")
+    : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N, {_name}){};
 };
 
 template<typename NUM_T, typename INTERFACE_T, int size>
 class Dist : public Base1dContainerImpl<NUM_T, INTERFACE_T, size>
 {
-    unsigned char fields;
-    std::vector<std::string> datanames;
 public:
-    Dist(NODE_T _N)
-    : fields(2)
-    , datanames({"to", "dist"})
-    , Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N * 2){};
+    Dist(NODE_T _N, std::string _name = "Distance", unsigned char _fields = 2)
+    : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N, {_name, "to", "distance"}, _fields){};
 };
 
 
@@ -105,8 +132,17 @@ class VertexWeights : public Base1dContainerImpl<NUM_T, INTERFACE_T, size>
     
 public:
     
-    VertexWeights(NODE_T _N)
-    : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N) {};
+    VertexWeights(NODE_T _N, std::string _name = "Vertex Weights")
+    : THRESHOLD_NODE(_N - 2) // second to last node
+    , ARTIFICIAL_NODE(_N - 1) // last node
+    , Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N, {_name}) {};
+    
+    void resize(NODE_T _newSize)
+    {
+        Base1dContainerImpl<NUM_T, INTERFACE_T, size>::resize(_newSize);
+        THRESHOLD_NODE = _newSize - 2;
+        ARTIFICIAL_NODE = _newSize - 1;
+    }
     
     template<typename _T>
     std::tuple<NUM_T, NUM_T>
@@ -130,10 +166,6 @@ public:
     NODE_T THRESHOLD_NODE;
     NODE_T ARTIFICIAL_NODE;
             
-protected:
-
-    NODE_T _num_nodes;
-    typeSelector1d<INTERFACE_T, NUM_T, size> data;
 };
 
 //MARK: Vertex Base Class

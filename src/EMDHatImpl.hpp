@@ -1,8 +1,7 @@
 #ifndef EMD_HAT_IMPL_HPP
 #define EMD_HAT_IMPL_HPP
 #define TIME 0
-#define PRINT 1
-#define DEBUG 1
+
 
 
 //=================================================================
@@ -74,9 +73,11 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     //-------------------------------------------------------
     if(maxC == -1)
     {
-        maxC = getMaxCost(Cc, P.size());
+        maxC = getMaxCost(Cc, static_cast<NODE_T>(P.size()));
     }
 
+    // TODO: maybe it is not necessaty to zero this counters?
+    // Their values should be overwritten by each call
     std::fill(nonZeroSourceNodes.begin(), nonZeroSourceNodes.end(), 0);
     std::fill(nonZeroSinkNodes.begin(), nonZeroSinkNodes.end(), 0);
  
@@ -154,6 +155,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
    
     //MARK: calculate EMD-Distance
     mcf.resize(cost.rows());
+    flows.resize(cost.rows());
     CONVERT_TO_T mcf_dist = mcf(vertexWeights, cost, flows);
 
     CONVERT_TO_T my_dist =

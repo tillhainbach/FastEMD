@@ -15,7 +15,6 @@
 #include "Vertex.hpp"
 
 
-
 typedef int NODE_T;
 
 template<typename NUM_T, typename INTERFACE_T, int arrSize = 0>
@@ -41,8 +40,8 @@ public:
     , data(_N, _N, -1) {};
 
     //TODO: check if ptr() is really necessary.
-//    virtual inline NUM_T* ptr() = 0;
-//    virtual inline NUM_T const * ptr() const = 0;
+    virtual inline NUM_T* ptr() = 0;
+    virtual inline NUM_T const * ptr() const = 0;
     
     inline auto begin(){return data.begin();}
     inline auto end(){return data.begin() + data.size();}
@@ -58,7 +57,7 @@ public:
     
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
     inline const auto& operator[](NODE_T idx) const
-        {return data[idx];}
+        {return ptr()[idx];}
     
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
     inline const auto operator[](NODE_T idx)const
@@ -125,10 +124,10 @@ public:
     Base1dContainer2Impl(NODE_T _N) : Base1dContainer2<NUM_T, INTERFACE_T, size>(_N) {};
     
     
-//    inline NUM_T* ptr()
-//        {return static_cast<NUM_T*>(this->data.data());}
-//    inline NUM_T const * ptr() const
-//        {return static_cast<NUM_T const *>(this->data.data());}
+    inline NUM_T* ptr() override
+        {return static_cast<NUM_T*>(this->data.data());}
+    inline NUM_T const * ptr() const override
+        {return static_cast<NUM_T const *>(this->data.data());}
 };
 
 template<typename NUM_T>
@@ -137,10 +136,10 @@ class Base1dContainer2Impl<NUM_T, OPENCV>: public Base1dContainer2<NUM_T, OPENCV
 public:
     Base1dContainer2Impl(NODE_T _N) : Base1dContainer2<NUM_T, OPENCV>(_N){};
     
-//    inline NUM_T * ptr()
-//        {return this->data.template ptr<NUM_T>(0);}
-//    inline NUM_T const * ptr() const
-//        {return this->data.template ptr<const NUM_T>(0);}
+    inline NUM_T * ptr() override
+        {return this->data.template ptr<NUM_T>(0);}
+    inline NUM_T const * ptr() const override
+        {return this->data.template ptr<const NUM_T>(0);}
 };
 // ---------------------- Counter Class --------------------------
 
@@ -183,6 +182,8 @@ std::ostream& operator<<(std::ostream&os, const Base1dContainer2<NUM_T, INTERFAC
 }
 
 int main(int argc, const char * argv[]) {
+    
+    
     // insert code here...
     Counter2<int, OPENCV> dat1(4);
     dat1[0][0] *= -1;
@@ -201,6 +202,11 @@ int main(int argc, const char * argv[]) {
     std::cout << cost << std::endl;
     
     Counter<int, OPENCV, 0> count(4);
+    count[0] = 9;
+    
+    Counter<int, ARRAY, 4> myCounter(4);
+    myCounter[0] = 9;
+    
     
     ForwardCost<int, OPENCV> flow(4);
 

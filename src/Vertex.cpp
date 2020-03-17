@@ -77,7 +77,10 @@ NUM_T VertexWeights<NUM_T, INTERFACE_T, size>::calcPreFlowCost(
     // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
     auto N = (this->size() - 2)/2;
     auto preFlowCost = 0;
-    int shrinkCounter = sinkNodes.size();
+    int shrinkCounter = costSize - sinkNodes.size() - 2;
+    
+    // for each sink node check whether it gets flow only from threshold node
+    // if true add its weight to Threshold Node else move it weight to new position
     for(auto j : sinkNodes)
     {
         auto weight = (*this)[j + N];
@@ -93,10 +96,13 @@ NUM_T VertexWeights<NUM_T, INTERFACE_T, size>::calcPreFlowCost(
         }
     }
     
-    //THREHOLD_NODE weight;
-    (*this)[this->_num_nodes - 2] = (*this)[this->THRESHOLD_NODE];
-    this->THRESHOLD_NODE = this->_num_nodes - 2;
-    this->ARTIFICIAL_NODE = this->_num_nodes - 1;
+    // move THRESHOLD_NODE weight;
+    (*this)[shrinkCounter] = (*this)[this->THRESHOLD_NODE];
+    
+    // resize weights to new size
+    this->resize(costSize);
+    
+    // add zero-weight Artificial node
     (*this)[ARTIFICIAL_NODE] = 0; //Artificialnode;
     
     return preFlowCost;
@@ -235,7 +241,7 @@ inline auto Vertex_Base<NUM_T, INTERFACE_T, size>::findIndex(NODE_T node, NODE_T
     }
     return it;
 }
-//MARK: --------------- Cost Implementation -------------------------
+//MARK: Cost Implementation
 template<typename NUM_T, typename INTERFACE_T, int size>
 template<class _T2d>
 void Cost<NUM_T, INTERFACE_T, size>::fill(
@@ -283,8 +289,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     } // i
 
     NODE_T ccSize = sourcesCounter + sinksCounter + 2;
-    this->_num_nodes = ccSize;
-    weights.resize(ccSize);
+    this->resize(ccSize);
     
     //MARK: add THRESHOLD_NODE
     for (NODE_T i = sourcesCounter; i <= sourcesCounter + sinksCounter; ++i)
@@ -293,6 +298,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
         (*this)[ccSize - 2][2 * (i - sourcesCounter)] = i;
         (*this)[ccSize - 2][2 * (i - sourcesCounter) + 1] = maxC;
     }
+    
     //MARK: add Artifical_NODE
     for (NODE_T i = 0; i < ccSize - 1; ++i)
     {
@@ -338,7 +344,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     std::cout << *this << std::endl;
 }
 
-//MARK: ------------ ForwardCost implementation -----------------------
+//MARK: ForwardCost implementation
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void ForwardCost<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
@@ -349,11 +355,11 @@ inline void ForwardCost<NUM_T, INTERFACE_T, size>::fillCore(
 }
 
   
-//MARK: ------------------- Flow implementation -----------------------
+//MARK: Flow implementation
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void Flow<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
-                    Counter<NUM_T, INTERFACE_T, size> & counters)
+                    Counter<NUM_T, INTERFACE_T, size>& counters)
 {
     NODE_T to = static_cast<NODE_T>(costFrom[i]);
     NUM_T cost = costFrom[i + 1];
@@ -391,7 +397,7 @@ NUM_T Flow<NUM_T, INTERFACE_T, size>::calcDist()
 }
 
 
-//MARK: ------------ BackwardCost implementation ----------------------
+//MARK: BackwardCost implementation
 template<typename NUM_T, typename INTERFACE_T, int size>
 inline void BackwardCost<NUM_T, INTERFACE_T, size>::fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
@@ -436,10 +442,6 @@ std::ostream& operator<<(std::ostream& os,
     NODE_T step = vertex.fields;
     NODE_T numNodes = vertex._num_nodes;
     //iterate over the rows eg. vertex/nodes
-    std::cout << numNodes << std::endl;
-    std::cout << vertex.ARTIFICIAL_NODE << std::endl;
-    std::cout << vertex.THRESHOLD_NODE << std::endl;
-    
     for (NODE_T i = 0; i < numNodes; ++i)
     {
         os << i << ": ";
@@ -447,30 +449,66 @@ std::ostream& operator<<(std::ostream& os,
         // next iterate over the columns eg. data
         for (NODE_T j = 0;  j < numNodes; ++j)
         {
-            os << "[";
             
-            // iterate over the channels eg. data entries
-            for (NODE_T k = 0; k < step; ++k)
+            auto to = rowPtr[j * step];
+            os << "[" << to << " : ";
+                // iterate over the channels eg. data entries
+            for (NODE_T k = 1; k < step; ++k)
             {
                 os << rowPtr[j * step + k];
                 if (k != step - 1) os << " : ";
             }
             os << "] ";
-    std::cout << vertex.breakCondition(i, j) << std::endl;
-            if (vertex.breakCondition(i, j)) break;
+            if (vertex.breakCondition(i, to)) break;
         }
         os << std::endl;
     }
     return os;
 } /* operator<<()*/
 
+
 template<typename NUM_T, typename INTERFACE_T, int size>
 std::ostream& operator<<(std::ostream& os,
                          const Base1dContainer<NUM_T, INTERFACE_T, size>& container)
 {
+    // Print the container name followed by the stored data.
+    for (const auto& element :  container.dataNames)
+    {
+        os << element << ": ";
+    }
+    
     for (const auto& e: container)
     {
         os << e << ", ";
+    }
+    return os;
+}
+    
+template<typename NUM_T, typename INTERFACE_T, int size>
+std::ostream& operator<<(std::ostream& os,
+                         const Dist<NUM_T, INTERFACE_T, size>& container)
+{
+    // Print the container name followed by the stored data.
+    os << container.name << ": ";
+   
+    const auto end = container.end() * container.getFields();
+    for (const auto it = container.begin(),
+         end = container.end() * container.getFields(); it != end;  it += 2)
+    {
+        //
+        const auto to = it[0];
+    
+        // cast distance value to string
+        std::string dist = std::to_string(it[0]);
+    
+        // If the distance is set to infinity, print the more
+        // self-explanatory string `INF`.
+        if (it[0] == std::numeric_limits<NUM_T>::max())
+        {
+            dist = "INF";
+        }
+    
+        os << "[" << to << " : " << dist << "] ";
     }
     return os;
 }

@@ -62,12 +62,7 @@ using typeSelector = typename std::conditional<isARRAY<_INT>, _A,
 //template< typename NUM_T, typename _INT, int size >
 //using typeSelector1d = typeSelector< _INT, array1d<NUM_T, size>, vector1d<NUM_T> >;
 template< typename NUM_T, typename _INT, int size >
-using typeSelector1d = typename std::conditional< isARRAY<_INT>, std::array<NUM_T, size>,
-typename std::conditional< isVECTOR< _INT>, std::vector<NUM_T>,
-    typename std::conditional<isOPENCV< _INT>, cv::Mat, UNKNOWN
-        >::type
-    >::type
->::type;
+using typeSelector1d = typeSelector< _INT, array1d< NUM_T, size >, vector1d <NUM_T> >;
 
 template<typename NUM_T, typename _INT, int size >
 using typeSelector2d = typeSelector< _INT, array2d< NUM_T, size >, vector2d <NUM_T> >;

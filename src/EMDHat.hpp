@@ -6,7 +6,7 @@
 #include "utils/flow_utils.hpp"
 #include "MinCostFlow.hpp"
 
-/// Fastest version of EMD. Also, in my experience metric ground distance yields better
+///@brief Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
 ///
 /// Required params:
@@ -27,7 +27,7 @@
 ///     We assume *F is already allocated and has enough space and is initialized to zeros.
 ///     See also flow_utils.hpp file for flow-related utils.
 ///     Default value: NULL and then FLOW_TYPE must be NO_FLOW.
-///     
+///
 /// Required template params:
 /// NUM_T - the type of the histogram bins count (should be one of: int, long int, long long int, double)
 ///
@@ -38,22 +38,26 @@
 ///           == WITHOUT_EXTRA_MASS_FLOW - fills F with the flows between all bins, except the flow
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
+///
+/// isMetric: Use this option (set it to false) if  EMDHat should not assume metric property for the ground distance (C).
+///        Note that C should still be symmetric and non-negative!
 
 template<typename NUM_T, typename CONVERT_TO_T,
          typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
 class EMDHat_Base
 {
 public:
-    EMDHat_Base(const NODE_T _N)
+    EMDHat_Base(const NODE_T _N, const bool isMetric = true)
     : N(_N)
     , cost(2 * _N + 2)
     , flows(2 * _N + 2)
-    , nonZeroSourceNodes(_N)
-    , nonZeroSinkNodes(_N)
-    , uniqueJs(_N)
+    , nonZeroSourceNodes(_N, "non-zero weight source nodes")
+    , nonZeroSinkNodes(_N, "non-zero weight sink nodes")
+    , uniqueJs(_N, "uniqueEges")
     , REMOVE_NODE_FLAG(-1)
     , mcf(2 * _N + 2)
-    , vertexWeights(2 * _N + 2)
+    , vertexWeights(2 * _N + 2, "Vertex Weights")
+    , groundDistanceIsMetric(isMetric)
     {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
@@ -86,8 +90,10 @@ protected:
     // const members
     const NODE_T N;
     const NODE_T REMOVE_NODE_FLAG;
+    const bool groundDistanceIsMetric;
 };
 
+//MARK: Partial Spacialization for EMDHat
 template<typename NUM_T, typename INTERFACE_T, int size = 0,
         FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
 class EMDHat :
@@ -127,8 +133,7 @@ public:
     
 };
 
-/// Same as emd_hat_gd_metric, but does not assume metric property for the ground distance (C).
-/// Note that C should still be symmetric and non-negative!
+
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE= NO_FLOW>
 struct emd_hat
 {
