@@ -46,21 +46,30 @@ void preFlow(const std::vector<int>& P, const std::vector<int>& Q)
     for(unsigned int weightIndex = 0; weighIndex < weightsSize; ++weightIndex)
     {
         const auto elem = weight[weightIndex];
-        if(elem > 0) sourcessAt[idx++] = weightIndex;
-        else if(elem < 0) sinksAt[idx++] = weightIndex;
+        if(elem > 0) sourcesAt[sourceIdx++] = weightIndex;
+        else if(elem < 0) sinksAt[sinkIdx++] = weightIndex;
         else continue; // Weight is Zero and can therefore be skipped.
     }
     
     /* For each source-sink-combination check if cost.at([sourceIndx, sinkIndex])
     // is less then the maximum (e.g. threshold) cost.
-    // sources/sinks: 0 1 3 once
+    // sources/sinks: 0 1 3 !once
     // |            0 1 0 0 0
        |            1 0 0 0 1  <- binary mat c[i][j] < maxCost.
                     2 1 1 0 0
-                once  0 0 1    <- sink node receives flow only from
+               !once  0 0 1    <- sink node receives flow only from
                                   threshold?
                             ^
                             |- source node flows only to threshold?
      */
-    for(auto & source)
+    for(auto & sourceIndex : sourcesAt)
+    {
+        for(auto& sinkIndex : sinksAt)
+        {
+            if (c[i][j] = maxC) continue;
+            arrayOfEdges[counter++] = sourceIndex;
+            arrayOfEdges[counter++] = sinkIndex;
+            
+        }
+    }
 }

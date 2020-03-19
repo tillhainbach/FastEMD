@@ -85,6 +85,7 @@
 		2B68565B2416234E00261814 /* Vertex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vertex.cpp; sourceTree = "<group>"; };
 		2B68565C2416234E00261814 /* Vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vertex.hpp; sourceTree = "<group>"; };
 		2B68566C24178DC100261814 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
 		2BB7085A2413AE1700CE4195 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -304,6 +305,7 @@
 				2BC463AE2388138900CBCAFF /* tictoc.hpp */,
 				2BC463CE2388422F00CBCAFF /* rubner_emd */,
 				2BB708592413AE1700CE4195 /* tqdm */,
+				2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */,
 			);
 			path = utils;
 			sourceTree = "<group>";

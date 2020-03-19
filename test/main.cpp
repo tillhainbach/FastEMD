@@ -7,13 +7,10 @@
 //
 
 #include <iostream>
-//#include <type_traits>
 #include <vector>
 #include <array>
-//#include <typeinfo>
 #include "utils/types.h"
-#include "Vertex.hpp"
-
+//#include "Vertex.hpp"
 
 typedef int NODE_T;
 
@@ -40,11 +37,10 @@ public:
     , data(_N, _N, -1) {};
 
     //TODO: check if ptr() is really necessary.
-    virtual inline NUM_T* ptr() = 0;
-    virtual inline NUM_T const * ptr() const = 0;
+//    virtual inline NUM_T* ptr() = 0;
+//    virtual inline NUM_T const * ptr() const = 0;
     
-    inline auto begin(){return data.begin();}
-    inline auto end(){return data.begin() + data.size();}
+
     
     inline const auto size() const {return _num_nodes;}
     inline auto resize(NODE_T _newSize){_num_nodes = _newSize;}
@@ -57,7 +53,7 @@ public:
     
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
     inline const auto& operator[](NODE_T idx) const
-        {return ptr()[idx];}
+        {return data[idx];}
     
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
     inline const auto operator[](NODE_T idx)const
@@ -123,23 +119,58 @@ class Base1dContainer2Impl : public Base1dContainer2<NUM_T, INTERFACE_T, size>
 public:
     Base1dContainer2Impl(NODE_T _N) : Base1dContainer2<NUM_T, INTERFACE_T, size>(_N) {};
     
+    inline auto begin(){return this->data.begin();}
+    inline auto end(){return this->data.begin() + this->_num_nodes;}
     
-    inline NUM_T* ptr() override
-        {return static_cast<NUM_T*>(this->data.data());}
-    inline NUM_T const * ptr() const override
-        {return static_cast<NUM_T const *>(this->data.data());}
+//    inline NUM_T* ptr() override
+//        {return static_cast<NUM_T*>(this->data.data());}
+//    inline NUM_T const * ptr() const override
+//        {return static_cast<NUM_T const *>(this->data.data());}
+};
+
+///@brief thin wrapper that holds a reference to an cv::Mat-object. Gets called by begin() or end().
+///  It can be incremented to be used in c++ range-for.
+///  @NOTE: The derefenrecing operator*() calls cv::Mat::row() which return a tempory object (It creates a
+///  new header for the specified row. Therefore catching by referenc in the for:-loop (e.g. auto& : ) is not
+///  supported.
+template<typename _T>
+class CVMatRowIterator
+{
+public:
+    
+    CVMatRowIterator& operator++() {_row++; return *this;}
+    
+    cv::Mat_<_T> operator*(){return _cvMat.row(_row);}
+    bool operator!=(CVMatRowIterator& rhs)
+    {return _row != rhs._row && &_cvMat == &(rhs._cvMat);}
+    
+    CVMatRowIterator(cv::Mat_<_T>& mat, int row = 0)
+    : _cvMat(mat)
+    , _row(row) {};
+    
+    
+    
+//private:
+    cv::Mat_<_T>& _cvMat;
+    int _row;
+    
 };
 
 template<typename NUM_T>
 class Base1dContainer2Impl<NUM_T, OPENCV>: public Base1dContainer2<NUM_T, OPENCV>
 {
 public:
+    
+    
     Base1dContainer2Impl(NODE_T _N) : Base1dContainer2<NUM_T, OPENCV>(_N){};
     
-    inline NUM_T * ptr() override
-        {return this->data.template ptr<NUM_T>(0);}
-    inline NUM_T const * ptr() const override
-        {return this->data.template ptr<const NUM_T>(0);}
+    
+    inline auto begin(){return CVMatRowIterator(this->data);}
+    inline auto end(){return CVMatRowIterator(this->data, this->_num_nodes);}
+//    inline NUM_T * ptr() override
+//        {return this->data.template ptr<NUM_T>(0);}
+//    inline NUM_T const * ptr() const override
+//        {return this->data.template ptr<const NUM_T>(0);}
 };
 // ---------------------- Counter Class --------------------------
 
@@ -185,34 +216,38 @@ int main(int argc, const char * argv[]) {
     
     
     // insert code here...
-    Counter2<int, OPENCV> dat1(4);
-    dat1[0][0] *= -1;
-    std::cout << dat1 << std::endl;
-    
-    Counter2<int, OPENCV> dat(4);
-    dat.makeDiagonal(dat1, 4);
+    Counter2<int, VECTOR> dat(4);
+    for(int i = 0; i < 4; ++i)
+        for(int j = 0; j < 4; ++j)
+            dat[i][j] = i * 4 + j;
     
     std::cout << dat << std::endl;
     
-    Cost<int, OPENCV> cost(4);
-    int* p = cost.row(0);
-    for (int i = 0; i < cost.rows() * cost.rows() * cost.getFields(); ++i)
-        *p++ = i;
-
-    std::cout << cost << std::endl;
+    for(auto row: dat)
+        for(auto& element : row)
+            element = 0;
+ 
+    std::cout << dat << std::endl;
     
-    Counter<int, OPENCV, 0> count(4);
-    count[0] = 9;
-    
-    Counter<int, ARRAY, 4> myCounter(4);
-    myCounter[0] = 9;
-    
-    
-    ForwardCost<int, OPENCV> flow(4);
-
-    flow.fill(cost, count);
-    std::cout << flow << std::endl;
-    
+//    Cost<int, OPENCV> cost(4);
+//    int* p = cost.row(0);
+//    for (int i = 0; i < cost.rows() * cost.rows() * cost.getFields(); ++i)
+//        *p++ = i;
+//
+//    std::cout << cost << std::endl;
+//
+//    Counter<int, OPENCV, 0> count(4);
+//    count[0] = 9;
+//
+//    Counter<int, ARRAY, 4> myCounter(4);
+//    myCounter[0] = 9;
+//
+//
+//    ForwardCost<int, OPENCV> flow(4);
+//
+//    flow.fill(cost, count);
+//    std::cout << flow << std::endl;
+//
     
     // bind to a member function
 //    Foo<int> foo;
@@ -228,8 +263,5 @@ int main(int argc, const char * argv[]) {
 //            std::cout<< e <<", ";
 //        std::cout << std::endl;
 //    }
-    
-    auto it = dat[0];
-    std::cout << typeid(it).name() << std::endl;
     return 0;
 }

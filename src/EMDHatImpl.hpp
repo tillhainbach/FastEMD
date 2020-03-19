@@ -134,7 +134,8 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 
     
     //MARK: fill cost matrix
-    std::fill(uniqueJs.begin(), uniqueJs.end(), 0);
+    std::fill(sinkNodeGetsFlowOnlyFromThreshold.begin(),
+              sinkNodeGetsFlowOnlyFromThreshold.end(), true);
     cost.fill(vertexWeights, nonZeroSourceNodes,
               nonZeroSinkNodes, uniqueJs, Cc, maxC,
               REMOVE_NODE_FLAG);

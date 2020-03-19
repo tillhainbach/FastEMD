@@ -169,81 +169,89 @@ public:
 };
 
 //MARK: Vertex Base Class
-template<typename NUM_T, typename INTERFACE_T, int size = 0>
+template<typename NUM_T, typename INTERFACE_T, int _size = 0>
 class Vertex_Base
 {
-    constexpr static InterfaceRequirement<INTERFACE_T, size> check{};
+    constexpr static InterfaceRequirement<INTERFACE_T, _size> check{};
     
-    std::vector<std::string> datanames;
+    std::vector<std::string> _dataNames;
     
-protected:
-    NODE_T _num_nodes;
-    unsigned char fields;
-    NODE_T THRESHOLD_NODE;
-    NODE_T ARTIFICIAL_NODE;
+protected: //MARK: Protected Members
+    NODE_T _numberOfNodes;
+    NODE_T _thresholdNodeIndex;
+    NODE_T _artificialNodeIndex;
+    unsigned char _fields;
     
     inline void reduceCostCore(
             NUM_T* thisFrom,
             const NODE_T from,
             const NODE_T i,
-            const Counter<NUM_T, INTERFACE_T, size>& d,
-            const Counter<bool, INTERFACE_T, size>& finalNodesFlg,
+            const Counter<NUM_T, INTERFACE_T, _size>& d,
+            const Counter<bool, INTERFACE_T, _size>& finalNodesFlg,
             const NODE_T l);
     
 public:
-    typeSelector2d<NUM_T, INTERFACE_T, size> matrix;
+    typeSelector2d<NUM_T, INTERFACE_T, _size> matrix;
 
     //MARK: Vertex_Base Initializers
     template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
-    Vertex_Base(NODE_T num_nodes, unsigned char _fields,
-           std::vector<std::string>& names)
-    : _num_nodes (num_nodes)
-    , THRESHOLD_NODE(num_nodes - 2)
-    , ARTIFICIAL_NODE(num_nodes - 1)
-    , fields(_fields)
-    , datanames(names) {};
+    Vertex_Base(NODE_T numberOfNodes, unsigned char fields,
+           std::vector<std::string>& dataNames)
+    : _numberOfNodes (numberOfNodes)
+    , _thresholdNodeIndex(numberOfNodes - 2)
+    , _artificialNodeIndex(numberOfNodes - 1)
+    , _fields(fields)
+    , _dataNames(dataNames) {};
     
     template< class T = INTERFACE_T, std::enable_if_t<isVECTOR<T>, int> = 0>
-    Vertex_Base(NODE_T num_nodes, unsigned char _fields,
-           std::vector<std::string>& names)
-    : _num_nodes (num_nodes)
-    , THRESHOLD_NODE(num_nodes - 2)
-    , ARTIFICIAL_NODE(num_nodes - 1)
-    , fields(_fields)
-    , datanames(names)
-    , matrix(num_nodes, std::vector<NUM_T>(num_nodes)) {};
+    Vertex_Base(NODE_T numberOfNodes, unsigned char fields,
+    std::vector<std::string>& dataNames)
+    : _numberOfNodes (numberOfNodes)
+    , _thresholdNodeIndex(numberOfNodes - 2)
+    , _artificialNodeIndex(numberOfNodes - 1)
+    , _fields(fields)
+    , _dataNames(dataNames)
+    , matrix(numberOfNodes, vector1d<NUM_T>(numberOfNodes)) {};
     
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    Vertex_Base(NODE_T num_nodes, unsigned char _fields,
-           std::vector<std::string>& names)
-    : _num_nodes (num_nodes)
-    , THRESHOLD_NODE(num_nodes - 2)
-    , ARTIFICIAL_NODE(num_nodes - 1)
-    , fields(_fields)
-    , datanames(names)
-    , matrix(num_nodes, num_nodes * _fields, 0) {};
+    Vertex_Base(NODE_T numberOfNodes, unsigned char fields,
+    std::vector<std::string>& dataNames)
+    : _numberOfNodes (numberOfNodes)
+    , _thresholdNodeIndex(numberOfNodes - 2)
+    , _artificialNodeIndex(numberOfNodes - 1)
+    , _fields(fields)
+    , _dataNames(dataNames)
+    , matrix(numberOfNodes, numberOfNodes * fields, 0) {};
     
     
-    //MARK: getters
+    
     inline virtual NUM_T const * row(NODE_T _row) const = 0;
     inline virtual NUM_T * row(NODE_T _row) = 0;
     
+    //MARK: Iterators
     inline auto begin(){return matrix.begin();}
-    inline auto end(){return matrix.begin() + _num_nodes;}
+    inline auto end(){return matrix.begin() + _numberOfNodes;}
+    inline auto thresholdNode(){return matrix.begin() + thresholdNodeIndex();}
+    inline auto artificialNode(){return matrix.begin() + artificialNodeIndex();}
     
-    inline auto const rows() const {return _num_nodes;}
-    inline auto const cols() const {return _num_nodes * fields;}
-    
-    inline auto const getFields() const {return fields;}
+    //MARK: Getters
+    inline auto const size() const {return _numberOfNodes;}
+    inline auto const rows() const {return _numberOfNodes;}
+    inline auto const cols() const {return _numberOfNodes * _fields;}
+    inline auto const fields() const {return _fields;}
+    inline auto const thresholdNodeIndex() const {return _thresholdNodeIndex;}
+    inline auto const artificialNodeIndex() const {return  _artificialNodeIndex;}
+    inline auto const toNode(NODE_T nodeIndex) const {return _fields * nodeIndex;}
 
     //MARK: setters
-    inline void resize(NODE_T _newSize)
+    inline void resize(NODE_T numberOfNodes)
     {
-        _num_nodes = _newSize;
-        ARTIFICIAL_NODE = _newSize - 1;
-        THRESHOLD_NODE = _newSize - 2;
+        _numberOfNodes = numberOfNodes;
+        _thresholdNodeIndex = numberOfNodes - 2;
+        _artificialNodeIndex = numberOfNodes - 1;
+
     }
-    inline void setFields(unsigned char _fields) {fields = _fields;}
+    inline void setFields(unsigned char fields) {_fields = fields;}
     
     // MARK: public member functions
     template<typename... Args>
@@ -256,9 +264,9 @@ public:
     void forEach(F&& func) const;
    
     // break condition for inner loop
-    inline bool breakCondition(NODE_T rowIt, NODE_T colIt) const
-        {return ((rowIt < ARTIFICIAL_NODE && colIt == ARTIFICIAL_NODE) ||
-                (rowIt == ARTIFICIAL_NODE && colIt == THRESHOLD_NODE));}
+    inline bool breakCondition(NODE_T rowIndex, NODE_T colIndex) const
+        {return ((rowIndex < _artificialNodeIndex && colIndex == _artificialNodeIndex) ||
+                (rowIndex == _artificialNodeIndex && colIndex == _thresholdNodeIndex));}
     
     // returns an iterator to "value" in row "node"
     inline auto findIndex(NODE_T node, NODE_T value);
@@ -268,13 +276,6 @@ public:
     void reduceCost(Args&&... args);
     
     //MARK: operator overloading
-    Vertex_Base& operator=(const Vertex_Base& vertex)
-    {
-        matrix = vertex.matrix;
-        _num_nodes = vertex._num_nodes;
-        datanames = vertex.datanames;
-        return *this;
-    }
     
     // std::array + std::vector need be return as reference.
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
@@ -291,7 +292,7 @@ public:
 private:
     inline virtual void fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
-                    Counter<NUM_T, INTERFACE_T, size>& counters) = 0;
+                    Counter<NUM_T, INTERFACE_T, _size>& counters) = 0;
 };
 
 //MARK: Vertex partial specialization

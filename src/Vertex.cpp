@@ -246,10 +246,10 @@ template<typename NUM_T, typename INTERFACE_T, int size>
 template<class _T2d>
 void Cost<NUM_T, INTERFACE_T, size>::fill(
         VertexWeights<NUM_T, INTERFACE_T, size>& weights,
-        const Counter<NUM_T, INTERFACE_T, size/2>& sourceNodes,
-        const Counter<NUM_T, INTERFACE_T, size/2>& sinkNodes,
-        Counter<NUM_T, INTERFACE_T, size/2>& uniqueJs,
-        const _T2d& costMatrix, const NUM_T maxC,
+        const Counter<NODE_T, INTERFACE_T, size/2>& nonZeroWeightSourceNodesAtIndex,
+        const Counter<NODE_T, INTERFACE_T, size/2>& nonZeroWeightSinkNodesAtIndex,
+        Counter<bool, INTERFACE_T, size/2>& sinkNodeGetsFlowOnlyFromThreshold,
+        const _T2d& costMatrix, const NUM_T maxCost,
         const int REMOVE_NODE_FLAG)
 {
     // number of sources_that_flow_not_only_to_thresh
@@ -258,87 +258,97 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     NODE_T sinksCounter = 0;
     unsigned char step = this->fields;
     
-    for(const auto i : sourceNodes)
+    for(const auto sourceNodeIndex : nonZeroWeightSourceNodesAtIndex)
     {
-        bool once = false;
-        int sinksForNode = 0;
-        for(const auto j: sinkNodes)
+        bool sourceNodeFlowsOnlyToThreshold = true;
+        int numberOfSinkNodesForSourceNode = 0;
+        auto sourceNode = this->row(sourcesCounter);
+        for(const auto sinkNodeIndex : nonZeroWeightSinkNodesAtIndex)
         { // TODO: is costMatrix really symmetric?
-            auto cost = costMatrix[i][j];
-            if (cost == maxC) continue;
-            (*this)[sourcesCounter][step * sinksForNode] = j;
-            (*this)[sourcesCounter][step * sinksForNode + 1] = cost;
-            sinksForNode++;
-            once = true;
-            if (uniqueJs[j] != j)
+            auto cost = costMatrix[sourceNodeIndex][sinkNodeIndex];
+            if (cost == maxCost) continue;
+            sourceNode[step * numberOfSinkNodesForSourceNode++] = sinkNodeIndex;
+            sourceNode[step * numberOfSinkNodesForSourceNode++] = cost;
+            sourceNodeFlowsOnlyToThreshold = false;
+            if (sinkNodeGetsFlowOnlyFromThreshold[sinkNodeIndex])
             {
-                uniqueJs[j] = j;
+                sinkNodeGetsFlowOnlyFromThreshold[sinkNodeIndex] = false;
                 sinksCounter++;
             }
         } // j
-        if(once)
-        { // mark last node
-            (*this)[sourcesCounter][step * sinksForNode] = REMOVE_NODE_FLAG;
-            weights[sourcesCounter] = weights[i];
-            sourcesCounter++;
+        if(sourceNodeFlowsOnlyToThreshold)
+        {
+            // Add source weight to Threshold node.
+            weights[weights.THRESHOLD_NODE] += weights[sourceNodeIndex];
         }
         else
         {
-            weights[weights.THRESHOLD_NODE] += weights[i];
+            // mark last node
+            sourceNode[step * numberOfSinkNodesForSourceNode] = REMOVE_NODE_FLAG;
+            // Move the source weight to new position.
+            weights[sourcesCounter++] = weights[sourceNodeIndex];
         }
     } // i
 
-    NODE_T ccSize = sourcesCounter + sinksCounter + 2;
-    this->resize(ccSize);
+    // reusable values
+    NODE_T costSize = sourcesCounter + sinksCounter + 2;
+    this->resize(costSize);
+    auto thresholdNodeIndex  = this->thresholdNode();
+    auto artificialNodeIndex = this->artificialNode();
+    auto artificalNodeCost   = maxCost + 1;
+    auto fields              = this->fields();
     
-    //MARK: add THRESHOLD_NODE
-    for (NODE_T i = sourcesCounter; i <= sourcesCounter + sinksCounter; ++i)
+    //MARK: Finalize Sources
+    // Now we have to update the data for each node. So get and iterator over the
+    // rows.
+    auto nodeIterator = this->begin();
+    auto end = this->begin() + sourcesCounter;
+    for(; nodeIterator != end; ++nodeIterator)
     {
-
-        (*this)[ccSize - 2][2 * (i - sourcesCounter)] = i;
-        (*this)[ccSize - 2][2 * (i - sourcesCounter) + 1] = maxC;
-    }
-    
-    //MARK: add Artifical_NODE
-    for (NODE_T i = 0; i < ccSize - 1; ++i)
-    {
-        (*this)[ccSize - 1][2 * i] = i;
-        (*this)[ccSize - 1][2 * i + 1] = maxC + 1;
-    }
-    
-    //MARK: add edges from sources to THRESHOLD_NODE and ARTIFICIAL_NODE
-    for(NODE_T i = 0; i < sourcesCounter; ++i)
-    {
-        for(NODE_T j = 0; j < sinksCounter + 1; ++j)
+        for(NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; sinkNodeIndex =+ fields)
         {
-            if ((*this)[i][2 * j] != REMOVE_NODE_FLAG && (*this)[i][2 * j + 1] != REMOVE_NODE_FLAG) continue;
-            (*this)[i][2 * j] = ccSize - 2;
-            (*this)[i][2 * j + 1] = 0;// to THRESHOLD_NODE
-            (*this)[i][2 * j + 2] = ccSize - 1;
-            (*this)[i][2 * j + 3] = maxC + 1;// to ARTIFICIAL_NODE
-            break;
+            // Update Sink Index
+            nodeIterator = sinkNodeGetsFlowOnlyFromThreshold[nodeIterator;
+            nodeIterator += this->getFields();
+            // add edges to Threshold Node and Artificial Node
+            if (*nodeIterator == REMOVE_NODE_FLAG)
+            { // Add edge from source to Threshold and Artificial Node.
+                *nodeIterator++ = thresholdNodeIndex;  // flows to node
+                *nodeIterator++ = 0;                   // cost to node
+                *nodeIterator++ = artificialNodeIndex; // flows to node
+                *sourceNode++ = artificalNodeCost;   // cost to node
+                break;
+            }
         }
     }
-
-    //MARK: Add edges from sinks to THRESHOLD_NODE and ARTIFICIAL_NODE.
-    for(NODE_T i = sourcesCounter; i < ccSize - 2; ++i)
-    {
-            (*this)[i][0] = ccSize - 1;
-            (*this)[i][1] = maxC + 1;// to ARTIFICAL_NODE
-    }
-
-    //MARK: Add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
-    (*this)[ccSize - 2][2 * sinksCounter + 2] = ccSize - 1;
-    (*this)[ccSize - 2][2 * sinksCounter + 3] = maxC + 1;
     
-    //MARK: Update sink names ([sourcesCounter; sourcesCounter + sinksCounter))
-    for (NODE_T i = 0; i < sourcesCounter; ++i)
+    //MARK: Edges from Sinks to ARTIFICIAL_NODE.
+    for(NODE_T sinkNodeIndex = sourcesCounter; sinkNodeIndex < thresholdNode; ++sinkNodeIndex)
     {
-        for (NODE_T j = 0; j < sinksCounter + 1; ++j)
-        {
-            if ((*this)[i][2 * j] == ccSize - 2) break;
-            (*this)[i][2 * j] = uniqueJs[(*this)[i][2 * j]];
-        }
+       (*this)[sinkNodeIndex][0] = artificialNodeIndex; // flows to Node
+       (*this)[sinkNodeIndex][1] = artificalNodeCost;   // cost to Node
+    }
+    
+    //MARK: Edges from Threshold node
+    // The threshold node is connected to all somls
+    auto thresholdNode = this->row(thresholdNodeIndex);
+    for (NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; ++sinkNodeIndex)
+    {
+        *thresholdNode++ = sinkNodeIndex; // flows to node
+        *thresholdNode++ = maxCost;          // cost of flow
+    }
+    
+    // Add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
+    *thresholdNode++ = artificialNodeIndex; // flows to node
+    *thresholdNode   = artificalNodeCost;   // cost of flow
+    
+    
+    //MARK: Edges from Artifical node
+    auto artificialNode = this->row(artificialNodeIndex);
+    for (NODE_T nodeIndex = 0; nodeIndex < artificialNodeIndex; ++nodeIndex)
+    {
+        *artificialNode++ = nodeIndex;          // flows to node
+        *artificialNode++ = artificalNodeCost;  // cost of flow
     }
     
     std::cout << *this << std::endl;
