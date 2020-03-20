@@ -220,7 +220,8 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
     
     return l;
 } // compute_shortest_path
-    
+ 
+//MARK: Heap Decrease Key
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_decrease_key(
                                         NODE_T i, CONVERT_TO_T alt)
@@ -233,6 +234,7 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_decrease_key(
     }
 } // heap_decrease_key
 
+//MARK: Heap Remove Frist
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_remove_first()
 {
@@ -240,7 +242,8 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_remove_first()
     swap_heap(0, Q.size() * Q.getFields());
     heapify(0);
 } // heap_remove_first
-        
+
+//MARK: Heapify
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heapify(NODE_T i)
 {
@@ -270,7 +273,8 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heapify(NODE_T i)
     } while (true);
     
 } // end heapify
-        
+
+//MARK: Swap Heap
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::swap_heap(NODE_T i,
                                                              NODE_T j)

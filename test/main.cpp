@@ -13,6 +13,7 @@
 //#include "Vertex.hpp"
 
 typedef int NODE_T;
+typedef unsigned char uchar;
 
 template<typename NUM_T, typename INTERFACE_T, int arrSize = 0>
 class Base1dContainer2
@@ -155,6 +156,9 @@ public:
     int _row;
     
 };
+
+template<int T, typename std::conditional<T == 2, int, long>::type >
+struct test { const int number = T;};
 
 template<typename NUM_T>
 class Base1dContainer2Impl<NUM_T, OPENCV>: public Base1dContainer2<NUM_T, OPENCV>

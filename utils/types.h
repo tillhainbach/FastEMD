@@ -52,20 +52,36 @@ inline constexpr bool isUNKNOWN = std::is_same_v<INTERFACE_T, UNKNOWN>;
 
 
 template< typename _INT, typename _A, typename _V, typename _C = cv::Mat1i >
-using typeSelector = typename std::conditional<isARRAY<_INT>, _A,
+using typeSelectorStructure = typename std::conditional<isARRAY<_INT>, _A,
                         typename std::conditional< isVECTOR< _INT>, _V,
                             typename std::conditional<isOPENCV< _INT>, _C, UNKNOWN
                                 >::type
                             >::type
                         >::type;
 
+
 //template< typename NUM_T, typename _INT, int size >
 //using typeSelector1d = typeSelector< _INT, array1d<NUM_T, size>, vector1d<NUM_T> >;
 template< typename NUM_T, typename _INT, int size >
-using typeSelector1d = typeSelector< _INT, array1d< NUM_T, size >, vector1d <NUM_T> >;
+using typeSelector1d = typeSelectorStructure< _INT, array1d< NUM_T, size >, vector1d <NUM_T> >;
 
 template<typename NUM_T, typename _INT, int size >
-using typeSelector2d = typeSelector< _INT, array2d< NUM_T, size >, vector2d <NUM_T> >;
+using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, size >, vector2d <NUM_T> >;
+
+//template < typename NUM_T, typename _INT, int Dimensions, int Size >
+//using typeSelector = typename std::conditional<Dimensions == 1>,
+//                                    typeSelector1d<NUM_T, _INT, Size>,
+//                        typename std::conditional<Dimensions == 2>,
+//                                    typeSelector2d<NUM_T, _INT, Size>,
+//                                    UNKNOWN>::type
+//>::type;
+template< typename NUM_T, typename _INT, int Dimensions, int Size>
+using typeSelector = typename std::conditional<Dimensions == 1,
+                            typeSelector1d<NUM_T, _INT, Size>,
+                        typename std::conditional<Dimensions == 2,
+                            typeSelector2d<NUM_T, _INT, Size>, UNKNOWN>
+                            ::type>
+                        ::type;
 
 template<typename INTERFACE_T, int size>
 struct InterfaceRequirement
