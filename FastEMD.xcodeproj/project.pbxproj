@@ -78,6 +78,15 @@
 		2B2DC04D241FBAD70090BD53 /* TestFastEMD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestFastEMD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B2DC04F241FBAD70090BD53 /* TestFastEMD.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestFastEMD.mm; sourceTree = "<group>"; };
 		2B2DC051241FBAD70090BD53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B3528192428F8970063A500 /* VertexWeights.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexWeights.hpp; sourceTree = "<group>"; };
+		2B35281A2428FE900063A500 /* Counter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Counter.hpp; sourceTree = "<group>"; };
+		2B35281B2428FECB0063A500 /* Distance.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Distance.hpp; sourceTree = "<group>"; };
+		2B35281C242901640063A500 /* BaseNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BaseNetwork.hpp; sourceTree = "<group>"; };
+		2B35281D242902270063A500 /* ReducedCostsNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ReducedCostsNetwork.hpp; sourceTree = "<group>"; };
+		2B35281E242905350063A500 /* ReducedCostsForwardEdgesNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ReducedCostsForwardEdgesNetwork.hpp; sourceTree = "<group>"; };
+		2B35281F2429054A0063A500 /* ReducedCostsAndCapacityBackwardEdgesNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ReducedCostsAndCapacityBackwardEdgesNetwork.hpp; sourceTree = "<group>"; };
+		2B352820242905540063A500 /* FlowNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FlowNetwork.hpp; sourceTree = "<group>"; };
+		2B352821242905600063A500 /* CostsNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CostsNetwork.hpp; sourceTree = "<group>"; };
 		2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo_FastEMD.cpp; sourceTree = "<group>"; };
 		2B3E9D6A2424D4CB00FF0E0A /* BaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BaseContainer.hpp; sourceTree = "<group>"; };
 		2B3E9D6B2424E40800FF0E0A /* VertexBaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBaseContainer.hpp; sourceTree = "<group>"; };
@@ -203,7 +212,16 @@
 				2B68565C2416234E00261814 /* Vertex.hpp */,
 				2B68565B2416234E00261814 /* Vertex.cpp */,
 				2B3E9D6A2424D4CB00FF0E0A /* BaseContainer.hpp */,
+				2B35281A2428FE900063A500 /* Counter.hpp */,
 				2B3E9D6B2424E40800FF0E0A /* VertexBaseContainer.hpp */,
+				2B3528192428F8970063A500 /* VertexWeights.hpp */,
+				2B35281B2428FECB0063A500 /* Distance.hpp */,
+				2B35281C242901640063A500 /* BaseNetwork.hpp */,
+				2B352821242905600063A500 /* CostsNetwork.hpp */,
+				2B352820242905540063A500 /* FlowNetwork.hpp */,
+				2B35281D242902270063A500 /* ReducedCostsNetwork.hpp */,
+				2B35281E242905350063A500 /* ReducedCostsForwardEdgesNetwork.hpp */,
+				2B35281F2429054A0063A500 /* ReducedCostsAndCapacityBackwardEdgesNetwork.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";

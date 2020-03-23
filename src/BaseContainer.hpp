@@ -14,29 +14,38 @@
 #include <type_traits>
 #include <typeinfo>
 
-//MARK: Base1dContainer
-template<typename NUM_T, typename INTERFACE_T, int Dimensions = 1, int Size = 0>
+//MARK: BaseContainer
+template<typename NUM_T, typename INTERFACE_T,  int Size = 0, int Dimensions = 1>
 class BaseContainer
 {
 constexpr static InterfaceRequirement<INTERFACE_T, arrSize> check{};
     
 public:
     
-    template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
-    Base1dContainer(NODE_T _N, std::vector<std::string> _name, uchar _fields = 1)
-    : _num_nodes(_N)
-    , dataNames({_name}) {};
+    //MARK: Initializers
+    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+                    std::vector<std::string> dataNames)
+    : _numberOfNodes(_N)
+    , _containerName(containerName)
+    , _dataNames({_name}) {};
+    
+    
+//    template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
+//    Base1dContainer(NODE_T numberOfNodes, std::string containerName, std::vector<std::string> dataNames)
+//    : _numberOfNodes(_N)
+//    , _containerName(containerName)
+//    , _dataNames({_name}) {};
     
     template< class T = INTERFACE_T, std::enable_if_t<isVECTOR<T>, int> = 0>
-    Base1dContainer(NODE_T _N, std::vector<std::string> _name, uchar _fields = 1)
-    : _num_nodes(_N)
-    , dataNames({_name})
+    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+                  std::vector<std::string> dataNames)
+    : BaseContainer(numberOfNodes, containerName, dataNames)
     , data(_N){};
     
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    Base1dContainer(NODE_T _N, std::vector<std::string> _name, uchar _fields = 1)
-    : _num_nodes(_N)
-    , dataNames({_name})
+    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+                  std::vector<std::string> dataNames)
+    : BaseContainer(numberOfNodes, containerName, dataNames)
     , data(1 + ((1 - Dimensions % 2) * (_N - 1)), _N){};
         //-> will resolve to 1 if Dimension == 1 or _N if Dimensions == 2
     
@@ -49,53 +58,60 @@ public:
     inline auto begin() const {return data.begin();}
     inline auto end() {return data.begin() + _numberOfNodes;}
     inline auto end() const {return data.begin() + _numberOfNodes;}
-    inline auto thresholdNode(){return data.begin() + thresholdNodeIndex();}
-    inline auto artificialNode(){return data.begin() + artificialNodeIndex();}
     
 
     //MARK: Getters
     inline NODE_T size() const {return _numberOfNodes;}
-    
-    //
-    inline NODE_T rows() const {return _numberOfNodes;}
-    inline NODE_T cols() const {return _numberOfNodes * _fields;}
-
-
-    
+ 
     //MARK: Setters
-    inline virtual void resize(NODE_T _newSize) {_num_nodes = _newSize;}
+    inline virtual void resize(NODE_T newNumberOfNodes)
+        {_numberOfNodes = newNumberOfNodes;}
     
-    inline const unsigned char getFields() const {return fields;}
+    inline unsigned char const getFields() const {return fields;}
     
     inline auto& operator[](NODE_T idx) {return ptr()[idx];}
-    inline const auto& operator[](NODE_T idx) const
+    inline auto const& operator[](NODE_T idx) const
         {return ptr()[idx];}
     
-    template<typename _T, typename _F, int _s>
+    template<typename... _Types>
     friend std::ostream& operator<<(std::ostream& os,
-                                    const Base1dContainer<_T, _F, _s>& container);
+                                    const BaseContainer<_Types...>& container);
     
 protected:
 
     NODE_T _numberOfNodes;
-    std::string containerName;
-    std::vector<std::string> dataNames;
-    typeSelector<NUM_T, INTERFACE_T, Dimensions, Size> data;
+    std::string _containerName;
+    std::vector<std::string> _dataNames;
+    typeSelector<NUM_T, INTERFACE_T, Dimensions, Size> _data;
 };
 
 //MARK: Base1dContainerImpl Class
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class Base1dContainerImpl : public Base1dContainer<NUM_T, INTERFACE_T, size>
+class BaseContainerImpl : public BaseContainer<NUM_T, INTERFACE_T, size>
 {
 public:
-    Base1dContainerImpl(NODE_T _N, std::vector<std::string> _name,
+    BaseContainerImpl(NODE_T _N, std::vector<std::string> _name,
                         unsigned char _fields = 1)
-    : Base1dContainer<NUM_T, INTERFACE_T, size>(_N, _name, _fields) {};
+    : BaseContainer<NUM_T, INTERFACE_T, size>(_N, _name, _fields) {};
     
     inline NUM_T * ptr() override
         {return static_cast<NUM_T*>(this->data.data());}
     inline NUM_T const * ptr() const override
         {return static_cast<NUM_T const *>(this->data.data());}
+};
+
+template<typename NUM_T>
+class BaseContainerImpl<NUM_T, OPENCV>: public BaseContainer<NUM_T, OPENCV>
+{
+public:
+    BaseContainerImpl(NODE_T _N, std::vector<std::string> _name,
+                        unsigned char _fields = 1)
+    : Base1dContainer<NUM_T, OPENCV>(_N, _name, _fields){};
+    
+    inline NUM_T * ptr() override
+        {return this->data.template ptr<NUM_T>(0);}
+    inline NUM_T const * ptr() const override
+        {return this->data.template ptr<const NUM_T>(0);}
 };
 
 #endif /* BaseContainer_h */

@@ -216,6 +216,16 @@ std::ostream& operator<<(std::ostream&os, const Base1dContainer2<NUM_T, INTERFAC
     return os;
 }
 
+template<typename... _T>
+class TestCounter : public Counter2<_T..., 2>
+{
+public:
+    TestCounter() : Counter2<_T..., 2>(1){};
+    
+    void sayHello(std::string name) {std::cout << "Hello " << name << "!" << std::endl;}
+};
+
+
 int main(int argc, const char * argv[]) {
     
     
@@ -230,6 +240,9 @@ int main(int argc, const char * argv[]) {
     for(auto row: dat)
         for(auto& element : row)
             element = 0;
+    
+    TestCounter<int, VECTOR> t;
+    t.sayHello("Till");
  
     std::cout << dat << std::endl;
     
