@@ -15,6 +15,7 @@
 		2BB708B9241470C600CE4195 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708AC24146E9700CE4195 /* demo_FastEMD.cpp */; };
 		2BC463CA2388403F00CBCAFF /* testCVFastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463A92388135000CBCAFF /* testCVFastEMD.cpp */; };
 		2BC463D32388422F00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
+		2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -135,6 +136,9 @@
 		2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_impl.hpp; sourceTree = "<group>"; };
 		2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = min_cost_flow.hpp; sourceTree = "<group>"; };
 		2BCE4CC0238E925B00990A02 /* cvMinCostFlow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cvMinCostFlow.hpp; sourceTree = "<group>"; };
+		2BDF5D16242A1892001C2B63 /* CVMatRowIterator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVMatRowIterator.hpp; sourceTree = "<group>"; };
+		2BDF5D17242A1B3C001C2B63 /* code snippets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "code snippets.h"; sourceTree = "<group>"; };
+		2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCVMatRowIterator.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +197,8 @@
 		2B2DC04E241FBAD70090BD53 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */,
+				2BDF5D17242A1B3C001C2B63 /* code snippets.h */,
 				2BB70892241452EF00CE4195 /* main.cpp */,
 				2B2DC04F241FBAD70090BD53 /* TestFastEMD.mm */,
 				2B2DC051241FBAD70090BD53 /* Info.plist */,
@@ -222,6 +228,7 @@
 				2B35281D242902270063A500 /* ReducedCostsNetwork.hpp */,
 				2B35281E242905350063A500 /* ReducedCostsForwardEdgesNetwork.hpp */,
 				2B35281F2429054A0063A500 /* ReducedCostsAndCapacityBackwardEdgesNetwork.hpp */,
+				2BDF5D16242A1892001C2B63 /* CVMatRowIterator.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -557,6 +564,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */,
 				2B2DC050241FBAD70090BD53 /* TestFastEMD.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -620,7 +628,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = TestFastEMD/Info.plist;
+				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -638,7 +646,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = TestFastEMD/Info.plist;
+				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

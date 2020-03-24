@@ -77,20 +77,21 @@ protected:
                           std::vector< std::vector<CONVERT_TO_T> >* F,
                           CONVERT_TO_T maxC);
     
+    //MARK: Helper Classes
     MinCostFlow<CONVERT_TO_T, INTERFACE_T, size> mcf;
     VertexWeights<NUM_T, INTERFACE_T, size> vertexWeights;
     Cost<CONVERT_TO_T, INTERFACE_T, size> cost;
     Flow<CONVERT_TO_T, INTERFACE_T, size> flows;
-    
-    // helper members:
+
     Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSourceNodes;
     Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSinkNodes;
     Counter<CONVERT_TO_T, INTERFACE_T, size/2> uniqueJs;
     
-    // const members
-    const NODE_T N;
-    const NODE_T REMOVE_NODE_FLAG;
-    const bool groundDistanceIsMetric;
+    //MARK: Attributes
+    bool needToSwapFlow;
+    NODE_T const numberOfNodes;
+    NODE_T const lastNodeFlag;
+    bool const groundDistanceIsMetric;
 };
 
 //MARK: Partial Spacialization for EMDHat
@@ -113,36 +114,22 @@ public:
     
 };
 
-template<typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE>
+template<typename... _Types>
 class EMDHat <double, INTERFACE_T, size, FLOW_TYPE> :
-    public EMDHat_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>
+    public EMDHat_Base<double, long long int, _Types...>
 {
 public:
     EMDHat(const NODE_T _N)
-    : EMDHat_Base<double, long long int, INTERFACE_T, size, FLOW_TYPE>(_N)
+    : EMDHat_Base<double, long long int,  _Types...>(_N)
     {};
     
-    typedef double NUM_T;
-    typedef long long int CONVERT_TO_T;
-    virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
-                     const std::vector<NUM_T>& Q,
-                     const std::vector< std::vector<NUM_T> >& C,
+    virtual double calcDistance(const std::vector<double>& P,
+                     const std::vector<double>& Q,
+                     const std::vector< std::vector<double> >& C,
                      NUM_T extra_mass_penalty = -1,
-                     std::vector< std::vector<NUM_T> >* F = NULL,
-                     NUM_T maxC = -1) override;
+                     std::vector< std::vector<double> >* F = NULL,
+                     double maxC = -1) override;
     
-};
-
-
-template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE= NO_FLOW>
-struct emd_hat
-{
-    NUM_T operator()(const std::vector<NUM_T>& P,
-                     const std::vector<NUM_T>& Q,
-                     const std::vector< std::vector<NUM_T> >& C,
-                     NUM_T extra_mass_penalty = -1,
-                     std::vector< std::vector<NUM_T> >* F = NULL);
-        
 };
 
 #include "EMDHatImpl.hpp"

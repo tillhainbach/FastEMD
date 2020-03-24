@@ -16,9 +16,20 @@ template<typename... _Types>
 class Counter : public BaseContainer<_Types...>
 {
 public:
-    Counter(NODE_T _N, std::string _name = "Counter")
-    : Base1dContainerImpl<NUM_T, INTERFACE_T, size>(_N, {_name}){};
+    Counter(NODE_T numberOfNodes, std::string containerName = "counter",
+            std::vector<std::string> dataNames = {"counts per vertex"})
+    : BaseContainer<_Types...>(numberOfNodes, containerName, dataNames){};
+    
+    friend std::ostream& operator<<(std::ostream& os,
+                                    const Counter<_Types...>& counter)
+    {
+        os << counter._containerName << ": ";
+        for (auto element : counter)
+        {
+            os << element << " ";
+        }
+        return os;
+    }
 };
-
 
 #endif /* Counter_h */

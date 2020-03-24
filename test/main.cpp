@@ -11,6 +11,8 @@
 #include <array>
 #include "utils/types.h"
 //#include "Vertex.hpp"
+#include "Counter.hpp"
+#include "CVMatRowIterator.hpp"
 
 typedef int NODE_T;
 typedef unsigned char uchar;
@@ -21,7 +23,7 @@ class Base1dContainer2
 constexpr static InterfaceRequirement<INTERFACE_T, arrSize> check{};
    
 protected:
-    inline virtual void fill(NODE_T r, NODE_T c, NUM_T i, NUM_T d) = 0;
+    inline virtual void fill(NODE_T r, NODE_T c, NUM_T i, NUM_T d) {2+2;};
     
 public:
     template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
@@ -129,34 +131,6 @@ public:
 //        {return static_cast<NUM_T const *>(this->data.data());}
 };
 
-///@brief thin wrapper that holds a reference to an cv::Mat-object. Gets called by begin() or end().
-///  It can be incremented to be used in c++ range-for.
-///  @NOTE: The derefenrecing operator*() calls cv::Mat::row() which return a tempory object (It creates a
-///  new header for the specified row. Therefore catching by referenc in the for:-loop (e.g. auto& : ) is not
-///  supported.
-template<typename _T>
-class CVMatRowIterator
-{
-public:
-    
-    CVMatRowIterator& operator++() {_row++; return *this;}
-    
-    cv::Mat_<_T> operator*(){return _cvMat.row(_row);}
-    bool operator!=(CVMatRowIterator& rhs)
-    {return _row != rhs._row && &_cvMat == &(rhs._cvMat);}
-    
-    CVMatRowIterator(cv::Mat_<_T>& mat, int row = 0)
-    : _cvMat(mat)
-    , _row(row) {};
-    
-    
-    
-//private:
-    cv::Mat_<_T>& _cvMat;
-    int _row;
-    
-};
-
 template<int T, typename std::conditional<T == 2, int, long>::type >
 struct test { const int number = T;};
 
@@ -178,22 +152,34 @@ public:
 };
 // ---------------------- Counter Class --------------------------
 
+template<typename... _C>
+class Test : public BaseContainer<_C...>
+{
+public:
+    Test (NODE_T _N)
+    : BaseContainer<_C...>(_N, "Tester", {"testResults"}){};
+    
+    void sayHello (std::string name)
+    {
+        std::cout << "Hello " << name << "!" << std::endl;
+    }
 
+};
 
-template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class Counter2 : public Base1dContainer2Impl<NUM_T, INTERFACE_T, size>
+template<typename NUM_T, typename... _T>
+class Counter2 : public Base1dContainer2Impl<NUM_T, _T...>
 {
 public:
     Counter2(NODE_T _N)
-    : Base1dContainer2Impl<NUM_T, INTERFACE_T, size>(_N){};
+    : Base1dContainer2Impl<NUM_T, _T...>(_N){};
 
 private:
     inline void fill(NODE_T r, NODE_T c, NUM_T i, NUM_T d) override;
 
 };
 
-template<typename NUM_T, typename INTERFACE_T, int size>
-inline void Counter2<NUM_T, INTERFACE_T, size>::fill(NODE_T r, NODE_T c, NUM_T i, NUM_T d)
+template<typename NUM_T, typename... _T>
+inline void Counter2<NUM_T, _T...>::fill(NODE_T r, NODE_T c, NUM_T i, NUM_T d)
 {
     (*this)[r][c] = i + d;
 }
@@ -215,70 +201,47 @@ std::ostream& operator<<(std::ostream&os, const Base1dContainer2<NUM_T, INTERFAC
     }
     return os;
 }
-
-template<typename... _T>
-class TestCounter : public Counter2<_T..., 2>
-{
-public:
-    TestCounter() : Counter2<_T..., 2>(1){};
     
-    void sayHello(std::string name) {std::cout << "Hello " << name << "!" << std::endl;}
+template< typename NUM_T, int dimensions = 1>
+class Tester
+{
+    int n;
+public:
+    template<int T = dimensions, std::enable_if_t<T == 1 &&
+    std::is_same_v<NUM_T, int>, int> = 0>
+    inline int foo(){ return 1;};
+    
+    template<int T = dimensions, std::enable_if_t<T == 2 &&
+                                    std::is_same_v<NUM_T, int>, int> = 0>
+    inline int foo(){ return 2;};
+    
 };
-
+    
 
 int main(int argc, const char * argv[]) {
     
+//    cv::Mat1i testMat(2,2, -1);
+//    std::cout << testMat << std::endl;
     
-    // insert code here...
-    Counter2<int, VECTOR> dat(4);
+    Counter<int, OPENCV> testCounter(4);
+    std::cout << testCounter << std::endl;
+    Test<int, VECTOR> tester(4);
+    
+    Counter2<int, OPENCV> dat(4);
     for(int i = 0; i < 4; ++i)
         for(int j = 0; j < 4; ++j)
             dat[i][j] = i * 4 + j;
     
     std::cout << dat << std::endl;
     
-    for(auto row: dat)
+    Tester<int> T;
+    std::cout << T.foo() << std::endl;
+    
+    for(auto& row: dat)
         for(auto& element : row)
             element = 0;
     
-    TestCounter<int, VECTOR> t;
-    t.sayHello("Till");
- 
     std::cout << dat << std::endl;
     
-//    Cost<int, OPENCV> cost(4);
-//    int* p = cost.row(0);
-//    for (int i = 0; i < cost.rows() * cost.rows() * cost.getFields(); ++i)
-//        *p++ = i;
-//
-//    std::cout << cost << std::endl;
-//
-//    Counter<int, OPENCV, 0> count(4);
-//    count[0] = 9;
-//
-//    Counter<int, ARRAY, 4> myCounter(4);
-//    myCounter[0] = 9;
-//
-//
-//    ForwardCost<int, OPENCV> flow(4);
-//
-//    flow.fill(cost, count);
-//    std::cout << flow << std::endl;
-//
-    
-    // bind to a member function
-//    Foo<int> foo;
-//    auto f3 = std::bind(&Foo<int>::print_sum, &foo, 95, std::placeholders::_1);
-//    f3(5);
-//    dat.doit(4, std::bind(f3, 5));
-    
-    
-//    std::cout << "[";
-//    for(const auto& r: dat.data)
-//    {
-//        for(const auto& e: r)
-//            std::cout<< e <<", ";
-//        std::cout << std::endl;
-//    }
     return 0;
 }

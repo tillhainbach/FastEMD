@@ -17,41 +17,6 @@
 #include <iostream>
 #include "tictocChrono.hpp"
 #include "utils/utils.h"
-     
-template<typename NUM_T, typename INTERFACE_T,
-         int size, FLOW_TYPE_T FLOW_TYPE>
-NUM_T EMDHat<NUM_T, INTERFACE_T, size,  FLOW_TYPE>::calcDistance(
-                            const std::vector<NUM_T>& P,
-                            const std::vector<NUM_T>& Q,
-                            const std::vector< std::vector<NUM_T> >& C,
-                            NUM_T extra_mass_penalty,
-                            std::vector< std::vector<NUM_T> >* F,
-                            NUM_T maxC)
-{
-
-    if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
-        
-    assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
-
-    return this->calcDistanceInt(P, Q, P, Q, C,
-                                 extra_mass_penalty, F, maxC);
-    
-} // EMDHatArray
-
-template<typename _T>
-auto getMaxCost(const _T& costMatrix, const NODE_T N)
-{
-    auto maxCost = 0;
-    for (NODE_T i = 0; i < N; ++i)
-    {
-        for (NODE_T j = i; j < N; ++j)
-        { // cost matrix is symmetric so just check upper right half
-            assert(costMatrix[i][j] >= 0);
-            if (costMatrix[i][j] > maxCost) maxCost = costMatrix[i][j];
-        }
-    }
-    return maxCost;
-}
 
 //MARK:: calcDistanceInt
 template<typename NUM_T, typename CONVERT_TO_T, typename INTERFACE_T,
@@ -168,7 +133,27 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     
 } // EMDHat_Base::calcDistanceInt()
 
-//MARK: partial specialization for type double
+//MARK: Integral Types
+template<typename... _Types>
+NUM_T EMDHat<_Types...>::calcDistance(
+                            const std::vector<NUM_T>& P,
+                            const std::vector<NUM_T>& Q,
+                            const std::vector< std::vector<NUM_T> >& C,
+                            NUM_T extra_mass_penalty,
+                            std::vector< std::vector<NUM_T> >* F,
+                            NUM_T maxC)
+{
+
+    if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
+        
+    assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
+
+    return this->calcDistanceInt(P, Q, P, Q, C,
+                                 extra_mass_penalty, F, maxC);
+    
+} // EMDHatArray
+
+//MARK: Double Type
 template<typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE>
 double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
                                                     const std::vector<double>& Q,
@@ -179,18 +164,21 @@ double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vec
 {
     typedef long long int CONVERT_TO_T;
      
-    // TODO: static assert
-    assert(sizeof(CONVERT_TO_T) >= 8);
+    static_assert(sizeof(CONVERT_TO_T) >= 8, "Size of CONVER_TO_T should be greater than 8 bytes!");
     
     // This condition should hold:
     // ( 2^(sizeof(CONVERT_TO_T*8)) >= ( MULT_FACTOR^2 )
     // Note that it can be problematic to check it because
     // of overflow problems. I simply checked it with Linux calc
     // which has arbitrary precision.
-    const double MULT_FACTOR = 1000000;
+    static unsigned char const MULT_ORDER = 6;
+    static_assert(MULT_ORDER < 10, "MULT_FACTOR mut hold ( 2^(sizeof(CONVERT_TO_T*8)) >= ( MULT_FACTOR^2 ) which is only true for MULT_ORDER < 10!")
+    const double MULT_FACTOR = pow(1, MULT_ORDER);
+    
+    
 
     // Constructing the input
-    const NODE_T N = static_cast<NODE_T>(P.size());
+    NODE_T const N = static_cast<NODE_T>(P.size());
     std::vector<CONVERT_TO_T> iP(N);
     std::vector<CONVERT_TO_T> iQ(N);
     std::vector< std::vector<CONVERT_TO_T> > iC(N, std::vector<CONVERT_TO_T>(N) );

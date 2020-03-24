@@ -24,11 +24,9 @@ public:
     , _artificialNodeIndex(numberOfNodes - 1)
     , _fields(fields)
     
-    
     //MARK: Iterators
     inline auto thresholdNode(){return data.begin() + thresholdNodeIndex();}
     inline auto artificialNode(){return data.begin() + artificialNodeIndex();}
-    
     
     //MARK: Getters
     inline NODE_T thresholdNodeIndex() const {return _thresholdNodeIndex;}
