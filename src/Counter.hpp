@@ -11,25 +11,35 @@
 
 #include "BaseContainer.hpp"
 
+namespace FastEMD
+{
+using namespace types;
 //MARK: Counter Class
-template<typename... _Types>
-class Counter : public BaseContainer<_Types...>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar DIMENSIONS = 1>
+class Counter : public BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>
 {
 public:
     Counter(NODE_T numberOfNodes, std::string containerName = "counter",
             std::vector<std::string> dataNames = {"counts per vertex"})
-    : BaseContainer<_Types...>(numberOfNodes, containerName, dataNames){};
+    : BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>(numberOfNodes, containerName, dataNames){};
     
+    template<typename _T, typename _I, NODE_T _S, uchar _D>
     friend std::ostream& operator<<(std::ostream& os,
-                                    const Counter<_Types...>& counter)
-    {
-        os << counter._containerName << ": ";
-        for (auto element : counter)
-        {
-            os << element << " ";
-        }
-        return os;
-    }
+                                    const Counter<_T, _I, _S, _D>& counter);
 };
 
+//MARK: implementations
+        
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar DIMENSIONS>
+std::ostream& operator<<(std::ostream& os,
+                         const Counter<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>& counter)
+{
+    os << counter._containerName << ": ";
+    for (auto element : counter)
+    {
+        os << element << " ";
+    }
+    return os;
+}
+} // namespace FastEMD
 #endif /* Counter_h */

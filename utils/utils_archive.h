@@ -15,9 +15,13 @@
 #include <random>
 #include <utils/EMD_DEFS.hpp>
 
+namespace FastEMD
+{
+namespace utils
+{
+
 #ifdef COMPUTE_RUBNER_VERSION
 #include "utils/rubner_emd/emd.h"
-
 void changeSignatures(signature_t *Psig, signature_t *Qsig, std::vector<int> &numbers, int i)
 {
     std::vector <int> noise(numbers.begin() + i * 4, numbers.begin() + i * 4 + 4);
@@ -36,6 +40,8 @@ void changeSignatures(signature_t *Psig, signature_t *Qsig, std::vector<int> &nu
     }
 }
 
+#endif
+
 template<typename _T>
 auto getMaxCost(const _T& costMatrix, const NODE_T N)
 {
@@ -50,39 +56,6 @@ auto getMaxCost(const _T& costMatrix, const NODE_T N)
     }
     return maxCost;
 }
-
-// I use pointers for the weights instead of references to the vector
-// cause I am lazy, and with pointers I can pass either a pointer of
-// std::vector::data() or cv::Mat::data.
-void convert2RubnerInterface(signature_t* Psig, signature_t* Qsig,
-                             int n, int* pWeights, int* qWeights)
-{
-    Psig->n = n;
-    Qsig->n = n;
-    Psig->Features = new feature_t[n];
-    Qsig->Features = new feature_t[n];
-    for (unsigned int i = 0; i < n; ++i)
-    {
-        Psig->Features[i] = i;
-        Qsig->Features[i] = i;
-    }
-    Psig->Weights = new float[n];
-    Qsig->Weights = new float[n];
-    for (unsigned int i = 0; i < n; ++i)
-    {
-        Psig->Weights[i] = pWeights[i];
-        Qsig->Weights[i] = qWeights[i];
-    }
-}
-
-inline
-void freeSignature(signature_t* sig)
-{
-    delete[] sig->Features;
-    delete[] sig->Weights;
-}
-#endif
-
 
 void changeVectors(std::vector<int> & v1, std::vector<int> & v2, std::vector<int> &numbers, int i)
 {
@@ -341,29 +314,9 @@ void printCostForward(
 }
 
 
-void readImage(const char* im_name,
-               unsigned int& im_R,
-               unsigned int& im_C,
-               std::vector<int>& im) {
-    
-    std::fstream fin(im_name);
-    if (!fin) goto readImageErrLabel;
-    
-    fin >> im_R;
-    if (!fin) goto readImageErrLabel;
-    fin >> im_C;
-    if (!fin) goto readImageErrLabel;
-    
-    int tmp;
-    while (fin >> tmp) {
-        im.push_back(tmp);
-    }
-    
-    if (im.size()==im_R*im_C) return;
-readImageErrLabel:
-    std::cerr << "Image " << im_name << " has a problem in its format" << std::endl;
-    exit(1);
-    
-} // readImage
+
+
+}
+} //utils //FastEMD
 
 #endif /* utils_h */

@@ -10,8 +10,8 @@
 #include <iostream>
 #include "utils/EMD_DEFS.hpp"
 #include "utils/tictocChrono.hpp"
-#include "utils/utils.h"
-#include "Vertex.hpp"
+#include "Container.hpp"
+
 
 //------------------------------------------------------------------------------
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
@@ -19,14 +19,14 @@ class MinCostFlow {
 
     //NODE_T _num_nodes;
     
-    Dist<CONVERT_TO_T, INTERFACE_T, size> Q;
+    Distance<CONVERT_TO_T, INTERFACE_T, size> Q;
     Counter<CONVERT_TO_T, INTERFACE_T, size> d;
     Counter<CONVERT_TO_T, INTERFACE_T, size> prev;
     Counter<NODE_T, INTERFACE_T, size> _nodes_to_Q;
     Counter<bool, INTERFACE_T, size> finalNodesFlg;
     Counter<NODE_T, INTERFACE_T, size> counters;
-    ForwardCost<CONVERT_TO_T, INTERFACE_T, size> forwardCost;
-    BackwardCost<CONVERT_TO_T, INTERFACE_T, size> backwardCost;
+    ReducedCostsForwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, size> forwardCost;
+    ReducedCostsAndCapacityBackwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, size> backwardCost;
 
 public:
     MinCostFlow(NODE_T _N)
@@ -47,8 +47,8 @@ public:
     // flow - the flow is returned in it
     CONVERT_TO_T operator()(
         VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
-        const Cost< CONVERT_TO_T, INTERFACE_T, size>& cost,
-        Flow< CONVERT_TO_T, INTERFACE_T, size>& flow);
+        const CostNetwork< CONVERT_TO_T, INTERFACE_T, size>& cost,
+        FlowNetwork< CONVERT_TO_T, INTERFACE_T, size>& flow);
     
     void resize(NODE_T _newSize)
     {

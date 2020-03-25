@@ -10,12 +10,23 @@
 #define types_h
 
 #include <opencv2/core.hpp>
+namespace FastEMD
+{
+namespace types
+{
+
 enum class INTERFACE_TYPE_T
 {
     OPENCV,
     ARRAY,
     VECTOR
 };
+
+//------------------------------------------------------------------------------
+// Should be integral and 0 should convert automatically to the type
+// Did not check if can be changed to other types.
+typedef int NODE_T;
+//------------------------------------------------------------------------------
 
 struct UNKNOWN {}; // used to test against in static_assert()
 
@@ -93,5 +104,7 @@ struct InterfaceRequirement
                   "Size must be greater than 0 if ARRAY-Interface is choosen");
 };
 
+}
 
+} //types //FastEMD
 #endif /* types_h */

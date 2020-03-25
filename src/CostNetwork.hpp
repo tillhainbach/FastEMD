@@ -10,41 +10,44 @@
 #define CostsNetwork_h
 #include "BaseNetwork.hpp"
 
+namespace FastEMD
+{
+using namespace types;
+
 //MARK: CostsNetwork
-template<typename... _Types, int size = 0>
-class CostsNetwork : public BaseNetwork<_Types..., size>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
+class CostNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
 {
 public:
-    Cost(NODE_T numberOfNodes)
-    : VBaseNetwork<_Types..., size>(numberOfNodes, "CostsNetwork",
+    CostNetwork(NODE_T numberOfNodes)
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "CostsNetwork",
                                     {"to", "cost"}, 2) {};
     
     template<class _T2d>
     void fill(
-        VertexWeights<_Types...>& weights,
-        const Counter<_Types..., size/2>& sourceNodes,
-        const Counter<_Types..., size/2>& sinkNodes,
-        Counter<_Types..., size/2>& uniqueJs,
+        VertexWeights<NUM_T, INTERFACE_T, SIZE>& weights,
+        const Counter<NODE_T, INTERFACE_T, SIZE/2>& sourceNodes,
+        const Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodes,
+        Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodeGetsFlowOnlyFromThreshold,
         const _T2d& costMatrix, const NUM_T maxC,
         const int REMOVE_NODE_FLAG);
     
 private:
     inline void fillCore(
                     const NUM_T* costFrom, NODE_T from, NODE_T i,
-                    Counter<_Types..., size>& counters)
+                    Counter<NUM_T, INTERFACE_T, SIZE>& counters)
     override {std::cout << "not in use!" << std::endl;};
 };
 
 //MARK: Implementation
-template<typename NUM_T, typename INTERFACE_T, int size>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 template<class _T2d>
-void Cost<NUM_T, INTERFACE_T, size>::fill(
-                                          VertexWeights<NUM_T, INTERFACE_T, size>& weights,
-                                          const Counter<NODE_T, INTERFACE_T, size/2>& nonZeroWeightSourceNodesAtIndex,
-                                          const Counter<NODE_T, INTERFACE_T, size/2>& nonZeroWeightSinkNodesAtIndex,
-                                          Counter<bool, INTERFACE_T, size/2>& sinkNodeGetsFlowOnlyFromThreshold,
-                                          const _T2d& costMatrix, const NUM_T maxCost,
-                                          const int REMOVE_NODE_FLAG)
+void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
+        VertexWeights<NUM_T, INTERFACE_T, SIZE>& weights,
+        const Counter<NODE_T, INTERFACE_T, SIZE/2>& nonZeroWeightSourceNodesAtIndex,
+        const Counter<NODE_T, INTERFACE_T, SIZE/2>& nonZeroWeightSinkNodesAtIndex,
+        Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodeGetsFlowOnlyFromThreshold,
+        const _T2d& costMatrix, const NUM_T maxCost, const int REMOVE_NODE_FLAG)
 {
     // number of sources_that_flow_not_only_to_thresh
     NODE_T sourcesCounter = 0;
@@ -85,8 +88,8 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     } // i
     
     // reusable values
-    NODE_T costSize = sourcesCounter + sinksCounter + 2;
-    this->resize(costSize);
+    NODE_T costSIZE = sourcesCounter + sinksCounter + 2;
+    this->reSIZE(costSIZE);
     auto thresholdNodeIndex  = this->thresholdNode();
     auto artificialNodeIndex = this->artificialNode();
     auto artificalNodeCost   = maxCost + 1;
@@ -125,7 +128,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     
     //MARK: Edges from Threshold node
     // The threshold node is connected to all somls
-    auto thresholdNode = this->row(thresholdNodeIndex);
+    auto thresholdNode = this->thresholdNode().begin();
     for (NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; ++sinkNodeIndex)
     {
         *thresholdNode++ = sinkNodeIndex; // flows to node
@@ -138,7 +141,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     
     
     //MARK: Edges from Artifical node
-    auto artificialNode = this->row(artificialNodeIndex);
+    auto artificialNode = this->artificialNode().begin();
     for (NODE_T nodeIndex = 0; nodeIndex < artificialNodeIndex; ++nodeIndex)
     {
         *artificialNode++ = nodeIndex;          // flows to node
@@ -148,7 +151,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
     std::cout << *this << std::endl;
 }
 
-
+} // namespace FastEMD
 #endif /* CostsNetwork_h */
 
 //    void fillCostOPENCV(cv::InputArray _VertexWeights, cv::InputArray _costMatrix, int N, int maxC)
@@ -176,7 +179,7 @@ void Cost<NUM_T, INTERFACE_T, size>::fill(
 //        cv::findNonZero(VertexWeights(sinks), nonZeroSinkNode);
 //
 //        std::vector<cv::Point> vertexNotFlowingToThreshold;
-//        vertexNotFlowingToThreshold.reserve(nonZeroSinkNode.size() * nonZeroSourceNode.size());
+//        vertexNotFlowingToThreshold.reserve(nonZeroSinkNode.SIZE() * nonZeroSourceNode.SIZE());
 //        for (auto& point : nonZeroSourceNode)
 //        {
 //            for (auto& p : nonZeroSinkNode)

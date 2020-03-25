@@ -8,25 +8,34 @@
 
 #import <XCTest/XCTest.h>
 #include <opencv2/core.hpp>
-#include "CVMatRowIterator.hpp"
+#include "utils/CVMatRowIterator.hpp"
+#include <iostream>
 
 @interface TestCVMatRowIterator : XCTestCase
 
 @end
 
 @implementation TestCVMatRowIterator
+cv::Mat1i testMat(4, 4 , -1);
+- (void)setUp{
+}
 
-- (void)testPostfixIncrementOperator {
-    cv::Mat1i testMat(4, 4 , -1);
-    CVMatRowIterator firstRow(testMat);
-    CVMatRowIterator nextRow(testMat, 1);
+- (void)testPrefixIncrementOperator {
+    FastEMD::utils::CVMatRowIterator firstRow(testMat);
+    FastEMD::utils::CVMatRowIterator nextRow(testMat, 1);
     XCTAssert(++firstRow == nextRow);
 }
 
+- (void)testPostfixIncrementOperator {
+    FastEMD::utils::CVMatRowIterator firstRow(testMat);
+    FastEMD::utils::CVMatRowIterator nextRow(testMat, 1);
+    XCTAssert(firstRow++ != nextRow);
+    XCTAssert(firstRow == nextRow);
+}
+
 -(void)testInequalityOperator {
-    cv::Mat1i testMat(4, 4 , -1);
-    CVMatRowIterator firstRow(testMat);
-    CVMatRowIterator nextRow(testMat, 1);
+    FastEMD::utils::CVMatRowIterator firstRow(testMat);
+    FastEMD::utils::CVMatRowIterator nextRow(testMat, 1);
     XCTAssert(firstRow != nextRow);
 }
 

@@ -12,6 +12,10 @@
 #include "VertexBaseContainer.hpp"
 
 
+namespace FastEMD
+{
+using namespace types;
+
 template<typename... _Types>
 class Distance : public VertexBaseContainer<_Types...>
 {
@@ -21,4 +25,5 @@ public:
                                      {"to", "distance"}, 2) {};
 };
 
+} // namespace FastEMD
 #endif /* Distance_h */

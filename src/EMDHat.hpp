@@ -80,8 +80,8 @@ protected:
     //MARK: Helper Classes
     MinCostFlow<CONVERT_TO_T, INTERFACE_T, size> mcf;
     VertexWeights<NUM_T, INTERFACE_T, size> vertexWeights;
-    Cost<CONVERT_TO_T, INTERFACE_T, size> cost;
-    Flow<CONVERT_TO_T, INTERFACE_T, size> flows;
+    CostNetwork<CONVERT_TO_T, INTERFACE_T, size> cost;
+    FlowNetwork<CONVERT_TO_T, INTERFACE_T, size> flows;
 
     Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSourceNodes;
     Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSinkNodes;

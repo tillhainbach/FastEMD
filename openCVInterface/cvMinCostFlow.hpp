@@ -14,7 +14,6 @@
 #include "EMD_DEFS.hpp"
 #include <iostream>
 #include "tictocChrono.hpp"
-#include "utils/utils.h"
 
 //------------------------------------------------------------------------------
 template<typename NUM_T>

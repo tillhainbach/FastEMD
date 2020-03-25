@@ -2,8 +2,8 @@
 #define EMD_HAT_HPP
 
 #include <vector>
-#include "EMD_DEFS.hpp"
-#include "flow_utils.hpp"
+#include "utils/EMD_DEFS.hpp"
+#include "utils/flow_utils.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 

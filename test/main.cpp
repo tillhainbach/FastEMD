@@ -13,9 +13,13 @@
 //#include "Vertex.hpp"
 #include "Counter.hpp"
 #include "CVMatRowIterator.hpp"
+#include "readImage.hpp"
 
 typedef int NODE_T;
 typedef unsigned char uchar;
+using namespace FastEMD;
+using namespace types;
+using namespace utils;
 
 template<typename NUM_T, typename INTERFACE_T, int arrSize = 0>
 class Base1dContainer2
@@ -216,7 +220,20 @@ public:
     inline int foo(){ return 2;};
     
 };
-    
+ 
+    template<typename NUM_T, typename INTERFACE_T, int size = 0>
+    class Test2 : public Counter<NUM_T, INTERFACE_T, size>
+    {
+    public:
+        Test2 (NODE_T _N)
+        : Counter<NUM_T, INTERFACE_T, size>(_N, "Tester", {"testResults"}){};
+        
+        void sayHello (std::string name)
+        {
+            std::cout << "Hello " << name << "!" << std::endl;
+        }
+
+    };
 
 int main(int argc, const char * argv[]) {
     
@@ -242,6 +259,42 @@ int main(int argc, const char * argv[]) {
             element = 0;
     
     std::cout << dat << std::endl;
+    
+    //MARK: Read images
+    const char* im1_name= "cameraman.txt";
+    const char* im2_name= "rice.txt";
+    unsigned int im1_R, im1_C, im2_R, im2_C;
+    std::vector<int> im1, im2;
+    FastEMD::utils::readImage(im1_name, im1_R, im1_C, im1);
+    FastEMD::utils::readImage(im2_name, im2_R, im2_C, im2);
+    if ( (im1_R != im2_R) || (im1_C != im2_C) )
+    {
+        std::cerr << "Images should be of the same size" << std::endl;
+    }
+    #define N 6
+    im1_R = N;
+    im1_C = N;
+    im2_R = N;
+    im2_C = N;
+    
+    std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
+    std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
+    std::stringstream vv;
+    for (auto & e: v2)
+    {
+        vv << e << " ";
+    }
+
+    std::string myString("98 95 141 134 102 97 120 181 117 126 150 130 122 98 118 114 102 103 125 113 166 123 97 155 154 148 131 163 109 165 154 104 98 97 102 96 ");
+    std::string vString(vv.str());
+    std::cout << vString << std::endl;
+    std::cout << myString << std::endl;
+    std::cout << (myString == vString) << std::endl;
+    std::cout << myString.size() << std::endl;
+    
+    for (int i = 0; i < vString.size(); ++i)
+        if(vString[i] != myString[i])
+            std::cout << int(vString[i]) << " != " << int(myString[i]) << std::endl;
     
     return 0;
 }

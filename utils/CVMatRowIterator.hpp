@@ -9,6 +9,11 @@
 #ifndef CVMatRowIterator_h
 #define CVMatRowIterator_h
 
+namespace FastEMD
+{
+namespace utils
+{
+
 ///@brief thin wrapper that holds a reference to an cv::Mat-object. Gets called by begin() or end().
 ///  It can be incremented to be used in c++ range-for. This Wrapper is supposed to mimic the behaviour when
 ///  looping over a vector of vectors (or array of arrays).
@@ -99,7 +104,7 @@ inline bool operator!=(CVMatRowIterator<_T> const & lhs,
 }
 
 
-
+}} // utils //FastEMD
 
 
 

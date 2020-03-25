@@ -13,6 +13,15 @@
 #include <cmath>
 #include <iostream>
 
+template<typename NUM_T>
+void fillFWithZeros(std::vector< std::vector<NUM_T> >& F) {
+    for (NODE_T i= 0; i<F.size(); ++i) {
+        for (NODE_T j= 0; j<F[i].size(); ++j) {
+            F[i][j]= 0;
+        }
+    }
+}
+
 // Forward declarations 
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE> struct emd_hat_impl;
 
@@ -262,11 +271,16 @@ struct emd_hat_impl_integral_types {
         }}
     }}
     //====================================================
-//    std::for_each(b.begin(), b.end(), [](int n) {std::cout << n << " ";});
-//    std::cout << std::endl;
-//    std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << n << " ";});
-//    std::cout << std::endl;
-//    std::cout << bb.size() << std::endl;
+    std::cout << "Vertex Weights:" << std::endl;
+    std::cout << "vertex: [weight]" << std::endl;
+    std::for_each(b.begin(), b.end(), [](int n) {std::cout << "["<< n << "]";});
+    std::cout << std::endl;
+        
+    std::cout << "Vertex Weights:" << std::endl;
+    std::cout << "vertex: [weight]" << std::endl;
+    std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << "["<< n << "]";});
+    std::cout << std::endl;
+    std::cout << bb.size() << std::endl;
     #ifndef NDEBUG
     NUM_T DEBUG_sum_bb= 0;
     for (NODE_T i=0; i<bb.size(); ++i) DEBUG_sum_bb+= bb[i];

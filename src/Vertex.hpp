@@ -47,49 +47,9 @@
 //};
 
 
-template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class ForwardCost : public Vertex<NUM_T, INTERFACE_T, size >
-{
-public:
-    ForwardCost(NODE_T num_nodes)
-    : Vertex<NUM_T, INTERFACE_T, size >(num_nodes, 2, {"to", "reduced cost"}) {};
-    
-private:
-    inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
-                         Counter<NUM_T, INTERFACE_T, size>& counters) override;
-    
-};
 
-template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class Flow : public Vertex<NUM_T, INTERFACE_T, size >
-{
-public:
-    Flow(NODE_T num_nodes)
-    : Vertex<NUM_T, INTERFACE_T, size>(num_nodes, 3, {"to", "cost", "flow"}) {};
-    
-    NUM_T calcDist();
-    
-private:
-    inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
-                         Counter<NUM_T, INTERFACE_T, size>& counters) override;
-};
 
-template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class BackwardCost : public Vertex<NUM_T, INTERFACE_T, size >
-{
-public:
-    BackwardCost(NODE_T num_nodes)
-    : Vertex<NUM_T, INTERFACE_T, size >(num_nodes, 3,
-            {"to", "reduced cost", "residual capacity"})
-    {};
 
-private:
-    inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
-                         Counter<NUM_T, INTERFACE_T, size>& counters) override;
-};
 
 
 #include "Vertex.cpp"

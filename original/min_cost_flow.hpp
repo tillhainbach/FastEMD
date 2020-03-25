@@ -7,7 +7,7 @@
 #include <list>
 #include <cassert>
 #include <math.h>
-#include "EMD_DEFS.hpp"
+#include "utils/EMD_DEFS.hpp"
 #include <iostream>
 
 //------------------------------------------------------------------------------
