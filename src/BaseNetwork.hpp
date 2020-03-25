@@ -22,7 +22,7 @@ public:
     
     BaseNetwork(NODE_T numberOfNodes, std::string containerName,
                 std::vector<std::string> dataNames, uchar fields)
-    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(numberOfNodes, containerName
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(numberOfNodes, containerName,
                                                        dataNames, fields) {};
     
     // MARK: public member functions
