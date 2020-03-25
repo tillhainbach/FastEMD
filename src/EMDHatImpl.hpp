@@ -16,7 +16,9 @@
 #include <cmath>
 #include <iostream>
 #include "tictocChrono.hpp"
-#include "utils/utils.h"
+
+namespace FastEMD
+{
 
 //MARK:: calcDistanceInt
 template<typename NUM_T, typename CONVERT_TO_T, typename INTERFACE_T,
@@ -236,7 +238,9 @@ double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vec
     
     return dist;
 } // EMDHat::calcDistance()
-//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+
+} //FastEMD
 #endif
 
 // Copyright (c) 2009-2012, Ofir Pele

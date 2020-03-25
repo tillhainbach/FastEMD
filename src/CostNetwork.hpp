@@ -105,7 +105,7 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
         for(NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; sinkNodeIndex =+ fields)
         {
             // Update Sink Index
-            nodeIterator = sinkNodeGetsFlowOnlyFromThreshold[nodeIterator;
+            nodeIterator = sinkNodeGetsFlowOnlyFromThreshold[nodeIterator];
             nodeIterator += this->getFields();
             // add edges to Threshold Node and Artificial Node
             if (*nodeIterator == REMOVE_NODE_FLAG)
@@ -113,14 +113,14 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
                 *nodeIterator++ = thresholdNodeIndex;  // flows to node
                 *nodeIterator++ = 0;                   // cost to node
                 *nodeIterator++ = artificialNodeIndex; // flows to node
-                *sourceNode++ = artificalNodeCost;   // cost to node
+                *nodeIterator++ = artificalNodeCost;   // cost to node
                 break;
             }
         }
     }
     
     //MARK: Edges from Sinks to ARTIFICIAL_NODE.
-    for(NODE_T sinkNodeIndex = sourcesCounter; sinkNodeIndex < thresholdNode; ++sinkNodeIndex)
+    for(NODE_T sinkNodeIndex = sourcesCounter; sinkNodeIndex < this->thresholdNodeIndex(); ++sinkNodeIndex)
     {
        (*this)[sinkNodeIndex][0] = artificialNodeIndex; // flows to Node
        (*this)[sinkNodeIndex][1] = artificalNodeCost;   // cost to Node

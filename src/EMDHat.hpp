@@ -5,6 +5,8 @@
 #include "utils/EMD_DEFS.hpp"
 #include "utils/flow_utils.hpp"
 #include "MinCostFlow.hpp"
+namespace FastEMD
+{
 
 ///@brief Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
@@ -41,7 +43,6 @@
 ///
 /// isMetric: Use this option (set it to false) if  EMDHat should not assume metric property for the ground distance (C).
 ///        Note that C should still be symmetric and non-negative!
-
 template<typename NUM_T, typename CONVERT_TO_T,
          typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
 class EMDHat_Base
@@ -54,7 +55,6 @@ public:
     , nonZeroSourceNodes(_N, "non-zero weight source nodes")
     , nonZeroSinkNodes(_N, "non-zero weight sink nodes")
     , uniqueJs(_N, "uniqueEges")
-    , REMOVE_NODE_FLAG(-1)
     , mcf(2 * _N + 2)
     , vertexWeights(2 * _N + 2, "Vertex Weights")
     , groundDistanceIsMetric(isMetric)
@@ -131,7 +131,7 @@ public:
                      double maxC = -1) override;
     
 };
-
+} //FastEMD
 #include "EMDHatImpl.hpp"
 
 #endif

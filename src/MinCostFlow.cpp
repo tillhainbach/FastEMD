@@ -13,13 +13,14 @@
 
 #include <stdio.h>
 #include "MinCostFlow.hpp"
-
+namespace FastEMD
+{
 //MARK: Operator()
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
 CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
             VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
-            const Cost< CONVERT_TO_T, INTERFACE_T, size>& cost,
-            Flow< CONVERT_TO_T, INTERFACE_T, size>& flow)
+            const CostNetwork< CONVERT_TO_T, INTERFACE_T, size>& cost,
+            FlowNetwork< CONVERT_TO_T, INTERFACE_T, size>& flow)
 {
     // zero the counters:
     std::fill(counters.begin(), counters.end(), 0);
@@ -285,4 +286,5 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::swap_heap(NODE_T i,
     _nodes_to_Q[ Q[i] ] = i;
 } // swap_heapify
 
+} //FastEMD
 #endif

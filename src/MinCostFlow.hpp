@@ -11,7 +11,8 @@
 #include "utils/EMD_DEFS.hpp"
 #include "utils/tictocChrono.hpp"
 #include "Container.hpp"
-
+namespace FastEMD
+{
 
 //------------------------------------------------------------------------------
 template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
@@ -84,7 +85,7 @@ private:
     inline NODE_T PARENT(NODE_T i) {return (i - 1) / 2;}
     
 }; // end min_cost_flow
-
+} //FastEMD
 #include "MinCostFlow.cpp"
 #endif
 
