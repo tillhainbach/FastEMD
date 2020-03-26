@@ -117,7 +117,7 @@ std::ostream& operator<<(std::ostream& os,
         for(auto& element : container)
         {
             counter++;
-            os << element;
+            os << element; //TODO: move this to vertew weight and own function for distance
             if (counter % container._fields == 0) os << "] [";
             else os << " : ";
         }
