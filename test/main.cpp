@@ -14,6 +14,9 @@
 #include "Counter.hpp"
 #include "CVMatRowIterator.hpp"
 #include "readImage.hpp"
+#include "Distance.hpp"
+#include "FlowNetwork.hpp"
+#include "ReducedCostsForwardEdgesNetwork.hpp"
 
 typedef int NODE_T;
 typedef unsigned char uchar;
@@ -48,6 +51,12 @@ public:
 //    virtual inline NUM_T const * ptr() const = 0;
     
 
+    template<typename T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
+    inline auto fromNode(NODE_T nodeIndex)
+        {return this->data.begin() + nodeIndex;}
+    template<typename T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
+    inline auto fromNode(NODE_T nodeIndex) const
+        {return this->data.begin() + nodeIndex;}
     
     inline const auto size() const {return _num_nodes;}
     inline auto resize(NODE_T _newSize){_num_nodes = _newSize;}
@@ -221,27 +230,26 @@ public:
     
 };
  
-    template<typename NUM_T, typename INTERFACE_T, int size = 0>
-    class Test2 : public Counter<NUM_T, INTERFACE_T, size>
-    {
-    public:
-        Test2 (NODE_T _N)
-        : Counter<NUM_T, INTERFACE_T, size>(_N, "Tester", {"testResults"}){};
-        
-        void sayHello (std::string name)
-        {
-            std::cout << "Hello " << name << "!" << std::endl;
-        }
+template<typename NUM_T, typename INTERFACE_T, int size = 0>
+class Test2 : public BaseNetwork<NUM_T, INTERFACE_T, size>
+{
 
-    };
+public:
+    Test2 (NODE_T _N)
+    : BaseNetwork<NUM_T, INTERFACE_T, size>(_N, "Tester", {"to", "from"}, 2){};
+
+};
+
 
 int main(int argc, const char * argv[]) {
     
 //    cv::Mat1i testMat(2,2, -1);
 //    std::cout << testMat << std::endl;
     
-    Counter<int, OPENCV> testCounter(4);
-    std::cout << testCounter << std::endl;
+    Counter<int, VECTOR> testCounter(4);
+    std::cout << testCounter[0] << std::endl;
+    
+    
     Test<int, VECTOR> tester(4);
     
     Counter2<int, OPENCV> dat(4);
@@ -253,6 +261,14 @@ int main(int argc, const char * argv[]) {
     
     Tester<int> T;
     std::cout << T.foo() << std::endl;
+  
+
+    FlowNetwork<int, ARRAY, 4> network(4);
+    ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
+    std::cout << network << std::endl;
+    auto node = network.thresholdNode();
+    
+    
     
     for(auto& row: dat)
         for(auto& element : row)

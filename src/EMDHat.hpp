@@ -44,20 +44,20 @@ namespace FastEMD
 /// isMetric: Use this option (set it to false) if  EMDHat should not assume metric property for the ground distance (C).
 ///        Note that C should still be symmetric and non-negative!
 template<typename NUM_T, typename CONVERT_TO_T,
-         typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
+         typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
 class EMDHat_Base
 {
 public:
-    EMDHat_Base(const NODE_T _N, const bool isMetric = true)
-    : N(_N)
-    , cost(2 * _N + 2)
-    , flows(2 * _N + 2)
-    , nonZeroSourceNodes(_N, "non-zero weight source nodes")
-    , nonZeroSinkNodes(_N, "non-zero weight sink nodes")
-    , uniqueJs(_N, "uniqueEges")
-    , mcf(2 * _N + 2)
-    , vertexWeights(2 * _N + 2, "Vertex Weights")
-    , groundDistanceIsMetric(isMetric)
+    EMDHat_Base(const NODE_T numberOfNodes, const bool isMetric = true)
+    : _numberOfNodes(numberOfNodes)
+    , cost(2 * numberOfNodes + 2)
+    , flows(2 * numberOfNodes + 2)
+    , nonZeroWeightSourceNodes(numberOfNodes, "non-zero weight source nodes")
+    , nonZeroWeightSinkNodes(numberOfNodes, "non-zero weight sink nodes")
+    , sinkNodesGettingFlowNotOnlyFromThreshold(numberOfNodes, "uniqueEges")
+    , mcf(2 * numberOfNodes + 2)
+    , vertexWeights(2 * numberOfNodes + 2)
+    , _groundDistanceIsMetric(isMetric)
     {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
@@ -78,31 +78,28 @@ protected:
                           CONVERT_TO_T maxC);
     
     //MARK: Helper Classes
-    MinCostFlow<CONVERT_TO_T, INTERFACE_T, size> mcf;
-    VertexWeights<NUM_T, INTERFACE_T, size> vertexWeights;
-    CostNetwork<CONVERT_TO_T, INTERFACE_T, size> cost;
-    FlowNetwork<CONVERT_TO_T, INTERFACE_T, size> flows;
+    MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE> mcf;
+    VertexWeights<NUM_T, INTERFACE_T, SIZE> vertexWeights;
+    CostNetwork<CONVERT_TO_T, INTERFACE_T, SIZE> cost;
+    FlowNetwork<CONVERT_TO_T, INTERFACE_T, SIZE> flows;
 
-    Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSourceNodes;
-    Counter<CONVERT_TO_T, INTERFACE_T, size/2> nonZeroSinkNodes;
-    Counter<CONVERT_TO_T, INTERFACE_T, size/2> uniqueJs;
+    Counter<NODE_T, INTERFACE_T, SIZE/2> nonZeroWeightSourceNodes;
+    Counter<NODE_T, INTERFACE_T, SIZE/2> nonZeroWeightSinkNodes;
+    Counter<NODE_T, INTERFACE_T, SIZE/2> sinkNodesGettingFlowNotOnlyFromThreshold;
     
     //MARK: Attributes
-    bool needToSwapFlow;
-    NODE_T const numberOfNodes;
-    NODE_T const lastNodeFlag;
-    bool const groundDistanceIsMetric;
+    bool _needToSwapFlow;
+    NODE_T const _numberOfNodes;
+    bool const _groundDistanceIsMetric;
 };
 
 //MARK: Partial Spacialization for EMDHat
-template<typename NUM_T, typename INTERFACE_T, int size = 0,
-        FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class EMDHat :
-    public EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
+class EMDHat : public EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>
 {
 public:
-    EMDHat(const NODE_T _N)
-    : EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, size, FLOW_TYPE>(_N)
+    EMDHat(const NODE_T numberOfNodes)
+    : EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>(numberOfNodes)
     {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
@@ -114,19 +111,18 @@ public:
     
 };
 
-template<typename... _Types>
-class EMDHat <double, INTERFACE_T, size, FLOW_TYPE> :
-    public EMDHat_Base<double, long long int, _Types...>
+template<typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
+class EMDHat <double, INTERFACE_T, SIZE, FLOW_TYPE> : public EMDHat_Base<double, long long int, INTERFACE_T, SIZE, FLOW_TYPE>
 {
 public:
-    EMDHat(const NODE_T _N)
-    : EMDHat_Base<double, long long int,  _Types...>(_N)
+    EMDHat(const NODE_T numberOfNodes)
+    : EMDHat_Base<double, long long int, INTERFACE_T, SIZE, FLOW_TYPE>(numberOfNodes)
     {};
     
     virtual double calcDistance(const std::vector<double>& P,
                      const std::vector<double>& Q,
                      const std::vector< std::vector<double> >& C,
-                     NUM_T extra_mass_penalty = -1,
+                     double extra_mass_penalty = -1,
                      std::vector< std::vector<double> >* F = NULL,
                      double maxC = -1) override;
     

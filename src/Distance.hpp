@@ -16,12 +16,12 @@ namespace FastEMD
 {
 using namespace types;
 
-template<typename... _Types>
-class Distance : public VertexBaseContainer<_Types...>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
+class Distance : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>
 {
 public:
     Distance(NODE_T numberOfNodes)
-    : VertexBaseContainer<_Types...>(numberOfNodes, "Distance",
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "Distance",
                                      {"to", "distance"}, 2) {};
 };
 

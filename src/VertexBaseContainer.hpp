@@ -29,30 +29,38 @@ public:
     {};
     
     //MARK: Iterators
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto thresholdNode(){return this->data.begin() + thresholdNodeIndex();}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto artificialNode(){return this->data.begin() + artificialNodeIndex();}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto thresholdNode() const {return this->data.begin() + thresholdNodeIndex();}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto artificialNode() const {return this->data.begin() + artificialNodeIndex();}
-     
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-    isOPENCV<INTERFACE_T>, uchar> = 0>
-    inline auto thresholdNode(){return CVMatRowIterator(this->data, _thresholdNodeIndex);}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-    isOPENCV<INTERFACE_T>, uchar> = 0>
-    inline auto thresholdNode() const {return CVMatRowIterator(this->data, _thresholdNodeIndex);}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-    isOPENCV<INTERFACE_T>, uchar> = 0>
-    inline auto artificialNode(){return CVMatRowIterator(this->data, _artificialNodeIndex);}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-    isOPENCV<INTERFACE_T>, uchar> = 0>
-    inline auto artificialNode() const {return CVMatRowIterator(this->data, _artificialNodeIndex);}
     
-    
-
+    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
+    isOPENCV<INTERFACE_T>, int> = 0>
+    inline auto thresholdNode()
+        {return CVMatRowIterator(this->data, this->thresholdNodeIndex());}
+    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
+    isOPENCV<INTERFACE_T>, int> = 0>
+    inline auto thresholdNode() const
+        {return CVMatRowIterator(this->data, this->thresholdNodeIndex());}
+    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
+    isOPENCV<INTERFACE_T>, int> = 0>
+    inline auto artificialNode()
+        {return CVMatRowIterator(this->data, this->artificialNodeIndex());}
+    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
+    isOPENCV<INTERFACE_T>, int> = 0>
+    inline auto artificialNode() const
+        {return CVMatRowIterator(this->data, this->artificialNodeIndex());}
     
     //MARK: Getters
     inline NODE_T thresholdNodeIndex() const {return _thresholdNodeIndex;}
@@ -105,12 +113,12 @@ std::ostream& operator<<(std::ostream& os,
     int counter = 0;
     if(container.rows() == 1)
     {
-        for(auto& element : container.data)
+        os << "[";
+        for(auto& element : container)
         {
             counter++;
-            if (container._fields )
-            os << "[" << element;
-            if (counter % container._fields == 0) os << "]";
+            os << element;
+            if (counter % container._fields == 0) os << "] [";
             else os << " : ";
         }
     }

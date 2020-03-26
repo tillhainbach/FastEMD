@@ -41,12 +41,14 @@ public:
     void swapWeights();
     
     //MARK: Getters
-    NUM_T calcPreFlowCost(
-            Counter<NUM_T, INTERFACE_T, SIZE/2>& sinkNodes,
+    void calcPreFlowCost(
+            Counter<NUM_T, INTERFACE_T, SIZE/2> const& sinkNodes,
             Counter<NUM_T, INTERFACE_T, SIZE/2>& uniqueJs,
-            NUM_T maxC, NODE_T costSize) const;
+            NUM_T maxC, NODE_T costSize);
         
     auto sum() const {NUM_T sum = 0; for (auto e: *this) sum += e; return sum;}
+    
+    NUM_T preFlowCost = 0;
             
 };
 
@@ -100,7 +102,7 @@ std::tuple<NUM_T, NUM_T> VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 void VertexWeights<NUM_T, INTERFACE_T, SIZE>::swapWeights()
 {
-    NODE_T N = (this->_num_nodes - 2) / 2;
+    NODE_T N = (this->_numberOfNodes - 2) / 2;
     std::swap_ranges(this->begin(), this->begin() + N, this->begin() + N);
     std::transform(this->begin(), this->end(), this->begin(),
                    std::bind(std::multiplies<NUM_T>(),
@@ -108,44 +110,41 @@ void VertexWeights<NUM_T, INTERFACE_T, SIZE>::swapWeights()
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-NUM_T VertexWeights<NUM_T, INTERFACE_T, SIZE>::calcPreFlowCost(
-                Counter<NUM_T, INTERFACE_T, SIZE/2>& sinkNodes,
-                Counter<NUM_T, INTERFACE_T, SIZE/2>& uniqueJs,
-                NUM_T maxC, NODE_T costSize) const
+void VertexWeights<NUM_T, INTERFACE_T, SIZE>::calcPreFlowCost(
+                Counter<NUM_T, INTERFACE_T, SIZE/2> const & sinkNodes,
+                Counter<NUM_T, INTERFACE_T, SIZE/2>& sinkNodeGetsFlowOnlyFromThreshold,
+                NUM_T maxC, NODE_T costSize)
 {
     // calculate pre_flow_cost & add weight to this->_thresholdNodeIndex
     // reorder b array so that all weights are in range [0, sourcesCounter + sinksCounter + 2];
-    auto N = (this->SIZE() - 2)/2;
-    auto preFlowCost = 0;
-    int shrinkCounter = costSize - sinkNodes.SIZE() - 2;
+    auto N = (this->size() - 2)/2;
+    int shrinkCounter = costSize - sinkNodes.size() - 2;
     
     // for each sink node check whether it gets flow only from threshold node
     // if true add its weight to Threshold Node else move it weight to new position
     for(auto j : sinkNodes)
     {
         auto weight = (*this)[j + N];
-        if (uniqueJs[j] == 0 && weight != 0)
+        if (sinkNodeGetsFlowOnlyFromThreshold[j] && weight != 0)
         {
             preFlowCost -= (weight * maxC);
-            (*this)[this->_thresholdNodeIndex] += weight;
+            *this->thresholdNode() += weight;
         }
-        else // (uniqueJs[j] != 0)
+        else // (sinkNodeGetsFlowOnlyFromThreshold[j] != 0)
         {
-            uniqueJs[j] = shrinkCounter;
+            sinkNodeGetsFlowOnlyFromThreshold[j] = shrinkCounter;
             (*this)[shrinkCounter++] = weight;
         }
     }
     
     // move this->_thresholdNodeIndex weight;
-    (*this)[shrinkCounter] = (*this)[this->_thresholdNodeIndex];
+    (*this)[shrinkCounter] = *this->thresholdNode();
     
     // resize weights to new SIZE
     this->resize(costSize);
     
     // add zero-weight Artificial node
-    (*this)[this->_artificialNodeIndex] = 0; //Artificialnode;
-    
-    return preFlowCost;
+    *this->artificialNode() = 0; //Artificialnode;
 }
 
 } // namespace FastEMD

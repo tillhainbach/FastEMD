@@ -1,13 +1,13 @@
 //
-//  utils.hpp
+//  readImage.hpp
 //  FastEMD
 //
-//  Created by Till Hainbach on 25.03.20.
+//  Created by Till Hainbach on 26.03.20.
 //  Copyright © 2020 Till Hainbach. All rights reserved.
 //
 
-#ifndef utils_h
-#define utils_h
+#ifndef readImage_h
+#define readImage_h
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -41,6 +41,8 @@ readImageErrLabel:
     
 } // readImage
 
+
+
 }} // utils // FastEMD
 
-#endif /* utils_h */
+#endif /* readImage_h */

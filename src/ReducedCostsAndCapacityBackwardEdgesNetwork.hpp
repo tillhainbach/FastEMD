@@ -20,27 +20,30 @@ class ReducedCostsAndCapacityBackwardEdgesNetwork :
 {
 public:
     ReducedCostsAndCapacityBackwardEdgesNetwork(NODE_T num_nodes)
-    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >(num_nodes, 3,
-            {"to", "reduced cost", "residual capacity"})
+    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >(num_nodes,
+                            "Reduced Costs And Capacity For Backward Edges Network",
+                            {"to", "reduced cost", "residual capacity"}, 3)
     {};
 
 private:
     inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                         NODE_T from, NODE_T i,
                          Counter<NUM_T, INTERFACE_T, SIZE>& counters) override;
 };
 
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline void ReducedCostsAndCapacityBackwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                                                                                            NODE_T from, NODE_T i,
                     Counter<NUM_T, INTERFACE_T, SIZE>& counters)
 {
     NODE_T to = static_cast<NODE_T>(costFrom[i]);
     (*this)[to][counters[to]] = from;
     (*this)[to][counters[to] + 1] = -costFrom[i + 1];;
     (*this)[to][counters[to] + 2] = 0;
-    counters[to] += this->fields;
+    counters[to] += this->fields();
 }
 
 } // namespace FastEMD

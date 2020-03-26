@@ -19,11 +19,12 @@ class ReducedCostsForwardEdgesNetwork : public ReducedCostsNetwork<NUM_T, INTERF
 {
 public:
     ReducedCostsForwardEdgesNetwork(NODE_T num_nodes)
-    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >(num_nodes, 2, {"to", "reduced cost"}) {};
+    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >(num_nodes, "Reduced Costs For Forward Edges Network", {"to", "reduced cost"}, 2) {};
     
 private:
     inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                         NODE_T from, NODE_T i,
                          Counter<NUM_T, INTERFACE_T, SIZE>& counters) override;
     
 };
@@ -31,7 +32,7 @@ private:
 //MARK: Implementation
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline void ReducedCostsForwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom, NODE_T from, NODE_T i,
                     Counter<NUM_T, INTERFACE_T, SIZE>& counters)
 {
     (*this)[from][i] = costFrom[i];

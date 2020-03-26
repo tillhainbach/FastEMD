@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "EMDHat.hpp"
 #include "utils/tictocChrono.hpp"
-#include "utils/utils.h"
+#include "utils/readImage.hpp"
 
 #ifdef COMPUTE_RUBNER_VERSION
 #include "emd.h"
@@ -39,8 +39,8 @@ int main( int argc, char* argv[])
     const char* im2_name= "rice.txt";
     unsigned int im1_R, im1_C, im2_R, im2_C;
     std::vector<int> im1, im2;
-    readImage(im1_name, im1_R, im1_C, im1);
-    readImage(im2_name, im2_R, im2_C, im2);
+    FastEMD::utils::readImage(im1_name, im1_R, im1_C, im1);
+    FastEMD::utils::readImage(im2_name, im2_R, im2_C, im2);
     if ( (im1_R != im2_R) || (im1_C != im2_C) )
     {
         std::cerr << "Images should be of the same size" << std::endl;
@@ -65,7 +65,7 @@ int main( int argc, char* argv[])
 
     std::vector<int> cost_mat_row(im1_R * im1_C);
     for (unsigned int i = 0; i < im1_R * im1_C; ++i) cost_mat.push_back(cost_mat_row);
-    int maxC = calculateCostMatVector(im1_R, im1_C, im2_R, im2_C,
+    int maxC = FastEMD::utils::calculateCostMatVector(im1_R, im1_C, im2_R, im2_C,
                                       cost_mat, THRESHOLD, COST_MULT_FACTOR);
 
     //-----------------------------------------------
@@ -80,9 +80,7 @@ int main( int argc, char* argv[])
 
     tictoc timer;
     timer.tic();
-    Cost<int, ARRAY, 80> dat(80);
-    dat[9][7] = 9;
-    EMDHat<int, ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
+    FastEMD::EMDHat<int, FastEMD::types::ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
 //    std::vector<double> v1d(v1.begin(), v1.end());
 //    std::vector<double> v2d(v2.begin(), v2.end());
 //    std::vector< std::vector<double> > cost_matd(cost_mat.size());

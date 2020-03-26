@@ -36,6 +36,8 @@ public:
     CVMatRowIterator& operator++(int);
     CVMatRowIterator& operator--();
     CVMatRowIterator& operator--(int);
+    CVMatRowIterator& operator+(int idx);
+    CVMatRowIterator& operator-(int idx);
     
     cv::Mat_<_T>& operator*(){currentRow = _cvMat.row(_row); return currentRow;}
     
@@ -87,6 +89,20 @@ CVMatRowIterator<_T>& CVMatRowIterator<_T>::operator--(int)
     CVMatRowIterator temp = *this;
     --*this;
     return temp;
+}
+
+template<typename _T>
+CVMatRowIterator<_T>& CVMatRowIterator<_T>::operator+(int idx)
+{
+    _row += idx;
+    return *this;
+}
+
+template<typename _T>
+CVMatRowIterator<_T>& CVMatRowIterator<_T>::operator-(int idx)
+{
+    _row -= idx;
+    return *this;
 }
 
 template<typename _T>

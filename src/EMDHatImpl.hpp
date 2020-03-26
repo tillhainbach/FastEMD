@@ -16,15 +16,16 @@
 #include <cmath>
 #include <iostream>
 #include "tictocChrono.hpp"
+#include "utils/utils.h"
 
 namespace FastEMD
 {
 
 //MARK:: calcDistanceInt
 template<typename NUM_T, typename CONVERT_TO_T, typename INTERFACE_T,
-         int size, FLOW_TYPE_T FLOW_TYPE>
+         NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
 CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
-        size, FLOW_TYPE>::calcDistanceInt(
+        SIZE, FLOW_TYPE>::calcDistanceInt(
                      const std::vector<CONVERT_TO_T>& POrig,
                      const std::vector<CONVERT_TO_T>& QOrig,
                      const std::vector<CONVERT_TO_T>& P,
@@ -40,54 +41,50 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     //-------------------------------------------------------
     if(maxC == -1)
     {
-        maxC = getMaxCost(Cc, static_cast<NODE_T>(P.size()));
+        maxC = utils::getMaxCost(Cc, static_cast<NODE_T>(P.size()));
     }
 
     // TODO: maybe it is not necessaty to zero this counters?
     // Their values should be overwritten by each call
-    std::fill(nonZeroSourceNodes.begin(), nonZeroSourceNodes.end(), 0);
-    std::fill(nonZeroSinkNodes.begin(), nonZeroSinkNodes.end(), 0);
+    std::fill(nonZeroWeightSourceNodes.begin(), nonZeroWeightSourceNodes.end(), 0);
+    std::fill(nonZeroWeightSinkNodes.begin(), nonZeroWeightSinkNodes.end(), 0);
  
     //MARK: creating the b vector that contains all vertexes
     // Assuming metric property we can pre-flow 0-cost edges
     auto [sum_P, sum_Q] =
-        vertexWeights.template fillWeights<std::vector<CONVERT_TO_T>>(P, Q, N,
-                                  nonZeroSourceNodes, nonZeroSinkNodes);
+        vertexWeights.template fillWeights<std::vector<CONVERT_TO_T>>(P, Q,
+                                                            nonZeroWeightSourceNodes,
+                                                            nonZeroWeightSinkNodes);
     
 #if PRINT && DEBUG
-    std::cout << "non-zero source nodes: "
-                << nonZeroSourceNodes << std::endl;
+    std::cout << nonZeroWeightSourceNodes << std::endl;
     
-    std::cout << "non-zero sink nodes: "
-                << nonZeroSinkNodes << std::endl;
+    std::cout << nonZeroWeightSinkNodes << std::endl;
 #endif
     //MARK: Ensuring that the supplier - P, has more mass.
     CONVERT_TO_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
     if (sum_Q > sum_P)
     {
         vertexWeights.swapWeights();
-        std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
+        std::swap(nonZeroWeightSourceNodes, nonZeroWeightSinkNodes);
         
 #if PRINT && DEBUG
         std::cout << "needToSwapFlow" << std::endl;
-        std::cout << "non-zero source nodes: "
-                    << nonZeroSourceNodes << std::endl;
+        std::cout << nonZeroWeightSourceNodes << std::endl;
         
-        std::cout << "non-zero sink nodes: "
-                    << nonZeroSinkNodes << std::endl;
+        std::cout << nonZeroWeightSinkNodes << std::endl;
 #endif
     }
-
+    
     /* remark*) I put here a deficit of the extra mass, as mass that flows
      to the threshold node can be absorbed from all sources with cost zero
      (this is in reverse order from the paper, where incoming edges to the
      threshold node had the cost of the threshold and outgoing edges had
      the cost of zero) This also makes sum of b zero. */
-    vertexWeights[vertexWeights.THRESHOLD_NODE] = -abs_diff_sum_P_sum_Q;
+    vertexWeights[vertexWeights.thresholdNodeIndex()] = -abs_diff_sum_P_sum_Q;
 
     //-------------------------------------------------------
 #if PRINT && DEBUG
-    std::cout << "start b: ";
     std::cout << vertexWeights << std::endl;
 #endif
     if (extra_mass_penalty == -1) extra_mass_penalty = maxC;
@@ -101,23 +98,20 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 
     
     //MARK: fill cost matrix
-    std::fill(sinkNodeGetsFlowOnlyFromThreshold.begin(),
-              sinkNodeGetsFlowOnlyFromThreshold.end(), true);
-    cost.fill(vertexWeights, nonZeroSourceNodes,
-              nonZeroSinkNodes, uniqueJs, Cc, maxC,
-              REMOVE_NODE_FLAG);
-    
-    CONVERT_TO_T preFlowCost = vertexWeights.calcPreFlowCost(nonZeroSinkNodes, uniqueJs, maxC, cost.rows());
+    std::fill(sinkNodesGettingFlowNotOnlyFromThreshold.begin(),
+              sinkNodesGettingFlowNotOnlyFromThreshold.end(), true);
+    cost.fill(vertexWeights, nonZeroWeightSourceNodes,
+              nonZeroWeightSinkNodes, sinkNodesGettingFlowNotOnlyFromThreshold, Cc, maxC);
 
 
 #if DEBUG
 #if PRINT
-    std::cout << "new vertex Weights:"
-                << vertexWeights << std::endl;
+    std::cout << vertexWeights << std::endl;
 #endif
     CONVERT_TO_T DEBUG_sum_b = 0;
     DEBUG_sum_b += vertexWeights.sum();
     assert(DEBUG_sum_b == 0);
+    cost.print();
 #endif
 
    
@@ -127,7 +121,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     CONVERT_TO_T mcf_dist = mcf(vertexWeights, cost, flows);
 
     CONVERT_TO_T my_dist =
-        preFlowCost + // pre-flowing on cases where it was possible
+    vertexWeights.preFlowCost + // pre-flowing on cases where it was possible
         mcf_dist + // solution of the transportation problem
         (abs_diff_sum_P_sum_Q * extra_mass_penalty); // emd-hat extra mass penalty
 
@@ -136,8 +130,8 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 } // EMDHat_Base::calcDistanceInt()
 
 //MARK: Integral Types
-template<typename... _Types>
-NUM_T EMDHat<_Types...>::calcDistance(
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
+NUM_T EMDHat<NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>::calcDistance(
                             const std::vector<NUM_T>& P,
                             const std::vector<NUM_T>& Q,
                             const std::vector< std::vector<NUM_T> >& C,
@@ -146,7 +140,7 @@ NUM_T EMDHat<_Types...>::calcDistance(
                             NUM_T maxC)
 {
 
-    if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
+//    if (FLOW_TYPE != NO_FLOW) fillFWithZeros(*F);
         
     assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
 
@@ -156,8 +150,8 @@ NUM_T EMDHat<_Types...>::calcDistance(
 } // EMDHatArray
 
 //MARK: Double Type
-template<typename INTERFACE_T, int size, FLOW_TYPE_T FLOW_TYPE>
-double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
+template<typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
+double EMDHat<double, INTERFACE_T, SIZE, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
                                                     const std::vector<double>& Q,
                                                     const std::vector< std::vector<double> >& C,
                                                     double extra_mass_penalty,
@@ -174,7 +168,7 @@ double EMDHat<double, INTERFACE_T, size, FLOW_TYPE>::calcDistance(const std::vec
     // of overflow problems. I simply checked it with Linux calc
     // which has arbitrary precision.
     static unsigned char const MULT_ORDER = 6;
-    static_assert(MULT_ORDER < 10, "MULT_FACTOR mut hold ( 2^(sizeof(CONVERT_TO_T*8)) >= ( MULT_FACTOR^2 ) which is only true for MULT_ORDER < 10!")
+    static_assert(MULT_ORDER < 10, "MULT_FACTOR mut hold ( 2^(sizeof(CONVERT_TO_T*8)) >= ( MULT_FACTOR^2 ) which is only true for MULT_ORDER < 10!");
     const double MULT_FACTOR = pow(1, MULT_ORDER);
     
     

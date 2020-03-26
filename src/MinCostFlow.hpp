@@ -15,19 +15,19 @@ namespace FastEMD
 {
 
 //------------------------------------------------------------------------------
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
 class MinCostFlow {
 
     //NODE_T _num_nodes;
     
-    Distance<CONVERT_TO_T, INTERFACE_T, size> Q;
-    Counter<CONVERT_TO_T, INTERFACE_T, size> d;
-    Counter<CONVERT_TO_T, INTERFACE_T, size> prev;
-    Counter<NODE_T, INTERFACE_T, size> _nodes_to_Q;
-    Counter<bool, INTERFACE_T, size> finalNodesFlg;
-    Counter<NODE_T, INTERFACE_T, size> counters;
-    ReducedCostsForwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, size> forwardCost;
-    ReducedCostsAndCapacityBackwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, size> backwardCost;
+    Distance<CONVERT_TO_T, INTERFACE_T, SIZE> Q;
+    Counter<CONVERT_TO_T, INTERFACE_T, SIZE> d;
+    Counter<CONVERT_TO_T, INTERFACE_T, SIZE> prev;
+    Counter<NODE_T, INTERFACE_T, SIZE> _nodes_to_Q;
+    Counter<bool, INTERFACE_T, SIZE> finalNodesFlg;
+    Counter<NODE_T, INTERFACE_T, SIZE> counters;
+    ReducedCostsForwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, SIZE> forwardCost;
+    ReducedCostsAndCapacityBackwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, SIZE> backwardCost;
 
 public:
     MinCostFlow(NODE_T _N)
@@ -47,9 +47,9 @@ public:
     // first is the second node
     // flow - the flow is returned in it
     CONVERT_TO_T operator()(
-        VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
-        const CostNetwork< CONVERT_TO_T, INTERFACE_T, size>& cost,
-        FlowNetwork< CONVERT_TO_T, INTERFACE_T, size>& flow);
+        VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
+        const CostNetwork< CONVERT_TO_T, INTERFACE_T, SIZE>& cost,
+        FlowNetwork< CONVERT_TO_T, INTERFACE_T, SIZE>& flow);
     
     void resize(NODE_T _newSize)
     {
@@ -67,7 +67,7 @@ public:
 private:
    
     NODE_T compute_shortest_path(
-        const VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
+        const VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
         NODE_T from);
     
     void heap_decrease_key(NODE_T v, CONVERT_TO_T alt);

@@ -291,7 +291,7 @@ private:
         // Making heap (all inf except 0, so we are saving comparisons...)
         //----------------------------------------------------------------
         std::vector<  edge3<NUM_T>  > Q(_num_nodes);
-        std::array<  edge3<NUM_T>, 20 > Qq;
+        std::array<  edge3<NUM_T>, 50 > Qq;
 //        std::cout << from << ": ";
         Q[0]._to= from;
         Qq[0]._to= from;
@@ -339,10 +339,12 @@ private:
 //            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
 //            std::cout << std::endl;
             NODE_T u = Q[0]._to;
-//            std::cout << u << " ";
+            std::cout << u << " ";
             d[u]= Q[0]._dist; // final distance
+            std::for_each(d.begin(), d.end(), [](NUM_T n) {std::cout << n << " ";});
             finalNodesFlg[u] = true;
             if (e[u]<0) {
+                std::cout << "[" << from << " : " << u << "] ";
                 l = u;
                 break;
             }
@@ -350,8 +352,8 @@ private:
 //            std::cout << std::endl;
             
             heap_remove_first(Q, _nodes_to_Q, Qsize);
-//            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
-//            std::cout << std::endl;
+            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+            std::cout << std::endl;
 //            std::pop_heap(Qq.begin(), Qq.begin() + _num_nodes, edgeCompareByDist<NUM_T>());
 //            for(auto &elem : Q) std::cout << "{" << elem._to << " : " << elem._dist << "} ";
 //            std::cout << std::endl;
@@ -367,13 +369,13 @@ private:
 //            std::cout << std::endl;
             
             // neighbors of u
-//            std::cout << "cost_forward" << std::endl;
+            std::cout << "cost_forward" << std::endl;
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
                 assert (it->_reduced_cost>=0);
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
                 if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
-//                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
+                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
                     prev[v]= u;
 //                    std::cout << "prev: ";
@@ -381,14 +383,14 @@ private:
 //                    std::cout << std::endl;
                 }
             }} //it
-//            std::cout << "cost_backward" << std::endl;
+            std::cout << "cost_backward" << std::endl;
             {for (typename std::list< edge2<NUM_T> >::const_iterator it= cost_backward[u].begin(); it!=cost_backward[u].end(); ++it) {
                 if (it->_residual_capacity>0) {
                     assert (it->_reduced_cost>=0);
                     NUM_T alt= d[u]+it->_reduced_cost;
                     NODE_T v = it->_to;
                     if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
-//                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
+                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
                         prev[v] = u;
 //                        std::cout << "prev: ";
@@ -397,7 +399,8 @@ private:
                     }
                 }
             }} //it
-
+            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+            std::cout << std::endl;
             
         } while (!(Qsize == 0));
 

@@ -16,11 +16,11 @@
 namespace FastEMD
 {
 //MARK: Operator()
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
-            VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
-            const CostNetwork< CONVERT_TO_T, INTERFACE_T, size>& cost,
-            FlowNetwork< CONVERT_TO_T, INTERFACE_T, size>& flow)
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
+            VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
+            const CostNetwork< CONVERT_TO_T, INTERFACE_T, SIZE>& cost,
+            FlowNetwork< CONVERT_TO_T, INTERFACE_T, SIZE>& flow)
 {
     // zero the counters:
     std::fill(counters.begin(), counters.end(), 0);
@@ -122,9 +122,9 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::operator()(
 
     
 //MARK: Compute Shortest Path
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
-                const VertexWeights<CONVERT_TO_T, INTERFACE_T, size>& weights,
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
+                const VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
                 NODE_T from)
 {
     // Making heap (all inf except 0, so we are saving
@@ -136,7 +136,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
     _nodes_to_Q[from] = 0;
     
 
-    // TODO: both of these into a function?
+    // TODO: both of these into a function? -> Distance class
     for (NODE_T i = 0; i < from; ++i)
     {
         _nodes_to_Q[i] = j;
@@ -162,19 +162,22 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
     {
         NODE_T u = static_cast<NODE_T>(Q[0]);
         d[u] = Q[1]; // final distance
-        
+        std::cout << u << " ";
+        std::cout << d << " ";
         finalNodesFlg[u] = true;
         if (weights[u] < 0)
         {
+            std::cout << "[" << from << " : " << u << "] ";
             l = u;
             break;
         }
-
+        //TODO: add as member function to Distance class
+        //TODO: wrong Q.size().
         heap_remove_first();
-        
+        std::cout << Q << std::endl;
         // neighbors of u
         for (auto it = forwardCost[u].begin(), end = forwardCost[u].end();
-             it != end; it += forwardCost.getFields())
+             it != end; it += forwardCost.fields())
         {
             assert (it[1] >= 0);
             CONVERT_TO_T alt = d[u] + it[1];
@@ -189,7 +192,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
         } //it
                 
         for (auto it = backwardCost[u].begin(), end = backwardCost[u].end();
-        it != end; it += backwardCost.getFields())
+        it != end; it += backwardCost.fields())
         {
             NODE_T v = static_cast<NODE_T>(*it);
             if (it[2] > 0)
@@ -205,7 +208,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
             }
             if (backwardCost.breakCondition(u, v)) break;
         }
-        
+        std::cout << Q << std::endl;
     } while (!(Q.size() == 0));
     //-------------------------------------------------------------
 
@@ -217,14 +220,16 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::compute_shortest_path(
         // reduced costs and capacity for backward edges
         // (c[j,i]-pi[j]+pi[i])
         backwardCost.reduceCost(d, finalNodesFlg, l);
+        
+
     } // if...
     
     return l;
 } // compute_shortest_path
  
 //MARK: Heap Decrease Key
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_decrease_key(
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+void MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::heap_decrease_key(
                                         NODE_T i, CONVERT_TO_T alt)
 {
     Q[i + 1] = alt;
@@ -236,19 +241,19 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_decrease_key(
 } // heap_decrease_key
 
 //MARK: Heap Remove Frist
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heap_remove_first()
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+void MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::heap_remove_first()
 {
     Q.resize(Q.size() - 1);
-    swap_heap(0, Q.size() * Q.getFields());
+    swap_heap(0, Q.size() * Q.fields());
     heapify(0);
 } // heap_remove_first
 
 //MARK: Heapify
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heapify(NODE_T i)
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+void MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::heapify(NODE_T i)
 {
-    assert(i % Q.getFields() == 0);
+    assert(i % Q.fields() == 0);
     NODE_T Qsize = Q.size();
     do {
         // TODO: change to loop
@@ -276,8 +281,8 @@ void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::heapify(NODE_T i)
 } // end heapify
 
 //MARK: Swap Heap
-template<typename CONVERT_TO_T, typename INTERFACE_T, int size>
-void MinCostFlow<CONVERT_TO_T, INTERFACE_T, size>::swap_heap(NODE_T i,
+template<typename CONVERT_TO_T, typename INTERFACE_T, NODE_T SIZE>
+void MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::swap_heap(NODE_T i,
                                                              NODE_T j)
 {
     std::swap(Q[i], Q[j]);

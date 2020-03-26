@@ -18,9 +18,10 @@ using namespace types;
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
 class CostNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
 {
+    static int const REMOVE_NODE_FLAG = -1;
 public:
     CostNetwork(NODE_T numberOfNodes)
-    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "CostsNetwork",
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "CostNetwork",
                                     {"to", "cost"}, 2) {};
     
     template<class _T2d>
@@ -29,14 +30,20 @@ public:
         const Counter<NODE_T, INTERFACE_T, SIZE/2>& sourceNodes,
         const Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodes,
         Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodeGetsFlowOnlyFromThreshold,
-        const _T2d& costMatrix, const NUM_T maxC,
-        const int REMOVE_NODE_FLAG);
+        const _T2d& costMatrix, const NUM_T maxC);
+    
+    void print()
+    {
+        std::cout << *this << std::endl;
+    }
     
 private:
     inline void fillCore(
-                    const NUM_T* costFrom, NODE_T from, NODE_T i,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom, NODE_T from, NODE_T i,
                     Counter<NUM_T, INTERFACE_T, SIZE>& counters)
     override {std::cout << "not in use!" << std::endl;};
+    
+
 };
 
 //MARK: Implementation
@@ -47,25 +54,25 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
         const Counter<NODE_T, INTERFACE_T, SIZE/2>& nonZeroWeightSourceNodesAtIndex,
         const Counter<NODE_T, INTERFACE_T, SIZE/2>& nonZeroWeightSinkNodesAtIndex,
         Counter<NODE_T, INTERFACE_T, SIZE/2>& sinkNodeGetsFlowOnlyFromThreshold,
-        const _T2d& costMatrix, const NUM_T maxCost, const int REMOVE_NODE_FLAG)
+        const _T2d& costMatrix, const NUM_T maxCost)
 {
     // number of sources_that_flow_not_only_to_thresh
     NODE_T sourcesCounter = 0;
     // number of sinks_that_get_flow_not_only_from_thresh
     NODE_T sinksCounter = 0;
-    unsigned char step = this->fields;
+    auto fields = this->fields();
     
     for(const auto sourceNodeIndex : nonZeroWeightSourceNodesAtIndex)
     {
         bool sourceNodeFlowsOnlyToThreshold = true;
         int numberOfSinkNodesForSourceNode = 0;
-        auto sourceNode = this->row(sourcesCounter);
+        auto& sourceNode = this->fromNode(sourcesCounter);
         for(const auto sinkNodeIndex : nonZeroWeightSinkNodesAtIndex)
         { // TODO: is costMatrix really symmetric?
             auto cost = costMatrix[sourceNodeIndex][sinkNodeIndex];
             if (cost == maxCost) continue;
-            sourceNode[step * numberOfSinkNodesForSourceNode++] = sinkNodeIndex;
-            sourceNode[step * numberOfSinkNodesForSourceNode++] = cost;
+            sourceNode[numberOfSinkNodesForSourceNode++] = sinkNodeIndex;
+            sourceNode[numberOfSinkNodesForSourceNode++] = cost;
             sourceNodeFlowsOnlyToThreshold = false;
             if (sinkNodeGetsFlowOnlyFromThreshold[sinkNodeIndex])
             {
@@ -76,37 +83,40 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
         if(sourceNodeFlowsOnlyToThreshold)
         {
             // Add source weight to Threshold node.
-            weights[weights.THRESHOLD_NODE] += weights[sourceNodeIndex];
+            weights[weights.thresholdNodeIndex()] += weights[sourceNodeIndex];
         }
         else
         {
             // mark last node
-            sourceNode[step * numberOfSinkNodesForSourceNode] = REMOVE_NODE_FLAG;
+            sourceNode[numberOfSinkNodesForSourceNode] = REMOVE_NODE_FLAG;
             // Move the source weight to new position.
             weights[sourcesCounter++] = weights[sourceNodeIndex];
         }
     } // i
+    ;
     
     // reusable values
-    NODE_T costSIZE = sourcesCounter + sinksCounter + 2;
-    this->reSIZE(costSIZE);
-    auto thresholdNodeIndex  = this->thresholdNode();
-    auto artificialNodeIndex = this->artificialNode();
+    NODE_T costSize = sourcesCounter + sinksCounter + 2;
+    this->resize(costSize);
+    auto thresholdNodeIndex  = this->thresholdNodeIndex();
+    auto artificialNodeIndex = this->artificialNodeIndex();
     auto artificalNodeCost   = maxCost + 1;
-    auto fields              = this->fields();
+    
+    weights.calcPreFlowCost(nonZeroWeightSinkNodesAtIndex, sinkNodeGetsFlowOnlyFromThreshold, maxCost, this->rows());
     
     //MARK: Finalize Sources
-    // Now we have to update the data for each node. So get and iterator over the
+    // Now we have to update the data for each node. So get an iterator over the
     // rows.
-    auto nodeIterator = this->begin();
+    auto sourceNodeIterator = this->begin();
     auto end = this->begin() + sourcesCounter;
-    for(; nodeIterator != end; ++nodeIterator)
+    for(; sourceNodeIterator != end; ++sourceNodeIterator)
     {
-        for(NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; sinkNodeIndex =+ fields)
+        auto nodeIterator = sourceNodeIterator->begin();
+        for(NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; ++sinkNodeIndex)
         {
             // Update Sink Index
-            nodeIterator = sinkNodeGetsFlowOnlyFromThreshold[nodeIterator];
-            nodeIterator += this->getFields();
+            *nodeIterator = sinkNodeGetsFlowOnlyFromThreshold[*nodeIterator];
+            nodeIterator += fields;
             // add edges to Threshold Node and Artificial Node
             if (*nodeIterator == REMOVE_NODE_FLAG)
             { // Add edge from source to Threshold and Artificial Node.
@@ -127,28 +137,26 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
     }
     
     //MARK: Edges from Threshold node
-    // The threshold node is connected to all somls
-    auto thresholdNode = this->thresholdNode().begin();
+    // The threshold node is connected to all sinks
+    auto thresholdNodeIterator = this->thresholdNode()->begin();
     for (NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; ++sinkNodeIndex)
     {
-        *thresholdNode++ = sinkNodeIndex; // flows to node
-        *thresholdNode++ = maxCost;          // cost of flow
+        *thresholdNodeIterator++ = sinkNodeIndex; // flows to node
+        *thresholdNodeIterator++ = maxCost;          // cost of flow
     }
     
-    // Add edge from THRESHOLD_NODE to ARTIFICIAL_NODE
-    *thresholdNode++ = artificialNodeIndex; // flows to node
-    *thresholdNode   = artificalNodeCost;   // cost of flow
+    // Add edge from thresholdNodeIndex() to ARTIFICIAL_NODE
+    *thresholdNodeIterator++ = artificialNodeIndex; // flows to node
+    *thresholdNodeIterator   = artificalNodeCost;   // cost of flow
     
     
     //MARK: Edges from Artifical node
-    auto artificialNode = this->artificialNode().begin();
+    auto artificialNodeIterator = this->artificialNode()->begin();
     for (NODE_T nodeIndex = 0; nodeIndex < artificialNodeIndex; ++nodeIndex)
     {
-        *artificialNode++ = nodeIndex;          // flows to node
-        *artificialNode++ = artificalNodeCost;  // cost of flow
+        *artificialNodeIterator++ = nodeIndex;          // flows to node
+        *artificialNodeIterator++ = artificalNodeCost;  // cost of flow
     }
-    
-    std::cout << *this << std::endl;
 }
 
 } // namespace FastEMD

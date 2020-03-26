@@ -42,21 +42,6 @@ void changeSignatures(signature_t *Psig, signature_t *Qsig, std::vector<int> &nu
 
 #endif
 
-template<typename _T>
-auto getMaxCost(const _T& costMatrix, const NODE_T N)
-{
-    auto maxCost = 0;
-    for (NODE_T i = 0; i < N; ++i)
-    {
-        for (NODE_T j = i; j < N; ++j)
-        { // cost matrix is symmetric so just check upper right half
-            assert(costMatrix[i][j] >= 0);
-            if (costMatrix[i][j] > maxCost) maxCost = costMatrix[i][j];
-        }
-    }
-    return maxCost;
-}
-
 void changeVectors(std::vector<int> & v1, std::vector<int> & v2, std::vector<int> &numbers, int i)
 {
 //    std::random_device rd;  //Will be used to obtain a seed for the random number engine

@@ -24,7 +24,7 @@ class ReducedCostsNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
 protected:
     ///@brief Core logic for reducing the cost along one edge.
     inline void reduceCostCore(
-        NUM_T* thisFrom,
+        typeSelector1d<NUM_T, INTERFACE_T, SIZE> & thisFrom,
         const NODE_T from,
         const NODE_T i,
         const Counter<NUM_T, INTERFACE_T, SIZE>& d,
@@ -46,7 +46,7 @@ public:
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCostCore(
-            NUM_T* thisFrom,
+            typeSelector1d<NUM_T, INTERFACE_T, SIZE> & thisFrom,
             const NODE_T from,
             const NODE_T i,
             const Counter<NUM_T, INTERFACE_T, SIZE>& d,

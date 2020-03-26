@@ -12,10 +12,13 @@
 #include "utils/types.h"
 #include <type_traits>
 #include <typeinfo>
+#include "utils/CVMatRowIterator.hpp"
 
 namespace FastEMD
 {
 using namespace types;
+using namespace utils;
+
 //MARK: BaseContainer
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar DIMENSIONS = 1>
 class BaseContainer
@@ -54,13 +57,17 @@ public:
 //    virtual inline NUM_T const * ptr() const = 0;
     
     //MARK: Iterators
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto begin() {return data.begin();}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto begin() const {return data.begin();}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto end() {return data.begin() + _numberOfNodes;}
-    template<uchar T = DIMENSIONS, std::enable_if_t<T == 1, uchar> = 0>
+    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
+    isOPENCV<INTERFACE_T>), uchar> = 0>
     inline auto end() const {return data.begin() + _numberOfNodes;}
     
     template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
@@ -86,18 +93,28 @@ public:
     
     //MARK: Operator Overloading
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
-    inline auto& operator[](NODE_T idx){return data[idx];}
+    inline auto& operator[](NODE_T idx) {return data[idx];}
     
     template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
-    inline auto& operator[](NODE_T idx) const
-     {return data[idx];}
+    inline auto& operator[](NODE_T idx) const {return data[idx];}
 
-    template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    inline auto operator[](NODE_T idx){return data[idx];}
+    // cv::Mat_.operator[]() returns a pointer to the elements which for
+    // 1-row cv::Mat_ means one has to call the subcript operator twice
+    // with first [] being 0 for the first row.
+    // In other words, you have say give be a pointer to the first row and then
+    // return the n-th object.
+    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isOPENCV<T>, int> = 0>
+    inline auto& operator[](NODE_T idx){return *data[idx];}
 
-    template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    inline const auto operator[](NODE_T idx)const
-     {return data[idx];}
+    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isOPENCV<T>, int> = 0>
+    inline auto const & operator[](NODE_T idx)const
+     {return *data[idx];}
+    
+    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 2 && isOPENCV<T>, int> = 0>
+    inline auto operator[](NODE_T idx) {return data[idx];}
+
+    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 2 && isOPENCV<T>, int> = 0>
+    inline auto const operator[](NODE_T idx)const {return data[idx];}
 
     //MARK: Attributes
 protected:
