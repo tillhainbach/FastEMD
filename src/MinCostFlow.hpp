@@ -23,7 +23,6 @@ class MinCostFlow {
     Distance<CONVERT_TO_T, INTERFACE_T, SIZE> Q;
     Counter<CONVERT_TO_T, INTERFACE_T, SIZE> d;
     Counter<CONVERT_TO_T, INTERFACE_T, SIZE> prev;
-    Counter<NODE_T, INTERFACE_T, SIZE> _nodes_to_Q;
     Counter<bool, INTERFACE_T, SIZE> finalNodesFlg;
     Counter<NODE_T, INTERFACE_T, SIZE> counters;
     ReducedCostsForwardEdgesNetwork<CONVERT_TO_T, INTERFACE_T, SIZE> forwardCost;
@@ -33,9 +32,8 @@ public:
     MinCostFlow(NODE_T _N)
     : Q(_N)
 //    , _num_nodes(_N)
-    , d(_N)
-    , prev(_N)
-    , _nodes_to_Q(_N)
+    , d(_N, "d")
+    , prev(_N, "prev")
     , finalNodesFlg(_N)
     , counters(_N)
     , forwardCost(_N)
@@ -57,7 +55,6 @@ public:
         Q.resize(_newSize);
         d.resize(_newSize);
         prev.resize(_newSize);
-        _nodes_to_Q.resize(_newSize);
         finalNodesFlg.resize(_newSize);
         counters.resize(_newSize);
         forwardCost.resize(_newSize);
@@ -69,20 +66,6 @@ private:
     NODE_T compute_shortest_path(
         const VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
         NODE_T from);
-    
-    void heap_decrease_key(NODE_T v, CONVERT_TO_T alt);
-            
-    void heap_remove_first();
-        
-    void heapify(NODE_T i);
-        
-    void swap_heap(NODE_T i, NODE_T j);
-    
-    inline NODE_T LEFT(NODE_T i) {return 2 * (i + 1) - 1;}
-
-    inline NODE_T RIGHT(NODE_T i) {return 2 * (i + 1);}
-
-    inline NODE_T PARENT(NODE_T i) {return (i - 1) / 2;}
     
 }; // end min_cost_flow
 } //FastEMD

@@ -80,7 +80,7 @@ int main( int argc, char* argv[])
 
     tictoc timer;
     timer.tic();
-    FastEMD::EMDHat<int, FastEMD::types::ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
+    FastEMD::EMDHat<int, FastEMD::types::ARRAY, 80 *  3> fastEMD(static_cast<NODE_T>(v1.size()));
 //    std::vector<double> v1d(v1.begin(), v1.end());
 //    std::vector<double> v2d(v2.begin(), v2.end());
 //    std::vector< std::vector<double> > cost_matd(cost_mat.size());

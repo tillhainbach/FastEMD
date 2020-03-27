@@ -118,6 +118,18 @@ public:
             }}
         }}
         
+        std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
+         std::cout << "vertex: [to : reduced cost]" << std::endl;
+        for (NODE_T from = 0; from < _num_nodes; ++from)
+        {
+            std::cout << from << ": ";
+            for (auto &e : r_cost_forward[from])
+            {
+                std::cout << "[" << e._to << " : " << e._reduced_cost << "]";
+            }
+            std::cout << std::endl;
+        }
+        
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
         std::vector< std::list< edge2<NUM_T> > > r_cost_cap_backward(_num_nodes);
@@ -126,15 +138,19 @@ public:
                     r_cost_cap_backward[ it->_to ].push_back( edge2<NUM_T>(from,-it->_cost,0) );
             }} // it
         }} // from
-//        for (NODE_T from = 0; from < _num_nodes; ++from)
-//        {
-//            std::cout << from << ": ";
-//            for (auto &e : r_cost_cap_backward[from])
-//            {
-//                std::cout << e._to << " ";
-//            }
-//            std::cout << std::endl;
-//        }
+        
+        std::cout << "Reduced Costs And Capacity For Backward Edges Network:" << std::endl;
+         std::cout << "vertex: [to : reduced cost : residual capacity]" << std::endl;
+        for (NODE_T from = 0; from < _num_nodes; ++from)
+        {
+            std::cout << from << ": ";
+            for (auto &e : r_cost_cap_backward[from])
+            {
+                std::cout << "[" << e._to << " : " << e._reduced_cost
+                    << " : " << e._residual_capacity << "]";
+            }
+            std::cout << std::endl;
+        }
         
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand,supply
@@ -169,7 +185,7 @@ public:
                 compute_shortest_path(d,prev, k,r_cost_forward,r_cost_cap_backward , e,l); 
                 //tictoc_shortest_path.toc(); 
                 
-//            std::cout << "l = " << l << std::endl;
+            std::cout << "l = " << l << std::endl;
 
                 
                 //---------------------------------------------------------------
@@ -195,20 +211,20 @@ public:
 
                 //---------------------------------------------------------------
                 // augment delta flow from k to l (backwards actually...)
-//            std::cout << "delta = " << delta << std::endl;
-//            std::cout << "k == " << k << ", l == " << l << std::endl;
-//            std::cout << "d: ";
-//            for (NODE_T i=0; i<d.size(); ++i) std::cout << d[i]<< " ";
-//            std::cout << std::endl;
-//            std::cout << "prev: ";
-//            for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-//            std::cout << std::endl;
-//            std::cout << "path: " << l << " ";
+            std::cout << "delta = " << delta << std::endl;
+            std::cout << "k == " << k << ", l == " << l << std::endl;
+            std::cout << "d: ";
+            for (NODE_T i=0; i<d.size(); ++i) std::cout << d[i]<< " ";
+            std::cout << std::endl;
+            std::cout << "prev: ";
+            for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
+            std::cout << std::endl;
+            std::cout << "path: " << l << " ";
                 to = l;
                 do {
                     NODE_T from = prev[to];
-//                    std::cout << from << " ";
-//                    std::cout << "from == k : " << (from == k) << std::endl;
+                    std::cout << from << " ";
+                    std::cout << "from == k : " << (from == k) << std::endl;
                     assert(from != to);
                                         
                     // TODO: might do here O(n) can be done in O(1)
@@ -228,14 +244,14 @@ public:
                     // update e
                     e[to] += delta;
                     e[from] -= delta;
-//                    std::cout << "e: ";
-//                    for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
-//                    std::cout << std::endl;
+                    std::cout << "e: ";
+                    for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
+                    std::cout << std::endl;
                     to = from;
                 } while (to != k);
-//            std::cout << std::endl;
-//            for (int i = 0; i < 50; ++i) std::cout << "-";
-//            std::cout << std::endl;
+            std::cout << std::endl;
+            for (int i = 0; i < 50; ++i) std::cout << "-";
+            std::cout << std::endl;
                 //---------------------------------------------------------------------------------
             } // while true (until we break when S or T is empty)
             //tictoc_while_true.toc();
@@ -292,7 +308,7 @@ private:
         //----------------------------------------------------------------
         std::vector<  edge3<NUM_T>  > Q(_num_nodes);
         std::array<  edge3<NUM_T>, 50 > Qq;
-//        std::cout << from << ": ";
+        std::cout << "from: " << from << std::endl;
         Q[0]._to= from;
         Qq[0]._to= from;
         _nodes_to_Q[from] = 0;
@@ -321,12 +337,19 @@ private:
             Qq[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
         }
+        
+//        std::cout << "nodes to Q: ";
 //        for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
 //        std::cout << std::endl;
-
-        
-        //----------------------------------------------------------------
-//        for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+//
+//        std::cout << "distance: vertex: [to : distance]" << std::endl;
+//        for (NODE_T i=0; i < Q.size(); ++i)
+//        {
+//            std::cout << "[" << Q[i]._to << " : ";
+//            if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
+//                std::cout << "INF] ";
+//            else std::cout << Q[i]._dist << "] ";
+//        }
 //        std::cout << std::endl;
 
         //----------------------------------------------------------------
@@ -339,59 +362,68 @@ private:
 //            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
 //            std::cout << std::endl;
             NODE_T u = Q[0]._to;
-            std::cout << u << " ";
+            std::cout << u << std::endl;
             d[u]= Q[0]._dist; // final distance
-            std::for_each(d.begin(), d.end(), [](NUM_T n) {std::cout << n << " ";});
+//            std::for_each(d.begin(), d.end(), [](NUM_T n) {std::cout << n << " ";});
+//            std::cout << std::endl;
             finalNodesFlg[u] = true;
             if (e[u]<0) {
-                std::cout << "[" << from << " : " << u << "] ";
+//                std::cout << "[" << from << " : " << u << "] " << std::endl;
                 l = u;
                 break;
             }
 //            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
 //            std::cout << std::endl;
-            
-            heap_remove_first(Q, _nodes_to_Q, Qsize);
-            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
+            std::cout << "nodes to Q: ";
+            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
             std::cout << std::endl;
-//            std::pop_heap(Qq.begin(), Qq.begin() + _num_nodes, edgeCompareByDist<NUM_T>());
-//            for(auto &elem : Q) std::cout << "{" << elem._to << " : " << elem._dist << "} ";
+            heap_remove_first(Q, _nodes_to_Q, Qsize);
+            std::cout << "nodes to Q: ";
+            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
+            std::cout << std::endl;
+//            std::cout << "nodes to Q: ";
+//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
 //            std::cout << std::endl;
-//            int i = 0;
-//            for(auto &elem : Qq)
+//
+//            std::cout << "distance: vertex: [to : distance]" << std::endl;
+//            for (NODE_T i=0; i < Q.size(); ++i)
 //            {
-//                if (i > _num_nodes) break;
-//                std::cout << "{" << elem._to << " : " << elem._dist << "} ";
-//                i++;
+//                std::cout << "[" << Q[i]._to << " : ";
+//                if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
+//                    std::cout << "INF] ";
+//                else std::cout << Q[i]._dist << "] ";
 //            }
-//            std::cout << std::endl;
-//            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
 //            std::cout << std::endl;
             
             // neighbors of u
-            std::cout << "cost_forward" << std::endl;
+//            std::cout << "cost_forward" << std::endl;
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
                 assert (it->_reduced_cost>=0);
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
                 if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
-                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
+//                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
+                    
+
                     prev[v]= u;
 //                    std::cout << "prev: ";
 //                    for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
 //                    std::cout << std::endl;
                 }
             }} //it
-            std::cout << "cost_backward" << std::endl;
+//            std::cout << "cost_backward" << std::endl;
             {for (typename std::list< edge2<NUM_T> >::const_iterator it= cost_backward[u].begin(); it!=cost_backward[u].end(); ++it) {
                 if (it->_residual_capacity>0) {
                     assert (it->_reduced_cost>=0);
                     NUM_T alt= d[u]+it->_reduced_cost;
                     NODE_T v = it->_to;
                     if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
-                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
+//                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
+//                        std::cout << "nodes to Q: ";
+//                        for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
+//                        std::cout << std::endl;
                         prev[v] = u;
 //                        std::cout << "prev: ";
 //                        for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
@@ -399,8 +431,19 @@ private:
                     }
                 }
             }} //it
-            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
-            std::cout << std::endl;
+//            std::cout << "nodes to Q: ";
+//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
+//            std::cout << std::endl;
+//
+//            std::cout << "distance: vertex: [to : distance]" << std::endl;
+//            for (NODE_T i=0; i < Q.size(); ++i)
+//            {
+//                std::cout << "[" << Q[i]._to << " : ";
+//                if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
+//                    std::cout << "INF] ";
+//                else std::cout << Q[i]._dist << "] ";
+//            }
+//            std::cout << std::endl;
             
         } while (!(Qsize == 0));
 
@@ -445,13 +488,14 @@ private:
         
         //----------------------------------------------------------------
 //        int i = 0;
-//        std::cout << "cost_forward" << std::endl;
+//        std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
+//        std::cout << "vertex: [to : reduced cost]" << std::endl;
 //        for (auto &node : cost_forward)
 //        {
 //            std::cout << i << ": ";
 //            for (auto &e : node)
 //            {
-//                std::cout << "{" << e._to << " : " << e._reduced_cost << "} ";
+//                std::cout << "[" << e._to << " : " << e._reduced_cost << "] ";
 //            }
 //            i++;
 //            std::cout << std::endl;

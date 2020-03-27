@@ -141,7 +141,7 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
     auto thresholdNodeIterator = this->thresholdNode()->begin();
     for (NODE_T sinkNodeIndex = 0; sinkNodeIndex < sinksCounter; ++sinkNodeIndex)
     {
-        *thresholdNodeIterator++ = sinkNodeIndex; // flows to node
+        *thresholdNodeIterator++ = sinkNodeIndex + sourcesCounter; // flows to node
         *thresholdNodeIterator++ = maxCost;          // cost of flow
     }
     

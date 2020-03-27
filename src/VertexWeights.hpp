@@ -49,6 +49,10 @@ public:
     auto sum() const {NUM_T sum = 0; for (auto e: *this) sum += e; return sum;}
     
     NUM_T preFlowCost = 0;
+    
+    template<typename _T, typename _I, NODE_T _S>
+    friend std::ostream& operator<<(std::ostream& os,
+                                   const VertexWeights<_T, _I, _S>& container);
             
 };
 
@@ -145,6 +149,23 @@ void VertexWeights<NUM_T, INTERFACE_T, SIZE>::calcPreFlowCost(
     
     // add zero-weight Artificial node
     *this->artificialNode() = 0; //Artificialnode;
+}
+
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+std::ostream& operator<<(std::ostream& os,
+                        const VertexWeights<NUM_T, INTERFACE_T, SIZE>& container)
+{
+    // Print the container name.
+    os << container._containerName << ": ";
+    // Print one line describing the containing data.
+    
+    // Now, print the actual data.
+    for(auto& element : container)
+    {
+        os << element << " ";
+    }
+
+    return os;
 }
 
 } // namespace FastEMD

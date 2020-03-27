@@ -130,7 +130,7 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE>::findIndex(NODE_T node, NODE_T value)
 {
-    auto row = (*this)[node];
+    auto& row = (*this)[node];
     auto it = row.begin();
     auto end = row.begin() + this->size() * this->fields();
     for ( ; it != end; it += this->fields())
@@ -171,7 +171,12 @@ std::ostream& operator<<(std::ostream& os,
             else os << " : ";
             if (network.breakCondition(vertexIndex, element)) break;
         }
-        os << row[counter] << "]" << std::endl;
+        for(NODE_T idx = 0; idx < network.fields() - 1; ++idx)
+        {
+            if (idx == 1) os << " : ";
+            os << row[counter + idx];
+        }
+        os << "]" << std::endl;
         ++vertexIndex;
     }
     return os;

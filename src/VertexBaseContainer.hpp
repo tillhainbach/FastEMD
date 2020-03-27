@@ -72,11 +72,7 @@ public:
     inline NODE_T cols() const {return this->_numberOfNodes * _fields;}
     
     //MARK: setters
-    void resize(NODE_T newNumberOfNodes) override;
-    
-    template<typename _T, typename _I, NODE_T _S, uchar _D>
-    friend std::ostream& operator<<(std::ostream& os,
-                                   const VertexBaseContainer<_T, _I, _S, _D>& container);
+    inline void resize(NODE_T newNumberOfNodes) override;
     
 private:
     NODE_T _thresholdNodeIndex;
@@ -94,36 +90,7 @@ void VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>::resize(NODE_T ne
     _artificialNodeIndex = newNumberOfNodes - 1;
 }
 
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar DIMENSIONS>
-std::ostream& operator<<(std::ostream& os,
-                        const VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>& container)
-{
-    // Print the container name.
-    os << container._containerName << ": ";
-    // Print one line describing the containing data.
-    os << "vertex: [";
-    for (auto& dataName : container._dataNames)
-    {
-        os << dataName;
-        if (&dataName != &container._dataNames.back()) os << " : ";
-    }
-    os << "]" << std::endl;
-    
-    // Now, print the actual data.
-    int counter = 0;
-    if(container.rows() == 1)
-    {
-        os << "[";
-        for(auto& element : container)
-        {
-            counter++;
-            os << element; //TODO: move this to vertew weight and own function for distance
-            if (counter % container._fields == 0) os << "] [";
-            else os << " : ";
-        }
-    }
-    return os;
-}
+
         
         
 } // namespace FastEMD

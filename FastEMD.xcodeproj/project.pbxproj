@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2B2DC050241FBAD70090BD53 /* TestCostNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B2DC04F241FBAD70090BD53 /* TestCostNetwork.mm */; };
 		2B2DC058241FC45F0090BD53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB70892241452EF00CE4195 /* main.cpp */; };
+		2B338DCC242E13A7007FE889 /* TestDistanceClass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B338DCB242E13A7007FE889 /* TestDistanceClass.mm */; };
 		2B45E8B5242B8056007508B1 /* TestFlowNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B4242B8056007508B1 /* TestFlowNetwork.mm */; };
 		2B45E8B7242B819E007508B1 /* TestVertexWeight.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B6242B819E007508B1 /* TestVertexWeight.mm */; };
 		2B45E8B9242B8325007508B1 /* TestCounter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B8242B8325007508B1 /* TestCounter.mm */; };
@@ -85,6 +86,7 @@
 		2B2DC04D241FBAD70090BD53 /* TestFastEMD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestFastEMD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B2DC04F241FBAD70090BD53 /* TestCostNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCostNetwork.mm; sourceTree = "<group>"; };
 		2B2DC051241FBAD70090BD53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B338DCB242E13A7007FE889 /* TestDistanceClass.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestDistanceClass.mm; sourceTree = "<group>"; };
 		2B3528192428F8970063A500 /* VertexWeights.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexWeights.hpp; sourceTree = "<group>"; };
 		2B35281A2428FE900063A500 /* Counter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Counter.hpp; sourceTree = "<group>"; };
 		2B35281B2428FECB0063A500 /* Distance.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Distance.hpp; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 		2B2DC04E241FBAD70090BD53 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				2B338DCB242E13A7007FE889 /* TestDistanceClass.mm */,
 				2B45E8B6242B819E007508B1 /* TestVertexWeight.mm */,
 				2B45E8B8242B8325007508B1 /* TestCounter.mm */,
 				2B45E8B4242B8056007508B1 /* TestFlowNetwork.mm */,
@@ -649,6 +652,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */,
+				2B338DCC242E13A7007FE889 /* TestDistanceClass.mm in Sources */,
 				2B2DC050241FBAD70090BD53 /* TestCostNetwork.mm in Sources */,
 				2B45E8B7242B819E007508B1 /* TestVertexWeight.mm in Sources */,
 				2B45E8B5242B8056007508B1 /* TestFlowNetwork.mm in Sources */,
