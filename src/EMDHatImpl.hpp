@@ -57,6 +57,8 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
                                                             nonZeroWeightSinkNodes);
     
 #if PRINT && DEBUG
+    std::cout << vertexWeights << std::endl;
+    
     std::cout << nonZeroWeightSourceNodes << std::endl;
     
     std::cout << nonZeroWeightSinkNodes << std::endl;

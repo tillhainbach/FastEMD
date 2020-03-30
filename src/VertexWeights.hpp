@@ -100,6 +100,10 @@ std::tuple<NUM_T, NUM_T> VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
     }
     nonZeroSourceNodes.resize(nonZeroSourceCounter);
     nonZeroSinkNodes.resize(nonZeroSinkCounter);
+    this->data[1] = 999;
+    std::cout << (*this)[1] << std::endl;
+    std::cout << (*this) << std::endl;
+    
     return {sum_P, sum_Q};
 }
 
@@ -160,9 +164,21 @@ std::ostream& operator<<(std::ostream& os,
     // Print one line describing the containing data.
     
     // Now, print the actual data.
-    for(auto& element : container)
+//    for(auto element : container)
+//    {
+//        os << element << " ";
+//    }
+    auto it = container.begin();
+    for(int i = 0; i < container.size(); ++i)
     {
-        os << element << " ";
+        os << container[i] << " ";
+        assert(&container[i] == &*it);
+        ++it;
+    }
+    
+    for(auto it = container.begin(), end = container.end(); it != end; ++it)
+    {
+        os << &(*it) << " ";
     }
 
     return os;
