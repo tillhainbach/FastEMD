@@ -57,6 +57,7 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
+    //TODO: gives wrong number of cols. Should be numberOfNodes . fields
     , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)), numberOfNodes){};
         //-> will resolve to 1 if Dimension == 1 or _N if DIMENSIONS == 2
     
