@@ -43,6 +43,8 @@ public:
     
     cvMatSingleRow& operator*(){currentRow = _cvMat.row(_row); return currentRow;}
     
+    cvMatSingleRow* operator->(){return &currentRow;}
+    
     ///@brief overloaded equality operator==(). It checks whether the row counters are equal while
     /// referenceing the same cv::Mat-Instance.
     template<typename _C>
@@ -54,6 +56,7 @@ public:
     template<typename _C>
     friend bool operator!=(CVMatRowIterator<_C> const & lhs,
                            CVMatRowIterator<_C> const & rhs);
+
   
 private:
     cv::Mat_<_T> const& _cvMat;

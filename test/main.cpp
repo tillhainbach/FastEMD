@@ -246,14 +246,14 @@ int main(int argc, const char * argv[]) {
 //    cv::Mat1i testMat(2,2, -1);
 //    std::cout << testMat << std::endl;
     typeSelector<bool, VECTOR, 1, 0> data(4);
-    Counter<bool, VECTOR> testCounter(4);
-    std::vector<bool> v(4);
+    Counter<int, VECTOR> testCounter(4);
+    std::vector<int> v(4);
 //    v[0] = 1 + 2;
     testCounter[0] = true;
     std::cout << typeid(testCounter.data[0]).name() << std::endl;
     std::cout << typeid(testCounter[0]).name() << std::endl;
     std::cout << testCounter << std::endl;
-    std::cout << typeid(v[0]).name() << std::endl;
+    std::cout << typeid(*(v.begin())).name() << std::endl;
     
         
     Test<int, VECTOR> tester(4);
@@ -270,14 +270,21 @@ int main(int argc, const char * argv[]) {
   
 
     cv::Mat1i mat(2, 2, 0);
+    
     CVMatRowIterator<int> it(mat);
-    std::cout << (*it)[0] << std::endl;
-    std::cout << typeid(*it).name() << std::endl;
+    std::cout << (*it) << std::endl;
+    std::cout << *it << std::endl;
     
     FlowNetwork<int, OPENCV> network(4);
     ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
     std::cout << network << std::endl;
-    auto node = network.thresholdNode();
+    std::cout << reducedCost << std::endl;
+    auto node = network.begin();
+    auto nodes = *network.fromNode(1);
+    auto arrayNode = *reducedCost.fromNode(1);
+    std::cout << *node << std::endl;
+    std::cout << nodes << std::endl;
+    std::cout << arrayNode[0] << std::endl;
     
 //    network.forEach([](int n) {std::cout << n << " ";});
     

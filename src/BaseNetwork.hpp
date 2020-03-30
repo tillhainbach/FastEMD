@@ -26,19 +26,16 @@ public:
                                                        dataNames, fields) {};
     
     //MARK: Iterators
-    template<typename T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
-    inline auto& fromNode(NODE_T nodeIndex)
-        {return *(this->data.begin() + nodeIndex);}
-    template<typename T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
-    inline auto& fromNode(NODE_T nodeIndex) const
-        {return *(this->data.begin() + nodeIndex);}
-    
-    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    inline auto fromNode(NODE_T nodeIndex)
-        {return *CVMatRowIterator(this->data, nodeIndex);}
-    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
+    inline auto fromNode(NODE_T nodeIndex) {return this->begin() + nodeIndex;}
     inline auto fromNode(NODE_T nodeIndex) const
-        {return *CVMatRowIterator(this->data, nodeIndex);}
+        {return this->begin() + nodeIndex;}
+    
+//    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
+//    inline auto& fromNode(NODE_T nodeIndex)
+//        {return *CVMatRowIterator(this->data, nodeIndex);}
+//    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
+//    inline auto& fromNode(NODE_T nodeIndex) const
+//        {return *CVMatRowIterator(this->data, nodeIndex);}
     
     // MARK: public member functions
     template<typename... Args>
@@ -130,13 +127,13 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE>::findIndex(NODE_T node, NODE_T value)
 {
-    auto& row = (*this)[node];
-    auto it = row.begin();
-    auto end = row.begin() + this->size() * this->fields();
+    auto row = this->fromNode(node);
+    auto it = row->begin();
+    auto end = row->begin() + this->size() * this->fields();
     for ( ; it != end; it += this->fields())
     {
         if (*it == value) break;
-        if (breakCondition(node, *it)) {it = row.end(); break;}
+        if (breakCondition(node, *it)) {it = row->end(); break;}
     }
     return it;
 }

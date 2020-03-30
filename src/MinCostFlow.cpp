@@ -8,8 +8,8 @@
 #ifndef MIN_COST_FLOW_CPP
 #define MIN_COST_FLOW_CPP
 
-#define PRINT 0
-#define DEBUG 0
+#define PRINT 1
+#define DEBUG 1
 
 #include <stdio.h>
 #include "MinCostFlow.hpp"
@@ -70,7 +70,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
                                 
             // residual
             auto it = backwardCost.findIndex(from, to);
-            if (it != backwardCost[from].end())
+            if (it != backwardCost.fromNode(from)->end())
             {
                 if (it[2] < delta) delta = it[2];
             }
@@ -92,10 +92,10 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
             
             // update residual for backward edges
             auto it = backwardCost.findIndex(to, from);
-            if (it != backwardCost[to].end()) it [2] += delta;
+            if (it != backwardCost.fromNode(to)->end()) it [2] += delta;
 
             it = backwardCost.findIndex(from, to);
-            if (it != backwardCost[from].end()) it [2] -= delta;
+            if (it != backwardCost.fromNode(from)->end()) it [2] -= delta;
 
             // update weigths
             weights[to] += delta;
@@ -138,7 +138,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
         
         Q.heapRemoveFirst();
         // neighbors of u
-        for (auto it = forwardCost[u].begin(), end = forwardCost[u].end();
+        for (auto it = forwardCost.fromNode(u)->begin(), end = forwardCost.fromNode(u)->end();
              it != end; it += forwardCost.fields())
         {
             assert (it[1] >= 0);
@@ -152,7 +152,7 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
             if (forwardCost.breakCondition(u, v)) break;
         } //it
           
-        for (auto it = backwardCost[u].begin(), end = backwardCost[u].end();
+        for (auto it = backwardCost.fromNode(u)->begin(), end = backwardCost.fromNode(u)->end();
         it != end; it += backwardCost.fields())
         {
             NODE_T v = static_cast<NODE_T>(*it);

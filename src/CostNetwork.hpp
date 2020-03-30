@@ -66,13 +66,13 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
     {
         bool sourceNodeFlowsOnlyToThreshold = true;
         int numberOfSinkNodesForSourceNode = 0;
-        auto& sourceNode = this->fromNode(sourcesCounter);
+        auto sourceNode = this->fromNode(sourcesCounter);
         for(const auto sinkNodeIndex : nonZeroWeightSinkNodesAtIndex)
         { // TODO: is costMatrix really symmetric?
             auto cost = costMatrix[sourceNodeIndex][sinkNodeIndex];
             if (cost == maxCost) continue;
-            sourceNode[numberOfSinkNodesForSourceNode++] = sinkNodeIndex;
-            sourceNode[numberOfSinkNodesForSourceNode++] = cost;
+            (*sourceNode)[numberOfSinkNodesForSourceNode++] = sinkNodeIndex;
+            (*sourceNode)[numberOfSinkNodesForSourceNode++] = cost;
             sourceNodeFlowsOnlyToThreshold = false;
             if (sinkNodeGetsFlowOnlyFromThreshold[sinkNodeIndex])
             {
@@ -88,7 +88,7 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
         else
         {
             // mark last node
-            sourceNode[numberOfSinkNodesForSourceNode] = REMOVE_NODE_FLAG;
+            (*sourceNode)[numberOfSinkNodesForSourceNode] = REMOVE_NODE_FLAG;
             // Move the source weight to new position.
             weights[sourcesCounter++] = weights[sourceNodeIndex];
         }
