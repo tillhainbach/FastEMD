@@ -37,8 +37,8 @@ inline void FlowNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
                                                             NODE_T from, NODE_T i,
                     Counter<NODE_T, INTERFACE_T, SIZE>& counters)
 {
-    NODE_T to = static_cast<NODE_T>(costFrom[i]);
-    NUM_T cost = costFrom[i + 1];
+    NODE_T const to = static_cast<NODE_T const>(costFrom[i]);
+    NUM_T const cost = costFrom[i + 1];
     (*this)[from][counters[from]] = to;
     (*this)[from][counters[from] + 1] = cost;
     (*this)[from][counters[from] + 2] = 0;

@@ -255,7 +255,7 @@ int main(int argc, const char * argv[]) {
     std::cout << testCounter << std::endl;
     std::cout << typeid(v[0]).name() << std::endl;
     
-    
+        
     Test<int, VECTOR> tester(4);
     
     Counter2<int, OPENCV> dat(4);
@@ -269,12 +269,17 @@ int main(int argc, const char * argv[]) {
     std::cout << T.foo() << std::endl;
   
 
-//    FlowNetwork<int, VECTOR> network(4);
-//    ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
-//    std::cout << network << std::endl;
-//    auto node = network.thresholdNode();
+    cv::Mat1i mat(2, 2, 0);
+    CVMatRowIterator<int> it(mat);
+    std::cout << (*it)[0] << std::endl;
+    std::cout << typeid(*it).name() << std::endl;
     
+    FlowNetwork<int, OPENCV> network(4);
+    ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
+    std::cout << network << std::endl;
+    auto node = network.thresholdNode();
     
+//    network.forEach([](int n) {std::cout << n << " ";});
     
     for(auto& row: dat)
         for(auto& element : row)

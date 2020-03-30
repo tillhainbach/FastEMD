@@ -100,41 +100,30 @@ public:
         {_numberOfNodes = newNumberOfNodes;}
     
     //MARK: Operator Overloading
-    template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T> && !std::is_same_v<NUM_T, bool>, int> = 0>
+    template< class T = INTERFACE_T,
+        std::enable_if_t<isARRAY<T> ||
+                        (isVECTOR<T> && !std::is_same_v<NUM_T, bool>) ||
+                        (isOPENCV<T> && DIMENSIONS == 1), int> = 0>
     inline auto& operator[](NODE_T idx) {return data[idx];}
     
-    template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T> && !std::is_same_v<NUM_T, bool>, int> = 0>
+    template< class T = INTERFACE_T,
+    std::enable_if_t<isARRAY<T> ||
+                    (isVECTOR<T> && !std::is_same_v<NUM_T, bool>) ||
+                    (isOPENCV<T> && DIMENSIONS == 1), int> = 0>
     inline auto& operator[](NODE_T idx) const {return data[idx];}
 
-    // spezial case for std::vector and NUM_T == bool. I don't fully understand
-    // but here this is a workaround
-    
-    template< class T = INTERFACE_T, std::enable_if_t<isVECTOR<T> && std::is_same_v<NUM_T, bool>, int> = 0>
+    // special case for std::vector and NUM_T == bool. I don't fully understand
+    // this but here is a workaround:
+    template< class T = INTERFACE_T,
+        std::enable_if_t<(isVECTOR<T> && std::is_same_v<NUM_T, bool>) ||
+                        (isOPENCV<T> && DIMENSIONS == 2), int> = 0>
     inline auto operator[](NODE_T idx) {return data[idx];}
     
-    template< class T = INTERFACE_T, std::enable_if_t<isVECTOR<T> && std::is_same_v<NUM_T, bool>, int> = 0>
-    inline auto operator[](NODE_T idx) const {return data[idx];}
+    template< class T = INTERFACE_T,
+    std::enable_if_t<(isVECTOR<T> && std::is_same_v<NUM_T, bool>) ||
+                    (isOPENCV<T> && DIMENSIONS == 2), int> = 0>
+    inline auto const operator[](NODE_T idx) const {return data[idx];}
     
-
-
-    // cv::Mat_.operator[]() returns a pointer to the elements which for
-    // 1-row cv::Mat_ means one has to call the subcript operator twice
-    // with first [] being 0 for the first row.
-    // In other words, you have say give be a pointer to the first row and then
-    // return the n-th object.
-    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isOPENCV<T>, int> = 0>
-    inline auto& operator[](NODE_T idx){return *data[idx];}
-
-    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isOPENCV<T>, int> = 0>
-    inline auto const & operator[](NODE_T idx)const
-     {return *data[idx];}
-    
-    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 2 && isOPENCV<T>, int> = 0>
-    inline auto operator[](NODE_T idx) {return data[idx];}
-
-    template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 2 && isOPENCV<T>, int> = 0>
-    inline auto const operator[](NODE_T idx)const {return data[idx];}
-
     //MARK: Attributes
 //protected:
 

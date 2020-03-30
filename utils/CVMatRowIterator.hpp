@@ -8,6 +8,8 @@
 
 #ifndef CVMatRowIterator_h
 #define CVMatRowIterator_h
+#include <opencv2/core.hpp>
+#include "cvMatSingleRow.h"
 
 namespace FastEMD
 {
@@ -39,7 +41,7 @@ public:
     CVMatRowIterator& operator+(int idx);
     CVMatRowIterator& operator-(int idx);
     
-    cv::Mat_<_T>& operator*(){currentRow = _cvMat.row(_row); return currentRow;}
+    cvMatSingleRow& operator*(){currentRow = _cvMat.row(_row); return currentRow;}
     
     ///@brief overloaded equality operator==(). It checks whether the row counters are equal while
     /// referenceing the same cv::Mat-Instance.
@@ -55,7 +57,7 @@ public:
   
 private:
     cv::Mat_<_T> const& _cvMat;
-    cv::Mat_<_T> currentRow; // cache for the currentRow Header
+    cvMatSingleRow currentRow; // cache for the currentRow Header
     int _row;
     
 };

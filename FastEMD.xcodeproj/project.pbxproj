@@ -83,6 +83,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B1B776424321CB1000A410A /* cvMatSingleRow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvMatSingleRow.h; sourceTree = "<group>"; };
 		2B2DC04D241FBAD70090BD53 /* TestFastEMD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestFastEMD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B2DC04F241FBAD70090BD53 /* TestCostNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCostNetwork.mm; sourceTree = "<group>"; };
 		2B2DC051241FBAD70090BD53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -367,6 +368,7 @@
 				2B7C7C3A242CB10800CBECB4 /* utils.h */,
 				2B45E8BB242BAC3C007508B1 /* EMD_DEFS.hpp */,
 				2BF8EDFA242CDA9100880E99 /* readImage.hpp */,
+				2B1B776424321CB1000A410A /* cvMatSingleRow.h */,
 				2BDF5D16242A1892001C2B63 /* CVMatRowIterator.hpp */,
 				2BC463B0238813A200CBCAFF /* flow_utils.hpp */,
 				2BB7085524117F5700CE4195 /* utils_archive.h */,

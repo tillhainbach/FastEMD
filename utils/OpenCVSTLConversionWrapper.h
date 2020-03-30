@@ -15,7 +15,7 @@ template<typename _T, typename Interface, int _size>
 class ConversionWrapper:
 {
 private:
-    typeselector2d<_T, Interface, _size> _container;
+    typeselector1d<_T, Interface, _size> _container;
     
 public:
     
