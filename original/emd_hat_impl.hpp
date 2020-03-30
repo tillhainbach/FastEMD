@@ -271,33 +271,33 @@ struct emd_hat_impl_integral_types {
         }}
     }}
     //====================================================
-    std::cout << "Vertex Weights:" << std::endl;
-    std::cout << "vertex: [weight]" << std::endl;
-    std::for_each(b.begin(), b.end(), [](int n) {std::cout << "["<< n << "]";});
-    std::cout << std::endl;
-        
-    std::cout << "Vertex Weights:" << std::endl;
-    std::cout << "vertex: [weight]" << std::endl;
-    std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << "["<< n << "]";});
-    std::cout << std::endl;
-    std::cout << bb.size() << std::endl;
+//    std::cout << "Vertex Weights:" << std::endl;
+//    std::cout << "vertex: [weight]" << std::endl;
+//    std::for_each(b.begin(), b.end(), [](int n) {std::cout << "["<< n << "]";});
+//    std::cout << std::endl;
+//        
+//    std::cout << "Vertex Weights:" << std::endl;
+//    std::cout << "vertex: [weight]" << std::endl;
+//    std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << "["<< n << "]";});
+//    std::cout << std::endl;
+//    std::cout << bb.size() << std::endl;
     #ifndef NDEBUG
     NUM_T DEBUG_sum_bb= 0;
     for (NODE_T i=0; i<bb.size(); ++i) DEBUG_sum_bb+= bb[i];
     assert(DEBUG_sum_bb==0);
     #endif
     
-    std::cout << "CostNetwork:" << std::endl;
-    std::cout << "vertex: [to : cost]" << std::endl;
-    for (NODE_T i = 0; i < cc.size(); ++i)
-    {
-        std::cout << i << ": ";
-        for (auto &edge : cc[i])
-        {
-            std::cout << "[" << edge._to << " : " << edge._cost << "] ";
-        }
-        std::cout << std::endl;
-    }
+//    std::cout << "CostNetwork:" << std::endl;
+//    std::cout << "vertex: [to : cost]" << std::endl;
+//    for (NODE_T i = 0; i < cc.size(); ++i)
+//    {
+//        std::cout << i << ": ";
+//        for (auto &edge : cc[i])
+//        {
+//            std::cout << "[" << edge._to << " : " << edge._cost << "] ";
+//        }
+//        std::cout << std::endl;
+//    }
 
     //-------------------------------------------------------
     min_cost_flow<NUM_T> mcf;

@@ -53,10 +53,9 @@ inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCostCore(
             const Counter<bool, INTERFACE_T, SIZE>& finalNodesFlg,
             const NODE_T l)
 {
-    auto it = &thisFrom[2 * i];
-    if (finalNodesFlg[*it]) it[1] -= d[*it] - d[l];
+    auto it = &thisFrom[this->fields() * i];
     if (finalNodesFlg[from]) it[1] += d[from] - d[l];
-    
+    if (finalNodesFlg[*it]) it[1] -= d[*it] - d[l];
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>

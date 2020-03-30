@@ -157,7 +157,8 @@ int main( int argc, char* argv[]) {
     emd_hat_gd_metric_val= emd_hat_gd_metric<int>()(v1, v2, cost_mat,THRESHOLD);
     }
     timer.toc();
-    std::cout << "emd_hat_gd_metric time in seconds: " << timer.totalTimeSec() << std::endl;
+    std::cout << "emd_hat_gd_metric time in seconds: " << timer.totalTimeSec() * 1000 * 1000 << std::endl;
+    std::cout << "emd_hat_gd_metric_val == " << emd_hat_gd_metric_val << std::endl;
 
 //    timer.clear();
 //    timer.tic();

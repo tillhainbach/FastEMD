@@ -8,8 +8,8 @@
 #ifndef MIN_COST_FLOW_CPP
 #define MIN_COST_FLOW_CPP
 
-#define PRINT 1
-#define DEBUG 1
+#define PRINT 0
+#define DEBUG 0
 
 #include <stdio.h>
 #include "MinCostFlow.hpp"
@@ -25,19 +25,11 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // zero the counters:
     std::fill(counters.begin(), counters.end(), 0);
     flow.fill(cost, counters);
-
-#if PRINT
-    std::cout << flow << std::endl;
-#endif
         
     // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
     // Note that for forward edges the residual capacity is
     // infinity
     forwardCost.fill(cost, counters);
-            
-#if PRINT
-    std::cout << forwardCost << std::endl;
-#endif
         
     // reduced costs and capacity for backward edges
     // (c[j,i]-pi[j]+pi[i])
@@ -45,10 +37,6 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // capacity is also zero
     std::fill(counters.begin(), counters.end(), 0);
     backwardCost.fill(cost, counters);
-
-#if PRINT
-    std::cout << backwardCost << std::endl;
-#endif
             
     // Max supply TODO:demand?, given U?,
     // optimization-> min out of demand, supply
@@ -70,8 +58,6 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
         delta = maxSupply;
     
         NODE_T l = compute_shortest_path(weights, k);
-        std::cout << "l = " << l << std::endl;
-        
         //---------------------------------------------------------
         // find delta (minimum on the path from k to l)
         // delta = weigths[k];
@@ -93,18 +79,11 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     
         //---------------------------------------------------------
         // augment delta flow from k to l (backwards actually...)
-        std::cout << "delta = " << delta << std::endl;
-        std::cout << "k == " << k << ", l == " << l << std::endl;
-        std::cout << d << std::endl;
-        std::cout << prev << std::endl;
-        std::cout << "path: " << l << " ";
-        
+    
         to = l;
         do
         {
             NODE_T from = prev[to];
-            std::cout << from << " ";
-            std::cout << "from == k : " << (from == k) << std::endl;
             assert(from != to);
 
                                 
@@ -121,13 +100,8 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
             // update weigths
             weights[to] += delta;
             weights[from] -= delta;
-            std::cout << weights << std::endl;
             to = from;
         } while (to != k);
-        
-        std::cout << std::endl;
-        for (int i = 0; i < 50; ++i) std::cout << "-";
-        std::cout << std::endl;
         
     } // while true (until we break when S or T is empty)
     
@@ -143,10 +117,9 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
                 const VertexWeights<CONVERT_TO_T, INTERFACE_T, SIZE>& weights,
                 NODE_T from)
 {
-    std::cout << "from: " << from << std::endl;
     NODE_T l = 0;
     Q.fill(from, weights.size());
-//    Q.log();
+
     //-------------------------------------------------------------
     // main loop
     //-------------------------------------------------------------
@@ -156,19 +129,14 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
     {
         NODE_T u = static_cast<NODE_T>(Q[0]);
         d[u] = Q[1]; // final distance
-        std::cout << u << std::endl;
-//        std::cout << d << std::endl;
         finalNodesFlg[u] = true;
         if (weights[u] < 0)
         {
-//            std::cout << "[" << from << " : " << u << "] " << std::endl;
             l = u;
             break;
         }
-        std::cout << Q._nodesToQ << std::endl;
+        
         Q.heapRemoveFirst();
-        std::cout << Q._nodesToQ << std::endl;
-//        std::cout << Q << std::endl;
         // neighbors of u
         for (auto it = forwardCost[u].begin(), end = forwardCost[u].end();
              it != end; it += forwardCost.fields())
@@ -179,30 +147,27 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
             if ( Q.check(v, alt) )
             {
                 Q.heapDecreaseKey(v, alt);
-//                std::cout << std::endl << Q._nodesToQ << std::endl;
                 prev[v] = u;
             }
             if (forwardCost.breakCondition(u, v)) break;
         } //it
-                
+          
         for (auto it = backwardCost[u].begin(), end = backwardCost[u].end();
         it != end; it += backwardCost.fields())
         {
             NODE_T v = static_cast<NODE_T>(*it);
             if (it[2] > 0)
             {
-                assert (it[1] >= 0);
+                 assert (it[1] >= 0);
                 CONVERT_TO_T alt = d[u] + it[1];
                 if ( Q.check(v, alt)  )
                 {
                     Q.heapDecreaseKey(v, alt);
-//                    std::cout << Q._nodesToQ << std::endl;
                     prev[v] = u;
                 }
             }
             if (backwardCost.breakCondition(u, v)) break;
         }
-//        std::cout << Q << std::endl;
     } while (!(Q.size() == 0));
     //-------------------------------------------------------------
 
@@ -214,9 +179,6 @@ NODE_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::compute_shortest_path(
         // reduced costs and capacity for backward edges
         // (c[j,i]-pi[j]+pi[i])
         backwardCost.reduceCost(d, finalNodesFlg, l);
-//        std::cout << forwardCost << std::endl;
-//        std::cout << backwardCost << std::endl;
-
     } // if...
 
     return l;
