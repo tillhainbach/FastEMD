@@ -245,9 +245,15 @@ int main(int argc, const char * argv[]) {
     
 //    cv::Mat1i testMat(2,2, -1);
 //    std::cout << testMat << std::endl;
-    
-    Counter<int, VECTOR> testCounter(4);
-    std::cout << testCounter[0] << std::endl;
+    typeSelector<bool, VECTOR, 1, 0> data(4);
+    Counter<bool, VECTOR> testCounter(4);
+    std::vector<bool> v(4);
+//    v[0] = 1 + 2;
+    testCounter[0] = true;
+    std::cout << typeid(testCounter.data[0]).name() << std::endl;
+    std::cout << typeid(testCounter[0]).name() << std::endl;
+    std::cout << testCounter << std::endl;
+    std::cout << typeid(v[0]).name() << std::endl;
     
     
     Test<int, VECTOR> tester(4);
@@ -263,10 +269,10 @@ int main(int argc, const char * argv[]) {
     std::cout << T.foo() << std::endl;
   
 
-    FlowNetwork<int, ARRAY, 4> network(4);
-    ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
-    std::cout << network << std::endl;
-    auto node = network.thresholdNode();
+//    FlowNetwork<int, VECTOR> network(4);
+//    ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
+//    std::cout << network << std::endl;
+//    auto node = network.thresholdNode();
     
     
     
