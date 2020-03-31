@@ -60,6 +60,8 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 
     //-------------------------------------------------------
 #if PRINT && DEBUG
+    std::cout << nonZeroWeightSourceNodes << std::endl;
+    std::cout << nonZeroWeightSinkNodes << std::endl;
     std::cout << vertexWeights << std::endl;
 #endif
     if (extra_mass_penalty == -1) extra_mass_penalty = maxC;
