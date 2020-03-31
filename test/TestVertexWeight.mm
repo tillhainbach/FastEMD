@@ -26,15 +26,16 @@ std::vector<int> const v2 = {98, 95, 141, 134, 102, 97, 120, 181, 117, 126, 150,
                       97, 155, 154, 148, 131, 163, 109, 165, 154, 104, 98,
                       97, 102, 96};
 
-typedef FastEMD::types::ARRAY INTERFACE;
-static const unsigned int SIZE = 80;
 
-- (void)testFillWeights{
+
+- (void)testArrayFillWeights{
+    typedef FastEMD::types::ARRAY INTERFACE;
+    static const unsigned int SIZE = 80;
     
     FastEMD::NODE_T N = static_cast<FastEMD::NODE_T>(v1.size() * 2 + 2);
     FastEMD::VertexWeights<int, INTERFACE, SIZE> weights(N);
-    FastEMD::Counter<int,  FastEMD::ARRAY, SIZE/2> nonZeroSourceNodes(N);
-    FastEMD::Counter<int,  FastEMD::ARRAY, SIZE/2> nonZeroSinkNodes(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSourceNodes(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSinkNodes(N);
     weights.fillWeights(v1, v2, nonZeroSourceNodes, nonZeroSinkNodes);
     *weights.artificialNode() = 0;
     std::stringstream weightsStringStream;
@@ -44,6 +45,39 @@ static const unsigned int SIZE = 80;
     XCTAssert(weightsString == targetString);
 }
 
+- (void)testVectorFillWeights{
+    typedef FastEMD::types::VECTOR INTERFACE;
+    static const unsigned int SIZE = 0;
+    
+    FastEMD::NODE_T N = static_cast<FastEMD::NODE_T>(v1.size() * 2 + 2);
+    FastEMD::VertexWeights<int, INTERFACE, SIZE> weights(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSourceNodes(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSinkNodes(N);
+    weights.fillWeights(v1, v2, nonZeroSourceNodes, nonZeroSinkNodes);
+    *weights.artificialNode() = 0;
+    std::stringstream weightsStringStream;
+    weightsStringStream << weights;
+    std::string weightsString(weightsStringStream.str());
+    
+    XCTAssert(weightsString == targetString);
+}
+
+- (void)testOpenCVFillWeights{
+    typedef FastEMD::types::OPENCV INTERFACE;
+    static const unsigned int SIZE = 0;
+    
+    FastEMD::NODE_T N = static_cast<FastEMD::NODE_T>(v1.size() * 2 + 2);
+    FastEMD::VertexWeights<int, INTERFACE, SIZE> weights(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSourceNodes(N);
+    FastEMD::Counter<int,  INTERFACE, SIZE/2> nonZeroSinkNodes(N);
+    weights.fillWeights(v1, v2, nonZeroSourceNodes, nonZeroSinkNodes);
+    *weights.artificialNode() = 0;
+    std::stringstream weightsStringStream;
+    weightsStringStream << weights;
+    std::string weightsString(weightsStringStream.str());
+    
+    XCTAssert(weightsString == targetString);
+}
 
 -(void)testCalcPreFlowCost {
     
