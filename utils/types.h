@@ -35,11 +35,11 @@ using OPENCV = std::integral_constant<INTERFACE_TYPE_T, INTERFACE_TYPE_T::OPENCV
 using VECTOR = std::integral_constant<INTERFACE_TYPE_T, INTERFACE_TYPE_T::VECTOR>;
 using ARRAY = std::integral_constant<INTERFACE_TYPE_T, INTERFACE_TYPE_T::ARRAY>;
 
-template<typename NUM_T, int size>
-using array1d = std::array<NUM_T, size>;
+template<typename NUM_T, uint SIZE>
+using array1d = std::array<NUM_T, SIZE>;
 
-template<typename NUM_T, int size>
-using array2d = std::array< array1d<NUM_T, size>, size>;
+template<typename NUM_T, uint SIZE, uchar FIELDS>
+using array2d = std::array< array1d<NUM_T, SIZE * FIELDS>, SIZE>;
 
 template<typename NUM_T>
 using vector1d = std::vector<NUM_T>;
@@ -72,37 +72,37 @@ using typeSelectorStructure = typename std::conditional<isARRAY<_INT>, _A,
                         >::type;
 
 
-//template< typename NUM_T, typename _INT, int size >
-//using typeSelector1d = typeSelector< _INT, array1d<NUM_T, size>, vector1d<NUM_T> >;
-template< typename NUM_T, typename _INT, int size >
-using typeSelector1d = typeSelectorStructure< _INT, array1d< NUM_T, size >, vector1d <NUM_T>, utils::cvMatSingleRow>;
+//template< typename NUM_T, typename _INT, uint SIZE >
+//using typeSelector1d = typeSelector< _INT, array1d<NUM_T, SIZE>, vector1d<NUM_T> >;
+template< typename NUM_T, typename _INT, uint SIZE, uchar FIELDS = 1>
+using typeSelector1d = typeSelectorStructure< _INT, array1d< NUM_T, SIZE * FIELDS >, vector1d <NUM_T>, utils::cvMatSingleRow>;
 
-template<typename NUM_T, typename _INT, int size >
-using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, size >, vector2d <NUM_T>, cv::Mat1i>;
+template<typename NUM_T, typename _INT, uint SIZE, uchar FIELDS = 1 >
+using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, SIZE, FIELDS >, vector2d <NUM_T>, cv::Mat1i>;
 
-//template < typename NUM_T, typename _INT, int Dimensions, int Size >
+//template < typename NUM_T, typename _INT, int Dimensions, uint SIZE >
 //using typeSelector = typename std::conditional<Dimensions == 1>,
-//                                    typeSelector1d<NUM_T, _INT, Size>,
+//                                    typeSelector1d<NUM_T, _INT, SIZE>,
 //                        typename std::conditional<Dimensions == 2>,
-//                                    typeSelector2d<NUM_T, _INT, Size>,
+//                                    typeSelector2d<NUM_T, _INT, SIZE>,
 //                                    UNKNOWN>::type
 //>::type;
-template< typename NUM_T, typename _INT, int Dimensions, int Size>
+template< typename NUM_T, typename _INT, int Dimensions, uint SIZE>
 using typeSelector = typename std::conditional<Dimensions == 1,
-                            typeSelector1d<NUM_T, _INT, Size>,
+                            typeSelector1d<NUM_T, _INT, SIZE>,
                         typename std::conditional<Dimensions == 2,
-                            typeSelector2d<NUM_T, _INT, Size>, UNKNOWN>
+                            typeSelector2d<NUM_T, _INT, SIZE>, UNKNOWN>
                             ::type>
                         ::type;
 
-template<typename INTERFACE_T, int size>
+template<typename INTERFACE_T, uint SIZE>
 struct InterfaceRequirement
 {
     static_assert(!(isUNKNOWN<INTERFACE_T>),
                   "Unkwnown Interface selected! Must be of type OPENCV, VECTOR or ARRAY!");
     
-    static_assert(!(isARRAY<INTERFACE_T> && size == 0),
-                  "Size must be greater than 0 if ARRAY-Interface is choosen");
+    static_assert(!(isARRAY<INTERFACE_T> && SIZE == 0),
+                  "SIZE must be greater than 0 if ARRAY-Interface is choosen");
 };
 
 }
