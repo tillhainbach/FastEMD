@@ -15,15 +15,24 @@ namespace FastEMD
 using namespace types;
 
 //MARK: Vertex Base Class
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-class BaseNetwork : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
+class BaseNetwork : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, 2>
 {
 public:
     
-    BaseNetwork(NODE_T numberOfNodes, std::string containerName,
-                std::vector<std::string> dataNames, uchar fields)
-    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(numberOfNodes, containerName,
-                                                       dataNames, fields) {};
+    BaseNetwork(NODE_T numberOfNodes,
+                std::string containerName,
+                std::vector<std::string> dataNames)
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, 2>(numberOfNodes,
+                                                               containerName,
+                                                               dataNames) {};
+    
+    BaseNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, FIELDS> _data,
+                std::string containerName,
+                std::vector<std::string> dataNames)
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, 2>(_data,
+                                                               containerName,
+                                                               dataNames) {};
     
     //MARK: Iterators
     inline auto fromNode(NODE_T nodeIndex) {return this->begin() + nodeIndex;}
@@ -38,8 +47,8 @@ public:
 //        {return *CVMatRowIterator(this->data, nodeIndex);}
     
     // MARK: public member functions
-    template<typename... Args>
-    void fill(const BaseNetwork<NUM_T, INTERFACE_T, SIZE>& input, Args&&... args);
+    template<uchar _F, typename... Args>
+    void fill(const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input, Args&&... args);
     
     template <class F>
     void forEach(F&& func);
@@ -58,23 +67,23 @@ public:
 
    
     //MARK: operator overloading
-    template<typename _T, typename _I, NODE_T _S>
+    template<typename _T, typename _I, NODE_T _S, uchar _F>
     friend std::ostream& operator<<(std::ostream& os,
-                                   const BaseNetwork<_T, _I, _S>& network);
+                                   const BaseNetwork<_T, _I, _S, _F>& network);
 
     
 private:
     inline virtual void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, FIELDS> const & costFrom,
                                  NODE_T from, NODE_T i,
                     Counter<NODE_T, INTERFACE_T, SIZE>& counters) = 0;
 
 };
 
 //MARK: Implentations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 template<class F>
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::forEach(F&& func)
+void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func)
 {
     // init flow
     NODE_T from = 0;
@@ -90,9 +99,9 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::forEach(F&& func)
     }
 }
     
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 template<class F>
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::forEach(F&& func) const
+void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
 {
     // init flow
     NODE_T from = 0;
@@ -109,11 +118,11 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::forEach(F&& func) const
 }
  
         
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-template<typename... Args>
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
-                                        const BaseNetwork& input,
-                                        Args&&... args)
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
+template<uchar _F, typename... Args>
+void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::fill(
+                                                const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input,
+                                                         Args&&... args)
 {
     auto f = std::bind(&BaseNetwork::fillCore,
                        this, std::placeholders::_1,
@@ -124,8 +133,8 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
 };
         
 
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE>::findIndex(NODE_T node, NODE_T value)
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
+inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::findIndex(NODE_T node, NODE_T value)
 {
     auto row = this->fromNode(node);
     auto it = row->begin();
@@ -138,9 +147,9 @@ inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE>::findIndex(NODE_T node, NODE_T
     return it;
 }
     
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 std::ostream& operator<<(std::ostream& os,
-                               const BaseNetwork<NUM_T, INTERFACE_T, SIZE>& network)
+                               const BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>& network)
 {
     // Print the network name.
     os << network._containerName << ": " << std::endl;

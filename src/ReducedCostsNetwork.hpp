@@ -17,8 +17,8 @@ using namespace types;
 //MARK: Declaration
 ///@brief Parent class for ReducedCostFrowardEdgesNetwork and
 /// ReducedCostAndCapacityBackwardEdgesNetwork
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-class ReducedCostsNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
+class ReducedCostsNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>
 {
     
 protected:
@@ -32,10 +32,22 @@ protected:
         const NODE_T l);
     
 public:
-    ReducedCostsNetwork(NODE_T numberOfNodes, std::string containerName,
-                        std::vector<std::string> dataNames, uchar fields)
-    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, containerName,
-                                               dataNames, fields) {};
+    ReducedCostsNetwork(NODE_T numberOfNodes,
+                        std::string containerName,
+                        std::vector<std::string> dataNames)
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>(numberOfNodes,
+                                                    containerName,
+                                                    dataNames)
+    {};
+    
+    ReducedCostsNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, FIELDS> _data,
+                        std::string containerName,
+                        std::vector<std::string> dataNames)
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>(_data,
+                                                    containerName,
+                                                    dataNames)
+    {};
+
     
     ///@brief Calculates the residual costs for all edges in the Network.
     /// Calls "forEach" with "reduceCostCore"
@@ -44,8 +56,8 @@ public:
 };
 
 //MARK: Implementations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCostCore(
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
+inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCore(
             typeSelector1d<NUM_T, INTERFACE_T, SIZE> & thisFrom,
             const NODE_T from,
             const NODE_T i,
@@ -58,12 +70,12 @@ inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCostCore(
     if (finalNodesFlg[*it]) it[1] -= d[*it] - d[l];
 }
 
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 template<typename... Args>
-void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCost(Args&&... args)
+void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCost(Args&&... args)
 {
     auto f = std::bind(
-            &ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE>::reduceCostCore,
+            &ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCore,
             this,
             std::placeholders::_1, std::placeholders::_2,
             std::placeholders::_3, std::forward<Args>(args)...);

@@ -16,18 +16,18 @@ using namespace types;
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
 class ReducedCostsAndCapacityBackwardEdgesNetwork :
-    public ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >
+    public ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, 3>
 {
 public:
     ReducedCostsAndCapacityBackwardEdgesNetwork(NODE_T num_nodes)
-    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE >(num_nodes,
+    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, 3>(num_nodes,
                             "Reduced Costs And Capacity For Backward Edges Network",
-                            {"to", "reduced cost", "residual capacity"}, 3)
+                            {"to", "reduced cost", "residual capacity"})
     {};
 
 private:
     inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
                          NODE_T from, NODE_T i,
                          Counter<NUM_T, INTERFACE_T, SIZE>& counters) override;
 };
@@ -35,9 +35,8 @@ private:
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline void ReducedCostsAndCapacityBackwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
-                                                                                            NODE_T from, NODE_T i,
-                    Counter<NUM_T, INTERFACE_T, SIZE>& counters)
+            typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
+            NODE_T from, NODE_T i, Counter<NUM_T, INTERFACE_T, SIZE>& counters)
 {
     NODE_T to = static_cast<NODE_T>(costFrom[i]);
     (*this)[to][counters[to]] = from;

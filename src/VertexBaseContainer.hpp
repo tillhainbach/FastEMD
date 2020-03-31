@@ -13,19 +13,32 @@ namespace FastEMD
 {
 using namespace types;
 
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar DIMENSIONS = 1>
-class VertexBaseContainer : public BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar FIELDS = 1, uchar DIMENSIONS = 1>
+class VertexBaseContainer : public BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>
 {
     
 public:
     
     //MARK: Initializers
-    VertexBaseContainer(NODE_T numberOfNodes, std::string containerName,
-                        std::vector<std::string> dataNames, uchar fields)
-    : BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>(numberOfNodes, containerName, dataNames)
+    VertexBaseContainer(NODE_T numberOfNodes,
+                        std::string containerName,
+                        std::vector<std::string> dataNames)
+    : BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>(numberOfNodes,
+                                                                  containerName,
+                                                                  dataNames)
     , _thresholdNodeIndex(numberOfNodes - 2)
     , _artificialNodeIndex(numberOfNodes - 1)
-    , _fields(fields)
+    {};
+    
+    VertexBaseContainer(
+                typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE, FIELDS> _data,
+                        std::string containerName,
+                        std::vector<std::string> dataNames)
+    : BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>(_data,
+                                                                  containerName,
+                                                                  dataNames)
+    , _thresholdNodeIndex(this->_numberOfNodes - 2)
+    , _artificialNodeIndex(this->_numberOfNodes - 1)
     {};
     
     //MARK: Iterators
@@ -36,48 +49,14 @@ public:
     inline auto thresholdNode() const {return this->begin() + thresholdNodeIndex();}
     inline auto artificialNode() const {return this->begin() + artificialNodeIndex();}
     
-    
-//    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
-//    isOPENCV<INTERFACE_T>), uchar> = 0>
-//    inline auto thresholdNode(){return this->data.begin() + thresholdNodeIndex();}
-//
-//    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
-//    isOPENCV<INTERFACE_T>), uchar> = 0>
-//    inline auto artificialNode(){return this->data.begin() + artificialNodeIndex();}
-//
-//    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
-//    isOPENCV<INTERFACE_T>), uchar> = 0>
-//    inline auto thresholdNode() const {return this->data.begin() + thresholdNodeIndex();}
-//
-//    template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
-//    isOPENCV<INTERFACE_T>), uchar> = 0>
-//    inline auto artificialNode() const {return this->data.begin() + artificialNodeIndex();}
-//
-//    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-//    isOPENCV<INTERFACE_T>, int> = 0>
-//    inline auto thresholdNode()
-//        {return CVMatRowIterator(this->data, this->thresholdNodeIndex());}
-//    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-//    isOPENCV<INTERFACE_T>, int> = 0>
-//    inline auto thresholdNode() const
-//        {return CVMatRowIterator(this->data, this->thresholdNodeIndex());}
-//    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-//    isOPENCV<INTERFACE_T>, int> = 0>
-//    inline auto artificialNode()
-//        {return CVMatRowIterator(this->data, this->artificialNodeIndex());}
-//    template<uchar T = DIMENSIONS, std::enable_if_t<T == 2 &&
-//    isOPENCV<INTERFACE_T>, int> = 0>
-//    inline auto artificialNode() const
-//        {return CVMatRowIterator(this->data, this->artificialNodeIndex());}
-    
     //MARK: Getters
     inline NODE_T thresholdNodeIndex() const {return _thresholdNodeIndex;}
     inline NODE_T artificialNodeIndex() const {return  _artificialNodeIndex;}
-    inline uchar fields() const {return _fields;}
-    inline NODE_T toNode(NODE_T nodeIndex) const {return _fields * nodeIndex;}
+    inline uchar fields() const {return this->_fields;}
+    inline NODE_T toNode(NODE_T nodeIndex) const {return this->_fields * nodeIndex;}
     inline NODE_T rows() const
         {return 1 + (1 - DIMENSIONS % 2) * (this->_numberOfNodes - 1);}
-    inline NODE_T cols() const {return this->_numberOfNodes * _fields;}
+    inline NODE_T cols() const {return this->_numberOfNodes * this->_fields;}
     
     //MARK: setters
     inline void resize(NODE_T newNumberOfNodes) override;
@@ -85,15 +64,14 @@ public:
 private:
     NODE_T _thresholdNodeIndex;
     NODE_T _artificialNodeIndex;
-    unsigned char _fields;
     
 };
 
 //MARK: Implementations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar DIMENSIONS>
-void VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>::resize(NODE_T newNumberOfNodes)
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS, uchar DIMENSIONS>
+void VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>::resize(NODE_T newNumberOfNodes)
 {
-    BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>::resize(newNumberOfNodes);
+    BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS,  DIMENSIONS>::resize(newNumberOfNodes);
     _thresholdNodeIndex = newNumberOfNodes - 2;
     _artificialNodeIndex = newNumberOfNodes - 1;
 }

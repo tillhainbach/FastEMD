@@ -18,13 +18,20 @@ using namespace types;
 
 //TODO: let Distance be a child of BaseNetwork.
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
-class Distance : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>
+class Distance : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>
 {
 public:
     Distance(NODE_T numberOfNodes)
-    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "Distance",
-                                     {"to", "distance"}, 2)
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(numberOfNodes,
+                                                       "Distance",
+                                                       {"to", "distance"})
     , _nodesToQ(numberOfNodes, "nodes to Q") {};
+    
+    Distance(typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> _data)
+    : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(_data,
+                                                    "Distance",
+                                                    {"to", "distance"})
+    , _nodesToQ(this->_numberOfNodes, "nodes to Q") {};
     
     template<typename _T, typename _I, NODE_T _S>
     friend std::ostream& operator<<(std::ostream& os,
@@ -107,7 +114,7 @@ bool Distance<NUM_T, INTERFACE_T, SIZE>::check(NODE_T v, NUM_T alt)
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 void Distance<NUM_T, INTERFACE_T, SIZE>::resize(NODE_T newNumberOfNodes)
 {
-    VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>::resize(newNumberOfNodes);
+    VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>::resize(newNumberOfNodes);
     _nodesToQ.resize(newNumberOfNodes);
 }
 

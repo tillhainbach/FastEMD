@@ -15,24 +15,36 @@ namespace FastEMD
 {
 using namespace types;
 //MARK: Counter Class
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar DIMENSIONS = 1>
-class Counter : public BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
+class Counter : public BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>
 {
 public:
-    Counter(NODE_T numberOfNodes, std::string containerName = "counter",
+    Counter(NODE_T numberOfNodes,
+            std::string containerName = "counter",
             std::vector<std::string> dataNames = {"counts per vertex"})
-    : BaseContainer<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>(numberOfNodes, containerName, dataNames){};
+    : BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>(numberOfNodes,
+                                                    containerName,
+                                                    dataNames)
+    {};
     
-    template<typename _T, typename _I, NODE_T _S, uchar _D>
+    Counter(typeSelector1d<NUM_T, INTERFACE_T, SIZE> _data,
+            std::string containerName = "counter",
+            std::vector<std::string> dataNames = {"counts per vertex"})
+    : BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>(_data,
+                                                    containerName,
+                                                    dataNames)
+    {};
+    
+    template<typename _T, typename _I, NODE_T _S>
     friend std::ostream& operator<<(std::ostream& os,
-                                    const Counter<_T, _I, _S, _D>& counter);
+                                    const Counter<_T, _I, _S>& counter);
 };
 
 //MARK: implementations
         
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar DIMENSIONS>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 std::ostream& operator<<(std::ostream& os,
-                         const Counter<NUM_T, INTERFACE_T, SIZE, DIMENSIONS>& counter)
+                         const Counter<NUM_T, INTERFACE_T, SIZE>& counter)
 {
     os << counter._containerName << ": ";
     for (auto element : counter)

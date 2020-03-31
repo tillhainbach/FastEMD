@@ -15,17 +15,20 @@ namespace FastEMD
 using namespace types;
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
-class FlowNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
+class FlowNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE, 3>
 {
 public:
     FlowNetwork(NODE_T num_nodes)
-    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(num_nodes, "Flow Network", {"to", "cost", "flow"}, 3) {};
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, 3>(num_nodes,
+                                               "Flow Network",
+                                               {"to", "cost", "flow"})
+    {};
     
     NUM_T calcDist() const;
     
 private:
     inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
                          NODE_T from, NODE_T i,
                          Counter<NODE_T, INTERFACE_T, SIZE>& counters) override;
 };
@@ -33,7 +36,7 @@ private:
 //MARK: FlowNetwork implementation
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 inline void FlowNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE> const & costFrom,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
                                                             NODE_T from, NODE_T i,
                     Counter<NODE_T, INTERFACE_T, SIZE>& counters)
 {

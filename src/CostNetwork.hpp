@@ -16,13 +16,21 @@ using namespace types;
 
 //MARK: CostsNetwork
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
-class CostNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE>
+class CostNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE, 2>
 {
     static int const REMOVE_NODE_FLAG = -1;
 public:
     CostNetwork(NODE_T numberOfNodes)
-    : BaseNetwork<NUM_T, INTERFACE_T, SIZE>(numberOfNodes, "CostNetwork",
-                                    {"to", "cost"}, 2) {};
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, 2>(numberOfNodes,
+                                               "CostNetwork",
+                                               {"to", "cost"})
+    {};
+    
+    CostNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, 2> _data)
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, 2>(_data,
+                                               "CostNetwork",
+                                               {"to", "cost"})
+    {};
     
     template<class _T2d>
     void fill(

@@ -20,7 +20,7 @@ using namespace types;
 using namespace utils;
 
 //MARK: BaseContainer
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar DIMENSIONS = 1>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, uchar FIELDS = 1, uchar DIMENSIONS = 1>
 class BaseContainer
 {
 constexpr static InterfaceRequirement<INTERFACE_T, SIZE> check{};
@@ -29,14 +29,26 @@ public:
     
     //MARK: Initializers
     template< class T = INTERFACE_T, std::enable_if_t<isARRAY<T>, int> = 0>
-    BaseContainer(NODE_T numberOfNodes, std::string containerName,
-                    std::vector<std::string> dataNames)
+    BaseContainer(NODE_T numberOfNodes,
+                  std::string containerName,
+                  std::vector<std::string> dataNames)
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames}) {};
     
+    template< class T = INTERFACE_T, std::enable_if_t<!isOPENCV<T>, int> = 0>
+    BaseContainer(typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE> _data,
+                  std::string containerName,
+                  std::vector<std::string> dataNames)
+    : _numberOfNodes(_data.size() / FIELDS)
+    , _containerName(containerName)
+    , _dataNames({dataNames})
+    {data = _data;};
+    
+    // for VECTOR
     template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isVECTOR<T>, int> = 0>
-    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+    BaseContainer(NODE_T numberOfNodes,
+                  std::string containerName,
                   std::vector<std::string> dataNames)
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
@@ -44,26 +56,35 @@ public:
     , data(numberOfNodes){};
     
     template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS != 1 && isVECTOR<T>, int> = 0>
-    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+    BaseContainer(NODE_T numberOfNodes,
+                  std::string containerName,
                   std::vector<std::string> dataNames)
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
     , data(numberOfNodes, std::vector<NUM_T>(numberOfNodes * DIMENSIONS)){};
     
+    // For OPENCV
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-    BaseContainer(NODE_T numberOfNodes, std::string containerName,
+    BaseContainer(NODE_T numberOfNodes,
+                  std::string containerName,
                   std::vector<std::string> dataNames)
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    //TODO: gives wrong number of cols. Should be numberOfNodes . fields
     , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)), numberOfNodes){};
         //-> will resolve to 1 if Dimension == 1 or _N if DIMENSIONS == 2
     
-    //TODO: check if ptr() is really necessary.
-//    virtual inline NUM_T * ptr() = 0;
-//    virtual inline NUM_T const * ptr() const = 0;
+    //
+    template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
+    BaseContainer(typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE> _data,
+                  std::string containerName,
+                  std::vector<std::string> dataNames)
+    : _numberOfNodes(_data.cols / FIELDS)
+    , _containerName(containerName)
+    , _dataNames({dataNames})
+    //TODO: gives wrong number of cols. Should be numberOfNodes . fields
+    {data = _data;};
     
     //MARK: Iterators
     template<uchar T = DIMENSIONS, std::enable_if_t<!(T == 2 &&
@@ -126,9 +147,10 @@ public:
     inline auto const operator[](NODE_T idx) const {return data[idx];}
     
     //MARK: Attributes
-//protected:
+protected:
 
     NODE_T _numberOfNodes;
+    static unsigned char const _fields = FIELDS;
     std::string _containerName;
     std::vector<std::string> _dataNames;
     typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE> data;

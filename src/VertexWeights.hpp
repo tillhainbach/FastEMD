@@ -17,16 +17,20 @@ using namespace types;
 
 //MARK: Vertex Weights Class
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0>
-class VertexWeights : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>
+class VertexWeights : public VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 1>
 {
     
 public:
     
     //MARK: Initializer
     VertexWeights(NODE_T numberOfNodes)
-    :  VertexBaseContainer<NUM_T, INTERFACE_T, SIZE>(numberOfNodes,
+    :  VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 1>(numberOfNodes,
                                                      "Vertex Weights",
-                                                     {"weight"}, 1) {};
+                                                     {"weight"}) {};
+    VertexWeights(typeSelector1d<NUM_T, INTERFACE_T, SIZE> _data)
+    :  VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 1>(_data,
+                                                     "Vertex Weights",
+                                                     {"weight"}) {};
 
     //MARK: Setters
     template<typename _T>
