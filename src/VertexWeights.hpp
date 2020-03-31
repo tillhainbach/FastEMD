@@ -30,8 +30,7 @@ public:
 
     //MARK: Setters
     template<typename _T>
-    std::tuple<NUM_T, NUM_T>
-        fillWeights(const _T& P, const _T& Q,
+    NUM_T fillWeights(const _T& P, const _T& Q,
             Counter<NUM_T, INTERFACE_T, SIZE/2>& nonZeroSourceNodes,
             Counter<NUM_T, INTERFACE_T, SIZE/2>& nonZeroSinkNodes);
     
@@ -59,7 +58,7 @@ public:
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
 template<typename _T>
-std::tuple<NUM_T, NUM_T> VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
+NUM_T VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
                 _T const & P, _T const & Q,
                 Counter<NUM_T, INTERFACE_T, SIZE/2> & nonZeroSourceNodes,
                 Counter<NUM_T, INTERFACE_T, SIZE/2> & nonZeroSinkNodes)
@@ -131,7 +130,7 @@ std::tuple<NUM_T, NUM_T> VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
          the cost of zero) This also makes sum of b zero. */
         *(this->thresholdNode()) = -abs_diff_sum_P_sum_Q;
     
-    return {sum_P, sum_Q};
+    return abs_diff_sum_P_sum_Q;
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>

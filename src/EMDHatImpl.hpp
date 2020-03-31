@@ -51,7 +51,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
  
     //MARK: creating the b vector that contains all vertexes
     // Assuming metric property we can pre-flow 0-cost edges
-    auto [sum_P, sum_Q] =
+    auto abs_diff_sum_P_sum_Q =
         vertexWeights.template fillWeights<std::vector<CONVERT_TO_T>>(P, Q,
                                                             nonZeroWeightSourceNodes,
                                                             nonZeroWeightSinkNodes);
