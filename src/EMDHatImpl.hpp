@@ -56,34 +56,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
                                                             nonZeroWeightSourceNodes,
                                                             nonZeroWeightSinkNodes);
     
-#if PRINT && DEBUG
-    std::cout << vertexWeights << std::endl;
-    
-    std::cout << nonZeroWeightSourceNodes << std::endl;
-    
-    std::cout << nonZeroWeightSinkNodes << std::endl;
-#endif
-    //MARK: Ensuring that the supplier - P, has more mass.
-    CONVERT_TO_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
-    if (sum_Q > sum_P)
-    {
-        vertexWeights.swapWeights();
-        std::swap(nonZeroWeightSourceNodes, nonZeroWeightSinkNodes);
-        
-#if PRINT && DEBUG
-        std::cout << "needToSwapFlow" << std::endl;
-        std::cout << nonZeroWeightSourceNodes << std::endl;
-        
-        std::cout << nonZeroWeightSinkNodes << std::endl;
-#endif
-    }
-    
-    /* remark*) I put here a deficit of the extra mass, as mass that flows
-     to the threshold node can be absorbed from all sources with cost zero
-     (this is in reverse order from the paper, where incoming edges to the
-     threshold node had the cost of the threshold and outgoing edges had
-     the cost of zero) This also makes sum of b zero. */
-    vertexWeights[vertexWeights.thresholdNodeIndex()] = -abs_diff_sum_P_sum_Q;
+
 
     //-------------------------------------------------------
 #if PRINT && DEBUG
