@@ -35,7 +35,7 @@ public:
     , _row(row) {};
     
     CVMatRowIterator& operator++();
-    CVMatRowIterator& operator++(int);
+    CVMatRowIterator operator++(int);
     CVMatRowIterator& operator--();
     CVMatRowIterator& operator--(int);
     CVMatRowIterator& operator+(int idx);
@@ -74,7 +74,7 @@ CVMatRowIterator<_T>& CVMatRowIterator<_T>::operator++()
 }
 
 template<typename _T>
-CVMatRowIterator<_T>& CVMatRowIterator<_T>::operator++(int)
+CVMatRowIterator<_T> CVMatRowIterator<_T>::operator++(int)
 {
     CVMatRowIterator temp = *this;
     ++*this;
