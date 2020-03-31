@@ -164,21 +164,9 @@ std::ostream& operator<<(std::ostream& os,
     // Print one line describing the containing data.
     
     // Now, print the actual data.
-//    for(auto element : container)
-//    {
-//        os << element << " ";
-//    }
-    auto it = container.begin();
-    for(int i = 0; i < container.size(); ++i)
+    for(auto element : container)
     {
-        os << container[i] << " ";
-        assert(&container[i] == &*it);
-        ++it;
-    }
-    
-    for(auto it = container.begin(), end = container.end(); it != end; ++it)
-    {
-        os << &(*it) << " ";
+        os << element << " ";
     }
 
     return os;
