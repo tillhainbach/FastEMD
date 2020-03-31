@@ -87,11 +87,11 @@ using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, SIZE, FIELDS
 //                                    typeSelector2d<NUM_T, _INT, SIZE>,
 //                                    UNKNOWN>::type
 //>::type;
-template< typename NUM_T, typename _INT, int Dimensions, uint SIZE>
+template< typename NUM_T, typename _INT, int Dimensions, uint SIZE, uchar FIELDS = 1>
 using typeSelector = typename std::conditional<Dimensions == 1,
-                            typeSelector1d<NUM_T, _INT, SIZE>,
+                            typeSelector1d<NUM_T, _INT, SIZE, FIELDS>,
                         typename std::conditional<Dimensions == 2,
-                            typeSelector2d<NUM_T, _INT, SIZE>, UNKNOWN>
+                            typeSelector2d<NUM_T, _INT, SIZE, FIELDS>, UNKNOWN>
                             ::type>
                         ::type;
 
