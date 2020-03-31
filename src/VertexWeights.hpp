@@ -100,9 +100,6 @@ std::tuple<NUM_T, NUM_T> VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
     }
     nonZeroSourceNodes.resize(nonZeroSourceCounter);
     nonZeroSinkNodes.resize(nonZeroSinkCounter);
-    this->data[1] = 999;
-    std::cout << (*this)[1] << std::endl;
-    std::cout << (*this) << std::endl;
     
     return {sum_P, sum_Q};
 }
