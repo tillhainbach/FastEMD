@@ -6,15 +6,15 @@
 //  Copyright © 2020 Till Hainbach. All rights reserved.
 //
 
-#ifndef utils_h
-#define utils_h
+#ifndef utils_hpp
+#define utils_hpp
 
 namespace FastEMD
 {
 namespace utils
 {
 
-template<typename _T>
+template<typename _T> inline
 auto getMaxCost(const _T& costMatrix, const NODE_T N)
 {
     auto maxCost = 0;
@@ -29,6 +29,7 @@ auto getMaxCost(const _T& costMatrix, const NODE_T N)
     return maxCost;
 }
 
+inline 
 int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
                            std::vector< std::vector<int> >& costmat,
                            const int THRESHOLD, const int COST_MULT_FACTOR)
