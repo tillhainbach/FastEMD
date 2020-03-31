@@ -20,8 +20,8 @@ public:
     template<typename... Args>
     cvMatSingleRow(Args&&... args) : cv::Mat1i(std::forward<Args>(args)...) {};
     
-    int& operator[](int idx) { return *cv::Mat1i::operator[](idx);}
-    int const & operator[](int idx) const { return *cv::Mat1i::operator[](idx);}
+    int& operator[](int idx) { return cv::Mat1i::operator[](0)[idx];}
+    int const & operator[](int idx) const { return cv::Mat1i::operator[](0)[idx];}
 };
 
 
