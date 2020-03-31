@@ -153,7 +153,7 @@ protected:
     static unsigned char const _fields = FIELDS;
     std::string _containerName;
     std::vector<std::string> _dataNames;
-    typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE> data;
+    typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE, FIELDS> data;
 };
 
 } //namespace FastEMD

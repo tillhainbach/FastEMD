@@ -24,7 +24,7 @@ class ReducedCostsNetwork : public BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>
 protected:
     ///@brief Core logic for reducing the cost along one edge.
     inline void reduceCostCore(
-        typeSelector1d<NUM_T, INTERFACE_T, SIZE> & thisFrom,
+        typeSelector1d<NUM_T, INTERFACE_T, SIZE, FIELDS> & thisFrom,
         const NODE_T from,
         const NODE_T i,
         const Counter<NUM_T, INTERFACE_T, SIZE>& d,
@@ -58,7 +58,7 @@ public:
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCore(
-            typeSelector1d<NUM_T, INTERFACE_T, SIZE> & thisFrom,
+            typeSelector1d<NUM_T, INTERFACE_T, SIZE, FIELDS> & thisFrom,
             const NODE_T from,
             const NODE_T i,
             const Counter<NUM_T, INTERFACE_T, SIZE>& d,
@@ -75,10 +75,12 @@ template<typename... Args>
 void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCost(Args&&... args)
 {
     auto f = std::bind(
-            &ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCore,
+            &ReducedCostsNetwork::reduceCostCore,
             this,
-            std::placeholders::_1, std::placeholders::_2,
-            std::placeholders::_3, std::forward<Args>(args)...);
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3,
+            std::forward<Args>(args)...);
     return this->forEach(f);
 }
 

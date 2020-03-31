@@ -74,7 +74,7 @@ public:
     
 private:
     inline virtual void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, FIELDS> const & costFrom,
+                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
                                  NODE_T from, NODE_T i,
                     Counter<NODE_T, INTERFACE_T, SIZE>& counters) = 0;
 

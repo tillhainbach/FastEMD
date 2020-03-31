@@ -62,7 +62,6 @@ inline constexpr bool isVECTOR = std::is_same_v<INTERFACE_T, VECTOR>;
 template<typename INTERFACE_T>
 inline constexpr bool isUNKNOWN = std::is_same_v<INTERFACE_T, UNKNOWN>;
 
-
 template< typename _INT, typename _A, typename _V, typename _C>
 using typeSelectorStructure = typename std::conditional<isARRAY<_INT>, _A,
                         typename std::conditional< isVECTOR< _INT>, _V,
@@ -71,22 +70,12 @@ using typeSelectorStructure = typename std::conditional<isARRAY<_INT>, _A,
                             >::type
                         >::type;
 
-
-//template< typename NUM_T, typename _INT, uint SIZE >
-//using typeSelector1d = typeSelector< _INT, array1d<NUM_T, SIZE>, vector1d<NUM_T> >;
 template< typename NUM_T, typename _INT, uint SIZE, uchar FIELDS = 1>
 using typeSelector1d = typeSelectorStructure< _INT, array1d< NUM_T, SIZE * FIELDS >, vector1d <NUM_T>, utils::cvMatSingleRow>;
 
 template<typename NUM_T, typename _INT, uint SIZE, uchar FIELDS = 1 >
 using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, SIZE, FIELDS >, vector2d <NUM_T>, cv::Mat1i>;
 
-//template < typename NUM_T, typename _INT, int Dimensions, uint SIZE >
-//using typeSelector = typename std::conditional<Dimensions == 1>,
-//                                    typeSelector1d<NUM_T, _INT, SIZE>,
-//                        typename std::conditional<Dimensions == 2>,
-//                                    typeSelector2d<NUM_T, _INT, SIZE>,
-//                                    UNKNOWN>::type
-//>::type;
 template< typename NUM_T, typename _INT, int Dimensions, uint SIZE, uchar FIELDS = 1>
 using typeSelector = typename std::conditional<Dimensions == 1,
                             typeSelector1d<NUM_T, _INT, SIZE, FIELDS>,
