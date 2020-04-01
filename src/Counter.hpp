@@ -21,19 +21,19 @@ class Counter : public BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>
 public:
     Counter(NODE_T numberOfNodes,
             std::string containerName = "counter",
-            std::vector<std::string> dataNames = {"counts per vertex"})
+            bool zeroInitialization = false)
     : BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>(numberOfNodes,
                                                     containerName,
-                                                    dataNames)
-    {};
+                                                    {"dataNames"})
+    { if (zeroInitialization) std::fill(this->begin(), this->end(), 0); };
     
     Counter(std::vector<NUM_T> _data,
             std::string containerName = "counter",
-            std::vector<std::string> dataNames = {"counts per vertex"})
+            bool zeroInitialization = false)
     : BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>(_data,
                                                     containerName,
-                                                    dataNames)
-    {};
+                                                    {"dataNames"})
+    { if (zeroInitialization) std::fill(this->begin(), this->end(), 0); };
     
     template<typename _T, typename _I, NODE_T _S>
     friend std::ostream& operator<<(std::ostream& os,
