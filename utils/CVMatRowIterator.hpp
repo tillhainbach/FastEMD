@@ -43,7 +43,7 @@ public:
     
     cvMatSingleRow& operator*(){currentRow = _cvMat.row(_row); return currentRow;}
     
-    cvMatSingleRow* operator->(){return &currentRow;}
+    cvMatSingleRow* operator->(){currentRow = _cvMat.row(_row); return &currentRow;}
     
     ///@brief overloaded equality operator==(). It checks whether the row counters are equal while
     /// referenceing the same cv::Mat-Instance.
