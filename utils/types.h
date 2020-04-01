@@ -76,7 +76,7 @@ using typeSelector1d = typeSelectorStructure< _INT, array1d< NUM_T, SIZE * FIELD
 template<typename NUM_T, typename _INT, uint SIZE, uchar FIELDS = 1 >
 using typeSelector2d = typeSelectorStructure< _INT, array2d< NUM_T, SIZE, FIELDS >, vector2d <NUM_T>, cv::Mat1i>;
 
-template< typename NUM_T, typename _INT, int Dimensions, uint SIZE, uchar FIELDS = 1>
+template< typename NUM_T, typename _INT, int Dimensions, uint SIZE = 0, uchar FIELDS = 1>
 using typeSelector = typename std::conditional<Dimensions == 1,
                             typeSelector1d<NUM_T, _INT, SIZE, FIELDS>,
                         typename std::conditional<Dimensions == 2,
