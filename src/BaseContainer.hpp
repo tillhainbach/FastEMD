@@ -87,7 +87,7 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    , data(numberOfNodes, std::vector<NUM_T>((numberOfNodes - 1) * FIELDS * (2 - (containerName == "Flow Network")))){};
+    , data(numberOfNodes, std::vector<NUM_T>((numberOfNodes - 1) * FIELDS * (2 - (containerName != "Flow Network")))){};
     
     // For OPENCV
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
@@ -97,7 +97,9 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)), (numberOfNodes - 1) * FIELDS * (2 - (containerName == "Flow Network"))){};
+    , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)),
+           (numberOfNodes - 1 + DIMENSIONS % 2) * FIELDS * (2 - (containerName != "Flow Network")))
+    {};
         //-> will resolve to 1 if Dimension == 1 or _N if DIMENSIONS == 2
     
     //MARK: Iterators
