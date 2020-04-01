@@ -29,7 +29,7 @@ auto getMaxCost(const _T& costMatrix, const NODE_T N)
     return maxCost;
 }
 
-inline 
+inline
 int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
                            std::vector< std::vector<int> >& costmat,
                            const int THRESHOLD, const int COST_MULT_FACTOR)
@@ -55,6 +55,26 @@ int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
         }
     }
     return max_cost_mat;
+}
+
+inline
+void showStringInequality(std::string const& sample, std::string const& target)
+{
+    if(sample.size() != target.size())
+    {
+        std::cout << "string sizes are not equal!" << std::endl;
+        std::cout << "sample has size " << sample.size() << " and target has size "
+        << target.size() << std::endl;
+    }
+//    assert(sample.size() <= target.size());
+    for(unsigned int i = 0; i < target.size(); ++i)
+    {
+        if (sample[i] != target[i])
+        {
+            std::cout << sample[i] << " != " << target[i] << " | ";
+            std::cout << (int)sample[i] << " != " << (int)target[i] << std::endl;
+        }
+    }
 }
 
 }}
