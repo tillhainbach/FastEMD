@@ -60,10 +60,9 @@ public:
                     containerName,
                     dataNames)
     {
-        assert(_data.size() == _numberOfNodes);
         for(int i = 0; i < _data.size(); ++i)
         {
-            assert(_data[i].size() == _numberOfNodes * FIELDS);
+            assert(_data[i].size() <= _numberOfNodes * FIELDS);
             for(int j = 0; j < _data[i].size(); ++j)
             {
                 data[i][j] = static_cast<NUM_T>(_data[i][j]);
@@ -88,7 +87,7 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    , data(numberOfNodes, std::vector<NUM_T>(numberOfNodes * DIMENSIONS)){};
+    , data(numberOfNodes, std::vector<NUM_T>((numberOfNodes - 1) * FIELDS * (2 - (containerName == "Flow Network")))){};
     
     // For OPENCV
     template< class T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
@@ -98,7 +97,7 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)), numberOfNodes * FIELDS){};
+    , data(1 + ((1 - DIMENSIONS % 2) * (numberOfNodes - 1)), (numberOfNodes - 1) * FIELDS * (2 - (containerName == "Flow Network"))){};
         //-> will resolve to 1 if Dimension == 1 or _N if DIMENSIONS == 2
     
     //MARK: Iterators
