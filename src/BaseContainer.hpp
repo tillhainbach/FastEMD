@@ -78,7 +78,7 @@ public:
     : _numberOfNodes(numberOfNodes)
     , _containerName(containerName)
     , _dataNames({dataNames})
-    , data(numberOfNodes){};
+    , data(numberOfNodes * FIELDS){};
     
     template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS != 1 && isVECTOR<T>, int> = 0>
     BaseContainer(NODE_T numberOfNodes,
