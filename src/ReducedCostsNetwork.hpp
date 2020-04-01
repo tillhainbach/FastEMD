@@ -65,7 +65,7 @@ inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCor
             const Counter<bool, INTERFACE_T, SIZE>& finalNodesFlg,
             const NODE_T l)
 {
-    auto it = &thisFrom[this->fields() * i];
+    auto it = &thisFrom[i];
     if (finalNodesFlg[from]) it[1] += d[from] - d[l];
     if (finalNodesFlg[*it]) it[1] -= d[*it] - d[l];
 }
