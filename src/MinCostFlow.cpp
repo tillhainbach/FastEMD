@@ -8,9 +8,6 @@
 #ifndef MIN_COST_FLOW_CPP
 #define MIN_COST_FLOW_CPP
 
-#define PRINT 1
-#define DEBUG 1
-
 #include <stdio.h>
 #include "MinCostFlow.hpp"
 namespace FastEMD

@@ -1,5 +1,6 @@
 //#define COMPUTE_RUBNER_VERSION
-
+#define PRINT 1
+#define DEBUGMODE 1
 
 #include <chrono>
 #include <vector>

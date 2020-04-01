@@ -59,7 +59,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 
 
     //-------------------------------------------------------
-#if PRINT && DEBUG
+#if PRINT && DEBUGMODE
     std::cout << nonZeroWeightSourceNodes << std::endl;
     std::cout << nonZeroWeightSinkNodes << std::endl;
     std::cout << vertexWeights << std::endl;
@@ -81,14 +81,15 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
               nonZeroWeightSinkNodes, sinkNodesGettingFlowNotOnlyFromThreshold, Cc, maxC);
 
 
-#if DEBUG
+#if DEBUGMODE
 #if PRINT
     std::cout << vertexWeights << std::endl;
+    cost.print();
 #endif
     CONVERT_TO_T DEBUG_sum_b = 0;
     DEBUG_sum_b += vertexWeights.sum();
     assert(DEBUG_sum_b == 0);
-    cost.print();
+
 #endif
 
    
