@@ -289,15 +289,18 @@ struct emd_hat_impl_integral_types {
     
 //    std::cout << "CostNetwork:" << std::endl;
 //    std::cout << "vertex: [to : cost]" << std::endl;
-//    for (NODE_T i = 0; i < cc.size(); ++i)
-//    {
-//        std::cout << i << ": ";
-//        for (auto &edge : cc[i])
-//        {
-//            std::cout << "[" << edge._to << " : " << edge._cost << "] ";
-//        }
-//        std::cout << std::endl;
-//    }
+    for (NODE_T i = 0; i < cc.size(); ++i)
+    {
+        std::cout << "{";
+        for (auto &edge : cc[i])
+        {
+            std::cout << edge._to << ", " << edge._cost;
+            if (i != (cc.size() - 1) && edge._cost != 3001) std::cout << ", ";
+            if (i == (cc.size() - 1) && edge._to != 30) std::cout << ", ";
+        }
+        if (i != (cc.size() - 1)) std::cout << "}," << std::endl;
+        else  std::cout << "}" << std::endl;
+    }
 
     //-------------------------------------------------------
     min_cost_flow<NUM_T> mcf;

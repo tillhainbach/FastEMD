@@ -109,6 +109,18 @@ public:
             }} // it
         }} // from
         
+        std::cout << "Flow Network:" << std::endl;
+         std::cout << "vertex: [to : reduced cost]" << std::endl;
+        for (NODE_T from = 0; from < _num_nodes; ++from)
+        {
+            std::cout << from << ":";
+            for (auto &e : x[from])
+            {
+                std::cout << " [" << e._to << " : " << e._cost << " : " << e._flow << "]";
+            }
+            std::cout << std::endl;
+        }
+        
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
         // Note that for forward edges the residual capacity is infinity
         std::vector< std::list< edge1<NUM_T> > > r_cost_forward(_num_nodes);
@@ -118,17 +130,17 @@ public:
             }}
         }}
         
-//        std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
-//         std::cout << "vertex: [to : reduced cost]" << std::endl;
-//        for (NODE_T from = 0; from < _num_nodes; ++from)
-//        {
-//            std::cout << from << ": ";
-//            for (auto &e : r_cost_forward[from])
-//            {
-//                std::cout << "[" << e._to << " : " << e._reduced_cost << "]";
-//            }
-//            std::cout << std::endl;
-//        }
+        std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
+         std::cout << "vertex: [to : reduced cost]" << std::endl;
+        for (NODE_T from = 0; from < _num_nodes; ++from)
+        {
+            std::cout << from << ": ";
+            for (auto &e : r_cost_forward[from])
+            {
+                std::cout << "[" << e._to << " : " << e._reduced_cost << "] ";
+            }
+            std::cout << std::endl;
+        }
         
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
@@ -139,18 +151,18 @@ public:
             }} // it
         }} // from
         
-//        std::cout << "Reduced Costs And Capacity For Backward Edges Network:" << std::endl;
-//         std::cout << "vertex: [to : reduced cost : residual capacity]" << std::endl;
-//        for (NODE_T from = 0; from < _num_nodes; ++from)
-//        {
-//            std::cout << from << ": ";
-//            for (auto &e : r_cost_cap_backward[from])
-//            {
-//                std::cout << "[" << e._to << " : " << e._reduced_cost
-//                    << " : " << e._residual_capacity << "]";
-//            }
-//            std::cout << std::endl;
-//        }
+        std::cout << "Reduced Costs And Capacity For Backward Edges Network:" << std::endl;
+         std::cout << "vertex: [to : reduced cost : residual capacity]" << std::endl;
+        for (NODE_T from = 0; from < _num_nodes; ++from)
+        {
+            std::cout << from << ": ";
+            for (auto &e : r_cost_cap_backward[from])
+            {
+                std::cout << "[" << e._to << " : " << e._reduced_cost
+                    << " : " << e._residual_capacity << "] ";
+            }
+            std::cout << std::endl;
+        }
         
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand,supply
