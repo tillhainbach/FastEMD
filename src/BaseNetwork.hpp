@@ -9,6 +9,7 @@
 #ifndef BaseNetwork_h
 #define BaseNetwork_h
 #include "VertexBaseContainer.hpp"
+#include "Counter.hpp"
 
 namespace FastEMD
 {
