@@ -46,8 +46,8 @@
             filePath = "original/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "original/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -430,8 +430,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -474,8 +474,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -490,8 +490,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -520,8 +520,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
             <Locations>
@@ -568,8 +568,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -584,8 +584,8 @@
             filePath = "original/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, e, l)"
             landmarkType = "7">
          </BreakpointContent>
@@ -600,8 +600,8 @@
             filePath = "original/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "410"
+            endingLineNumber = "410"
             landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, e, l)"
             landmarkType = "7">
          </BreakpointContent>
@@ -616,8 +616,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -632,8 +632,8 @@
             filePath = "original/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
             landmarkName = "operator()(e, c, x)"
             landmarkType = "7">
          </BreakpointContent>
@@ -648,8 +648,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -664,8 +664,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -680,8 +680,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -696,8 +696,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -712,8 +712,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -728,8 +728,8 @@
             filePath = "src/ReducedCostsAndCapacityBackwardEdgesNetwork.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "fillCore(costFrom, from, i, counters)"
             landmarkType = "9">
          </BreakpointContent>
@@ -744,8 +744,8 @@
             filePath = "original/emd_hat_impl.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
             landmarkName = "operator()(POrig, QOrig, Pc, Qc, Cc, extra_mass_penalty, F)"
             landmarkType = "7">
          </BreakpointContent>
@@ -760,8 +760,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
             landmarkName = "operator()(weights, cost, flow)"
             landmarkType = "9">
          </BreakpointContent>
@@ -776,8 +776,8 @@
             filePath = "src/BaseNetwork.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
             landmarkName = "findIndex(node, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -792,8 +792,8 @@
             filePath = "src/BaseNetwork.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "findIndex(node, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -808,8 +808,8 @@
             filePath = "src/BaseNetwork.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
             landmarkName = "findIndex(node, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -824,8 +824,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -840,8 +840,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -856,8 +856,8 @@
             filePath = "src/Distance.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "heapDecreaseKey(v, alt)"
             landmarkType = "9">
          </BreakpointContent>
@@ -866,38 +866,6 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "DC576EBA-9AA0-4ADF-BB63-579D41D0F675"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/MinCostFlow.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "compute_shortest_path(weights, from)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B4A0FB99-DF71-42DC-BDB1-7963A21F62C0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/Distance.hpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "heapDecreaseKey(v, alt)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8AA0F393-1F01-44C6-9CE7-C7C12F25D218"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -913,6 +881,38 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "B4A0FB99-DF71-42DC-BDB1-7963A21F62C0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Distance.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "heapDecreaseKey(v, alt)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8AA0F393-1F01-44C6-9CE7-C7C12F25D218"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/MinCostFlow.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "compute_shortest_path(weights, from)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             uuid = "C27C8F83-C7B5-4A75-9DD2-48340EF6F991"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -920,8 +920,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -936,8 +936,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -952,8 +952,8 @@
             filePath = "original/min_cost_flow.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "331"
+            endingLineNumber = "331"
             landmarkName = "compute_shortest_path(d, prev, from, cost_forward, cost_backward, e, l)"
             landmarkType = "7">
          </BreakpointContent>
@@ -968,8 +968,8 @@
             filePath = "src/MinCostFlow.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "compute_shortest_path(weights, from)"
             landmarkType = "9">
          </BreakpointContent>
@@ -978,16 +978,96 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "F94E711B-C22C-47D0-925F-584CBAC25D3D"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "src/VertexWeights.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "fillWeights(P, Q, nonZeroSourceNodes, nonZeroSinkNodes)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EA287984-7101-4DC2-8650-DED4481371CB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/VertexWeights.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "operator&lt;&lt;(os, container)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "EA287984-7101-4DC2-8650-DED4481371CB - e258410853d1a0fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp; FastEMD::operator&lt;&lt;&lt;int, std::__1::integral_constant&lt;FastEMD::types::INTERFACE_TYPE_T, (FastEMD::types::INTERFACE_TYPE_T)0&gt;, 0&gt;(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;, FastEMD::VertexWeights&lt;int, std::__1::integral_constant&lt;FastEMD::types::INTERFACE_TYPE_T, (FastEMD::types::INTERFACE_TYPE_T)0&gt;, 0&gt; const&amp;)"
+                  moduleName = "arrayFastEMD"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tillhainbach/Github/FastEMD/src/VertexWeights.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "56">
+               </Location>
+               <Location
+                  uuid = "EA287984-7101-4DC2-8650-DED4481371CB - e258410853d1a0fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp; FastEMD::operator&lt;&lt;&lt;int, std::__1::integral_constant&lt;FastEMD::types::INTERFACE_TYPE_T, (FastEMD::types::INTERFACE_TYPE_T)0&gt;, 0&gt;(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;, FastEMD::VertexWeights&lt;int, std::__1::integral_constant&lt;FastEMD::types::INTERFACE_TYPE_T, (FastEMD::types::INTERFACE_TYPE_T)0&gt;, 0&gt; const&amp;)"
+                  moduleName = "arrayFastEMD"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tillhainbach/Github/FastEMD/src/VertexWeights.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "133">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "36EB747F-0AE1-4981-A026-B17B602DFF99"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "test/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "main(argc, argv)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "045B36E4-944A-407F-9623-A5B7A476843B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "original/min_cost_flow.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "operator()(e, c, x)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
