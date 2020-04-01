@@ -22,11 +22,19 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // zero the counters:
     std::fill(counters.begin(), counters.end(), 0);
     flow.fill(cost, counters);
-        
+
+#if PRINT && DEBUGMODE
+    std::cout << flow << std::endl;
+#endif
+    
     // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
     // Note that for forward edges the residual capacity is
     // infinity
     forwardCost.fill(cost, counters);
+    
+#if PRINT && DEBUGMODE
+    std::cout << forwardCost << std::endl;
+#endif
         
     // reduced costs and capacity for backward edges
     // (c[j,i]-pi[j]+pi[i])
@@ -34,7 +42,11 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // capacity is also zero
     std::fill(counters.begin(), counters.end(), 0);
     backwardCost.fill(cost, counters);
-            
+    
+#if PRINT && DEBUGMODE
+    std::cout << backwardCost << std::endl;
+#endif
+    
     // Max supply TODO:demand?, given U?,
     // optimization-> min out of demand, supply
 //    CONVERT_TO_T U = *(std::max_element(weigths.begin(),
