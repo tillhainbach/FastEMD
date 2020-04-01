@@ -27,7 +27,8 @@ public:
     :  VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 1>(numberOfNodes,
                                                      "Vertex Weights",
                                                      {"weight"}) {};
-    VertexWeights(typeSelector1d<NUM_T, INTERFACE_T, SIZE> _data)
+    
+    VertexWeights(std::vector<NUM_T> _data)
     :  VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 1>(_data,
                                                      "Vertex Weights",
                                                      {"weight"}) {};
@@ -105,34 +106,34 @@ NUM_T VertexWeights<NUM_T, INTERFACE_T, SIZE>::fillWeights(
     nonZeroSinkNodes.resize(nonZeroSinkCounter);
     
     //TODO: untangle this function into several smaller functions...
-    #if PRINT && DEBUG
-        std::cout << vertexWeights << std::endl;
+#if PRINT && DEBUG
+    std::cout << *this << std::endl;
+    
+    std::cout << nonZeroSourceNodes << std::endl;
+    
+    std::cout << nonZeroSinkNodes << std::endl;
+#endif
+    //MARK: Ensuring that the supplier - P, has more mass.
+    NUM_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
+    if (sum_Q > sum_P)
+    {
+        this->swapWeights();
+        std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
         
+#if PRINT && DEBUG
+        std::cout << "needToSwapFlow" << std::endl;
         std::cout << nonZeroSourceNodes << std::endl;
         
         std::cout << nonZeroSinkNodes << std::endl;
-    #endif
-        //MARK: Ensuring that the supplier - P, has more mass.
-        NUM_T abs_diff_sum_P_sum_Q = std::abs(sum_P - sum_Q);
-        if (sum_Q > sum_P)
-        {
-            this->swapWeights();
-            std::swap(nonZeroSourceNodes, nonZeroSinkNodes);
-            
-    #if PRINT && DEBUG
-            std::cout << "needToSwapFlow" << std::endl;
-            std::cout << nonZeroSourceNodes << std::endl;
-            
-            std::cout << nonZeroSinkNodes << std::endl;
-    #endif
-        }
+#endif
+    }
         
-        /* remark*) I put here a deficit of the extra mass, as mass that flows
-         to the threshold node can be absorbed from all sources with cost zero
-         (this is in reverse order from the paper, where incoming edges to the
-         threshold node had the cost of the threshold and outgoing edges had
-         the cost of zero) This also makes sum of b zero. */
-        *(this->thresholdNode()) = -abs_diff_sum_P_sum_Q;
+    /* remark*) I put here a deficit of the extra mass, as mass that flows
+     to the threshold node can be absorbed from all sources with cost zero
+     (this is in reverse order from the paper, where incoming edges to the
+     threshold node had the cost of the threshold and outgoing edges had
+     the cost of zero) This also makes sum of b zero. */
+    *(this->thresholdNode()) = -abs_diff_sum_P_sum_Q;
     
     return abs_diff_sum_P_sum_Q;
 }

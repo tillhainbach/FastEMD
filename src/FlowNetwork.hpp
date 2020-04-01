@@ -24,6 +24,12 @@ public:
                                                {"to", "cost", "flow"})
     {};
     
+    FlowNetwork(vector2d<NUM_T> _data)
+    : BaseNetwork<NUM_T, INTERFACE_T, SIZE, 3>(_data,
+                                               "Flow Network",
+                                               {"to", "cost", "flow"})
+    {};
+    
     NUM_T calcDist() const;
     
 private:

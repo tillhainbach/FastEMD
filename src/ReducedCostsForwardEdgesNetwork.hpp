@@ -24,7 +24,7 @@ public:
                                                        {"to", "reduced cost"})
     {};
     
-    ReducedCostsForwardEdgesNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, 2> _data)
+    ReducedCostsForwardEdgesNetwork(vector2d<NUM_T> _data)
     : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, 2>(_data,
                                                        "Reduced Costs For Forward Edges Network",
                                                        {"to", "reduced cost"})

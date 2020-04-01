@@ -27,7 +27,7 @@ public:
                                                        {"to", "distance"})
     , _nodesToQ(numberOfNodes, "nodes to Q") {};
     
-    Distance(typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> _data)
+    Distance(std::vector<NUM_T> _data)
     : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, 2>(_data,
                                                     "Distance",
                                                     {"to", "distance"})

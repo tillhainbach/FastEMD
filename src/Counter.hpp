@@ -27,7 +27,7 @@ public:
                                                     dataNames)
     {};
     
-    Counter(typeSelector1d<NUM_T, INTERFACE_T, SIZE> _data,
+    Counter(std::vector<NUM_T> _data,
             std::string containerName = "counter",
             std::vector<std::string> dataNames = {"counts per vertex"})
     : BaseContainer<NUM_T, INTERFACE_T, SIZE, 1, 1>(_data,

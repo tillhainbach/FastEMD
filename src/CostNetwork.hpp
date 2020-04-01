@@ -26,7 +26,7 @@ public:
                                                {"to", "cost"})
     {};
     
-    CostNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, 2> _data)
+    CostNetwork(vector2d<NUM_T> _data)
     : BaseNetwork<NUM_T, INTERFACE_T, SIZE, 2>(_data,
                                                "CostNetwork",
                                                {"to", "cost"})

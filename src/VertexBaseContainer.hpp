@@ -30,8 +30,8 @@ public:
     , _artificialNodeIndex(numberOfNodes - 1)
     {};
     
-    VertexBaseContainer(
-                typeSelector<NUM_T, INTERFACE_T, DIMENSIONS, SIZE, FIELDS> _data,
+    template<typename _T>
+    VertexBaseContainer(_T _data,
                         std::string containerName,
                         std::vector<std::string> dataNames)
     : BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>(_data,

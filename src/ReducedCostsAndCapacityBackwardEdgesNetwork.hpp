@@ -24,6 +24,12 @@ public:
                             "Reduced Costs And Capacity For Backward Edges Network",
                             {"to", "reduced cost", "residual capacity"})
     {};
+    
+    ReducedCostsAndCapacityBackwardEdgesNetwork(vector2d<NUM_T> _data)
+    : ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, 3>(_data,
+                            "Reduced Costs And Capacity For Backward Edges Network",
+                            {"to", "reduced cost", "residual capacity"})
+    {};
 
 private:
     inline void fillCore(

@@ -27,7 +27,7 @@ public:
                                                                containerName,
                                                                dataNames) {};
     
-    BaseNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, FIELDS> _data,
+    BaseNetwork(vector2d<NUM_T> _data,
                 std::string containerName,
                 std::vector<std::string> dataNames)
     : VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, 2>(_data,
@@ -152,7 +152,7 @@ std::ostream& operator<<(std::ostream& os,
                                const BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>& network)
 {
     // Print the network name.
-    os << network._containerName << ": " << std::endl;
+    os << network._containerName << ":" << std::endl;
     
     // Print one line describing the containing data.
     os << "vertex: [";

@@ -40,7 +40,7 @@ public:
                                                     dataNames)
     {};
     
-    ReducedCostsNetwork(typeSelector2d<NUM_T, INTERFACE_T, SIZE, FIELDS> _data,
+    ReducedCostsNetwork(vector2d<NUM_T> _data,
                         std::string containerName,
                         std::vector<std::string> dataNames)
     : BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>(_data,
