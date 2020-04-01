@@ -9,6 +9,7 @@
 #ifndef CostsNetwork_h
 #define CostsNetwork_h
 #include "BaseNetwork.hpp"
+#include "VertexWeights.hpp"
 
 namespace FastEMD
 {
@@ -101,7 +102,6 @@ void CostNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
             weights[sourcesCounter++] = weights[sourceNodeIndex];
         }
     } // i
-    ;
     
     // reusable values
     NODE_T costSize = sourcesCounter + sinksCounter + 2;
