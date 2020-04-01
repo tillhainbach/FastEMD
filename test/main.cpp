@@ -231,12 +231,12 @@ public:
 };
  
 template<typename NUM_T, typename INTERFACE_T, int size = 0>
-class Test2 : public BaseNetwork<NUM_T, INTERFACE_T, size>
+class Test2 : public BaseNetwork<NUM_T, INTERFACE_T, size, 2>
 {
 
 public:
     Test2 (NODE_T _N)
-    : BaseNetwork<NUM_T, INTERFACE_T, size>(_N, "Tester", {"to", "from"}, 2){};
+    : BaseNetwork<NUM_T, INTERFACE_T, size, 2>(_N, "Tester", {"to", "from"}, 2){};
 
 };
 
@@ -250,7 +250,7 @@ int main(int argc, const char * argv[]) {
     std::vector<int> v(4);
 //    v[0] = 1 + 2;
     testCounter[0] = true;
-    std::cout << typeid(testCounter.data[0]).name() << std::endl;
+//    std::cout << typeid(testCounter.data[0]).name() << std::endl;
     std::cout << typeid(testCounter[0]).name() << std::endl;
     std::cout << testCounter << std::endl;
     std::cout << typeid(*(v.begin())).name() << std::endl;
@@ -267,24 +267,57 @@ int main(int argc, const char * argv[]) {
     
     Tester<int> T;
     std::cout << T.foo() << std::endl;
-  
-
-    cv::Mat1i mat(2, 2, 0);
+    
+    std::array<int, 4> arr;
+    std::vector<int> vec = {1, 2, 3, 4};
+    
+    cv::Mat1i mat(1, 10, 1);
+    cv::Mat1i mat2(mat);
+    Counter<int, OPENCV> matCounter(mat);
+    Counter<int, VECTOR> matCounter2({1, 2, 3});
+    std::cout << matCounter2 << std::endl;
+    
+    cvMatSingleRow single(mat);
+    
+    assert (mat.size == single.size);
+    auto itm = mat.begin();
+    for(int c = 0; c < mat.cols; ++c)
+    {
+        std::cout << single[c] <<  " ";
+        std::cout << mat[0][c] <<  " ";
+        std::cout << mat2[0][c] << std::endl;
+    }
     
     CVMatRowIterator<int> it(mat);
     std::cout << (*it) << std::endl;
     std::cout << *it << std::endl;
+
     
-    FlowNetwork<int, OPENCV> network(4);
+    std::vector< std::vector <int> > vecF(4, std::vector <int>(12));
+    int value = 0;
+    for (auto & row: vecF) for(auto& e: row) e = value++;
+
+    FlowNetwork<int, OPENCV> network(vecF);
     ReducedCostsForwardEdgesNetwork<int, ARRAY, 4> reducedCost(4);
+    
     std::cout << network << std::endl;
-    std::cout << reducedCost << std::endl;
     auto node = network.begin();
-    auto nodes = *network.fromNode(1);
-    auto arrayNode = *reducedCost.fromNode(1);
-    std::cout << *node << std::endl;
-    std::cout << nodes << std::endl;
-    std::cout << arrayNode[0] << std::endl;
+    auto end = network.begin() + 2;
+    
+    std::cout << "-------------------------------" << std::endl;
+    for(;node != end; ++node)
+    {
+        auto item = node->begin();
+        std::cout << typeid(item).name() << std::endl;
+        for (int i = 0; i < 4; ++i)
+            std::cout << *item++ << " " << (*node) [i] << " ";
+        std::cout << std::endl;
+    }
+    std::cout << "-------------------------------" << std::endl;
+
+    auto node2 = network.begin();
+    ++node2;
+    std::cout << &((*node2)[0]) << " " << &(network[1][0]) << std::endl;
     
 //    network.forEach([](int n) {std::cout << n << " ";});
     
