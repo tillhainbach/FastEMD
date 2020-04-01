@@ -164,10 +164,12 @@ std::ostream& operator<<(std::ostream& os,
     }
     os << "]" << std::endl;
     
+    bool isFlowNetwork = network._containerName == "Flow Network";
     // Now, print the actual data.
     NODE_T vertexIndex = 0;
     for (auto const& row : network)
     {
+        bool costSignHasChanged = false;
         NODE_T counter = 0;
         os << vertexIndex << ": [";
         for(auto const& element : row)
@@ -176,7 +178,11 @@ std::ostream& operator<<(std::ostream& os,
             os << element;
             if (counter % network.fields() == 0) os << "] [";
             else os << " : ";
-            if (network.breakCondition(vertexIndex, element)) break;
+            if (network.breakCondition(vertexIndex, element))
+            {
+                if(!(costSignHasChanged ^ isFlowNetwork)) break;
+                else costSignHasChanged = true;
+            }
         }
         for(NODE_T idx = 0; idx < network.fields() - 1; ++idx)
         {
