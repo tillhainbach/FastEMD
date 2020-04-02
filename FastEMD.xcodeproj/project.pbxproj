@@ -13,12 +13,12 @@
 		2B45E8B5242B8056007508B1 /* TestFlowNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B4242B8056007508B1 /* TestFlowNetwork.mm */; };
 		2B45E8B7242B819E007508B1 /* TestVertexWeight.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B6242B819E007508B1 /* TestVertexWeight.mm */; };
 		2B45E8B9242B8325007508B1 /* TestCounter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B8242B8325007508B1 /* TestCounter.mm */; };
-		2B45E8BD242BAC6E007508B1 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8BC242BAC6E007508B1 /* demo_FastEMD.cpp */; };
-		2B82359524361644006B5E76 /* demoFastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708802414413E00CE4195 /* demoFastEMD.cpp */; };
+		2B8235A124361FB3006B5E76 /* testInterfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708562412BED900CE4195 /* testInterfaces.cpp */; };
+		2B8235A22436202E006B5E76 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8BC242BAC6E007508B1 /* demo_FastEMD.cpp */; };
+		2B8235A324362037006B5E76 /* newImplementationFastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */; };
 		2B8EBD4824349697002CBED8 /* TestReducedCostForwardEdges.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */; };
 		2B8EBD4A24349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */; };
 		2BB1D7A924338C23000976DC /* TestEMDHat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B3CE74424331B5F0095BB14 /* TestEMDHat.mm */; };
-		2BB708792413C28700CE4195 /* testInterfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708562412BED900CE4195 /* testInterfaces.cpp */; };
 		2BB708B9241470C600CE4195 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708AC24146E9700CE4195 /* demo_FastEMD.cpp */; };
 		2BC463D32388422F00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
 		2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */; };
@@ -100,7 +100,7 @@
 		2B352820242905540063A500 /* FlowNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FlowNetwork.hpp; sourceTree = "<group>"; };
 		2B352821242905600063A500 /* CostNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CostNetwork.hpp; sourceTree = "<group>"; };
 		2B3CE74424331B5F0095BB14 /* TestEMDHat.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestEMDHat.mm; sourceTree = "<group>"; };
-		2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo_FastEMD.cpp; sourceTree = "<group>"; };
+		2B3E8B362398014D00CE5FAF /* compareImplementations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compareImplementations.cpp; sourceTree = "<group>"; };
 		2B3E9D6A2424D4CB00FF0E0A /* BaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BaseContainer.hpp; sourceTree = "<group>"; };
 		2B3E9D6B2424E40800FF0E0A /* VertexBaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBaseContainer.hpp; sourceTree = "<group>"; };
 		2B40A90524212FC30046360F /* preFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = preFlow.cpp; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		2BB7087D2414412900CE4195 /* EMDHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHat.hpp; sourceTree = "<group>"; };
 		2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHatImpl.hpp; sourceTree = "<group>"; };
 		2BB7087F2414412900CE4195 /* MinCostFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MinCostFlow.hpp; sourceTree = "<group>"; };
-		2BB708802414413E00CE4195 /* demoFastEMD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demoFastEMD.cpp; sourceTree = "<group>"; };
+		2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = newImplementationFastEMD.cpp; sourceTree = "<group>"; };
 		2BB708892414420400CE4195 /* arrayFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = arrayFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BB70892241452EF00CE4195 /* codeSketchbook.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codeSketchbook.cpp; sourceTree = "<group>"; };
 		2BB708AC24146E9700CE4195 /* demo_FastEMD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = demo_FastEMD.cpp; path = vectorInterface/demo_FastEMD.cpp; sourceTree = SOURCE_ROOT; };
@@ -146,7 +146,6 @@
 		2BC463A92388135000CBCAFF /* testCVFastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testCVFastEMD.cpp; sourceTree = "<group>"; };
 		2BC463AC2388138900CBCAFF /* emd_hat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat.hpp; sourceTree = "<group>"; };
 		2BC463AE2388138900CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
-		2BC463AF2388138A00CBCAFF /* emd_hat_signatures_interface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_signatures_interface.hpp; sourceTree = "<group>"; };
 		2BC463B0238813A200CBCAFF /* flow_utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = flow_utils.hpp; sourceTree = "<group>"; };
 		2BC463B6238813B600CBCAFF /* originalFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = originalFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC463CF2388422F00CBCAFF /* emd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = emd.c; sourceTree = "<group>"; };
@@ -242,7 +241,7 @@
 			path = test;
 			sourceTree = "<group>";
 		};
-		2B2DC056241FBF4C0090BD53 /* src */ = {
+		2B2DC056241FBF4C0090BD53 /* include */ = {
 			isa = PBXGroup;
 			children = (
 				2BC463A82388132800CBCAFF /* modifiedOriginal */,
@@ -265,7 +264,7 @@
 				2B35281F2429054A0063A500 /* ReducedCostsAndCapacityBackwardEdgesNetwork.hpp */,
 				2B45E8BE242BCC9B007508B1 /* Container.hpp */,
 			);
-			path = src;
+			path = include;
 			sourceTree = "<group>";
 		};
 		2B82359424361534006B5E76 /* code snippets */ = {
@@ -279,6 +278,17 @@
 			path = "code snippets";
 			sourceTree = "<group>";
 		};
+		2B82359D24361F19006B5E76 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2B45E8BC242BAC6E007508B1 /* demo_FastEMD.cpp */,
+				2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */,
+				2B3E8B362398014D00CE5FAF /* compareImplementations.cpp */,
+				2BB708562412BED900CE4195 /* testInterfaces.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		2BB708592413AE1700CE4195 /* tqdm */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,16 +296,6 @@
 				2BB7085B2413AE1700CE4195 /* tqdm.h */,
 			);
 			path = tqdm;
-			sourceTree = "<group>";
-		};
-		2BB708612413AE7B00CE4195 /* testFastEMD-Interfaces */ = {
-			isa = PBXGroup;
-			children = (
-				2BB708802414413E00CE4195 /* demoFastEMD.cpp */,
-				2B3E8B362398014D00CE5FAF /* demo_FastEMD.cpp */,
-				2BB708562412BED900CE4195 /* testInterfaces.cpp */,
-			);
-			path = "testFastEMD-Interfaces";
 			sourceTree = "<group>";
 		};
 		2BB708AB24146E6B00CE4195 /* vectorInterface */ = {
@@ -312,13 +312,13 @@
 		2BC45E1323872F7A00CBCAFF = {
 			isa = PBXGroup;
 			children = (
+				2B82359D24361F19006B5E76 /* src */,
 				2BC4601B23872F9700CBCAFF /* CHANGES.txt */,
 				2BC4603F23872F9700CBCAFF /* README.txt */,
 				2BC4604223872F9700CBCAFF /* LICENSE.txt */,
 				2B82359424361534006B5E76 /* code snippets */,
-				2B2DC056241FBF4C0090BD53 /* src */,
+				2B2DC056241FBF4C0090BD53 /* include */,
 				2BC460DB238730AF00CBCAFF /* utils */,
-				2BB708612413AE7B00CE4195 /* testFastEMD-Interfaces */,
 				2BC460D92387308100CBCAFF /* Resources */,
 				2B2DC04E241FBAD70090BD53 /* test */,
 				2BF8EE03242CEF7800880E99 /* libdbghelper */,
@@ -383,8 +383,6 @@
 		2BC463A82388132800CBCAFF /* modifiedOriginal */ = {
 			isa = PBXGroup;
 			children = (
-				2B45E8BC242BAC6E007508B1 /* demo_FastEMD.cpp */,
-				2BC463AF2388138A00CBCAFF /* emd_hat_signatures_interface.hpp */,
 				2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */,
 				2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */,
 				2BC463AC2388138900CBCAFF /* emd_hat.hpp */,
@@ -667,8 +665,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BB708792413C28700CE4195 /* testInterfaces.cpp in Sources */,
-				2B82359524361644006B5E76 /* demoFastEMD.cpp in Sources */,
+				2B8235A124361FB3006B5E76 /* testInterfaces.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +673,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B8235A324362037006B5E76 /* newImplementationFastEMD.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,7 +697,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BC463D32388422F00CBCAFF /* emd.c in Sources */,
-				2B45E8BD242BAC6E007508B1 /* demo_FastEMD.cpp in Sources */,
+				2B8235A22436202E006B5E76 /* demo_FastEMD.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

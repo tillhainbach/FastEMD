@@ -337,14 +337,14 @@ private:
                 break;
             }
 
-            heap_remove_first(Q, _nodes_to_Q)
+            heap_remove_first(Q, _nodes_to_Q);
             
             // neighbors of u
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
                 assert (it->_reduced_cost>=0);
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
-                if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
+                if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
                     prev[v]= u;
                 }
@@ -355,7 +355,7 @@ private:
                     assert (it->_reduced_cost>=0);
                     NUM_T alt= d[u]+it->_reduced_cost;
                     NODE_T v = it->_to;
-                    if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
+                    if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
 //                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
                         prev[v] = u;
@@ -418,22 +418,22 @@ private:
     void heap_remove_first(std::vector< edge3<NUM_T> >& Q,
                            std::vector<NODE_T>& nodes_to_Q)
     {
-        swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
         Q.pop_back();
-        heapify(Q, nodes_to_Q , 0, Qsize);
+        swap_heap(Q, nodes_to_Q, 0, Q.size());
+        heapify(Q, nodes_to_Q , 0);
     } // heap_remove_first
 
 
 
     void heapify(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q,
-                 NODE_T i, int &Qsize) {
+                 NODE_T i) {
 
         do {
             // TODO: change to loop
             NODE_T l = LEFT(i);
             NODE_T r = RIGHT(i);
             NODE_T smallest;
-            if ( (l < Qsize) && (Q[l]._dist < Q[i]._dist) )
+            if ( (l < Q.size()) && (Q[l]._dist < Q[i]._dist) )
             {
                 smallest = l;
             }
@@ -441,7 +441,7 @@ private:
             {
                 smallest = i;
             }
-            if ( (r < Qsize)&& (Q[r]._dist < Q[smallest]._dist) )
+            if ( (r < Q.size())&& (Q[r]._dist < Q[smallest]._dist) )
             {
                 smallest = r;
             }

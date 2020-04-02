@@ -66,7 +66,7 @@ int main( int argc, char* argv[])
 
     std::vector<int> cost_mat_row(im1_R * im1_C);
     for (unsigned int i = 0; i < im1_R * im1_C; ++i) cost_mat.push_back(cost_mat_row);
-    int maxC = FastEMD::utils::calculateCostMatVector(im1_R, im1_C, im2_R, im2_C,
+    int maxC = FastEMD::utils::calculateCostMatrix(im1_R, im1_C, im2_R, im2_C,
                                       cost_mat, THRESHOLD, COST_MULT_FACTOR);
 
     //-----------------------------------------------
