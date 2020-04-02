@@ -7,7 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include "include/EMDHat.hpp"
-#include "include/modifiedInterface"
+#include "include/modifiedInterface/modifiedEmdHat.hpp"
 #include "utils/tictocChrono.hpp"
 #include "utils/readImage.hpp"
 
@@ -75,30 +75,32 @@ int main( int argc, char* argv[])
     std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
     long iterations = strtol(argv[1], NULL, 10);
 
+    typedef FastEMD::types::ARRAY INTERFACE;
+    static FastEMD::NODE_T const SIZE = 80;
+    
     std::cout << "I am doing stuff for " << iterations << " times..." << std::endl;
     std::vector <long> emdValues(iterations);
 
     tictoc timer;
     timer.tic();
-    FastEMD::EMDHat<int, FastEMD::types::ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
+    FastEMD::EMDHat<int, INTERFACE, SIZE> fastEMD(static_cast<NODE_T>(v1.size()));
 
     int emdDistanceUniversalInterface = 0;
     for (int i = 0; i < iterations; i++)
     {
-        std::cout << "iter: " << i << "\r";
         emdDistanceUniversalInterface = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
     std::cout << "emdDistance time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
     std::cerr << "emdDistanceUniversalInterface = " << emdDistanceUniversalInterface<< std::endl;
     
-    
-    FastEMD::modified::EMDHat<int, 80> modifiedFastEMD(static_cast<NODE_T>(v1.size()));
+    timer.clear();
+    timer.tic();
+    FastEMD::modified::EMDHat<int, INTERFACE, SIZE> modifiedFastEMD(static_cast<NODE_T>(v1.size()));
 
-    emdDistanceModifiedInterface = 0;
+    int emdDistanceModifiedInterface = 0;
     for (int i = 0; i < iterations; i++)
     {
-        std::cout << "iter: " << i << "\r";
         emdDistanceModifiedInterface = modifiedFastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();

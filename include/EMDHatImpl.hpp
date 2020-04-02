@@ -129,23 +129,24 @@ NUM_T EMDHat<NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>::calcDistance(
         
     assert( (F != NULL) || (FLOW_TYPE == NO_FLOW) );
 
-    return this->calcDistanceInt(P, Q, P, Q, C,
-                                 extra_mass_penalty, F, maxC);
+    return this->calcDistanceInt(P, Q, P, Q, C, extra_mass_penalty, F, maxC);
     
-} // EMDHatArray
+} // EMDHat
 
 //MARK: Double Type
 template<typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
-double EMDHat<double, INTERFACE_T, SIZE, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
-                                                    const std::vector<double>& Q,
-                                                    const std::vector< std::vector<double> >& C,
-                                                    double extra_mass_penalty,
-                                                    std::vector< std::vector<double> >* F,
-                                                     double maxC)
+double EMDHat<double, INTERFACE_T, SIZE, FLOW_TYPE>::calcDistance(
+                                    const std::vector<double>& P,
+                                    const std::vector<double>& Q,
+                                    const std::vector< std::vector<double> >& C,
+                                    double extra_mass_penalty,
+                                    std::vector< std::vector<double> >* F,
+                                    double maxC)
 {
     typedef long long int CONVERT_TO_T;
      
-    static_assert(sizeof(CONVERT_TO_T) >= 8, "Size of CONVER_TO_T should be greater than 8 bytes!");
+    static_assert(sizeof(CONVERT_TO_T) >= 8,
+                  "Size of CONVER_TO_T should be greater than 8 bytes!");
     
     // This condition should hold:
     // ( 2^(sizeof(CONVERT_TO_T*8)) >= ( MULT_FACTOR^2 )

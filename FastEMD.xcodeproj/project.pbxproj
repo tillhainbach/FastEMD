@@ -128,7 +128,7 @@
 		2BB708892414420400CE4195 /* arrayFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = arrayFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BB70892241452EF00CE4195 /* codeSketchbook.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codeSketchbook.cpp; sourceTree = "<group>"; };
 		2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHatImpl.hpp; sourceTree = "<group>"; };
-		2BB708AF24146F0800CE4195 /* modifiedMinCostFlowVector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedMinCostFlowVector.hpp; sourceTree = "<group>"; };
+		2BB708AF24146F0800CE4195 /* modifiedMinCostFlow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedMinCostFlow.hpp; sourceTree = "<group>"; };
 		2BB708B8241470B400CE4195 /* vectorFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vectorFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC45E1C23872F7A00CBCAFF /* FastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC45E3023872F9500CBCAFF /* tictocChrono.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictocChrono.hpp; sourceTree = "<group>"; };
@@ -287,7 +287,7 @@
 			children = (
 				2B8235A424362C33006B5E76 /* modifiedEmdHat.hpp */,
 				2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */,
-				2BB708AF24146F0800CE4195 /* modifiedMinCostFlowVector.hpp */,
+				2BB708AF24146F0800CE4195 /* modifiedMinCostFlow.hpp */,
 			);
 			path = modifiedInterface;
 			sourceTree = "<group>";
