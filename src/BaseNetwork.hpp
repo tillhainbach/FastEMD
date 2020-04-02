@@ -48,13 +48,13 @@ public:
 //        {return *CVMatRowIterator(this->data, nodeIndex);}
     
     // MARK: public member functions
-    template<uchar _F, typename... Args>
+    template<uchar _F, typename... Args> inline
     void fill(const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input, Args&&... args);
     
-    template <class F>
+    template <class F> inline
     void forEach(F&& func);
     
-    template <class F>
+    template <class F> inline
     void forEach(F&& func) const;
    
     // break condition for inner loop
@@ -83,7 +83,7 @@ private:
 
 //MARK: Implentations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<class F>
+template<class F> inline
 void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func)
 {
     // init flow
@@ -101,7 +101,7 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func)
 }
     
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<class F>
+template<class F> inline
 void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
 {
     // init flow
@@ -120,7 +120,7 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
  
         
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<uchar _F, typename... Args>
+template<uchar _F, typename... Args> inline
 void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::fill(
                                                 const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input,
                                                          Args&&... args)

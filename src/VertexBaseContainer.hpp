@@ -68,7 +68,7 @@ private:
 };
 
 //MARK: Implementations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS, uchar DIMENSIONS>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS, uchar DIMENSIONS> inline
 void VertexBaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS, DIMENSIONS>::resize(NODE_T newNumberOfNodes)
 {
     BaseContainer<NUM_T, INTERFACE_T, SIZE, FIELDS,  DIMENSIONS>::resize(newNumberOfNodes);

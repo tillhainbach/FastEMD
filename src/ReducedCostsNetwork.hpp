@@ -51,7 +51,7 @@ public:
     
     ///@brief Calculates the residual costs for all edges in the Network.
     /// Calls "forEach" with "reduceCostCore"
-    template<typename... Args>
+    template<typename... Args> inline
     void reduceCost(Args&&... args);
 };
 
@@ -71,7 +71,7 @@ inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCor
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<typename... Args>
+template<typename... Args> inline
 void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCost(Args&&... args)
 {
     auto f = std::bind(

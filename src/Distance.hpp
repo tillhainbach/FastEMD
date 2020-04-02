@@ -37,15 +37,15 @@ public:
     friend std::ostream& operator<<(std::ostream& os,
                                    const Distance<_T, _I, _S>& container);
     
-    void heapDecreaseKey(NODE_T v, NUM_T alt);
+    inline void heapDecreaseKey(NODE_T v, NUM_T alt);
             
-    void heapRemoveFirst();
+    inline void heapRemoveFirst();
     
     inline virtual void resize(NODE_T newNumberOfNodes) override;
     
     inline bool check(NODE_T v, NUM_T alt);
     
-    void fill(NODE_T from, NODE_T numberOfNodes);
+    inline void fill(NODE_T from, NODE_T numberOfNodes);
     
     void log() {std::cout << (*this) << std::endl;}
     
@@ -62,9 +62,9 @@ private:
     inline auto const & distance(NODE_T node) const
         {return (*this)[node * this->fields() + 1];}
     
-    void heapify(NODE_T i);
+    inline void heapify(NODE_T i);
         
-    void swapHeap(NODE_T i, NODE_T j);
+    inline void swapHeap(NODE_T i, NODE_T j);
     
     inline NODE_T LEFT(NODE_T i) {return 2 * (i + 1) - 1;}
 
@@ -76,7 +76,7 @@ private:
 };
 
 //MARK: Implementations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 void Distance<NUM_T, INTERFACE_T, SIZE>::fill(NODE_T from, NODE_T numberOfNodes)
 {
     // Making heap (all inf except 0, so we are saving
@@ -104,7 +104,7 @@ void Distance<NUM_T, INTERFACE_T, SIZE>::fill(NODE_T from, NODE_T numberOfNodes)
 
 }
 
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 bool Distance<NUM_T, INTERFACE_T, SIZE>::check(NODE_T v, NUM_T alt)
 {
     NODE_T node = _nodesToQ[v];
@@ -120,7 +120,7 @@ void Distance<NUM_T, INTERFACE_T, SIZE>::resize(NODE_T newNumberOfNodes)
 
 
 // Heap Decrease Key
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 void Distance<NUM_T, INTERFACE_T, SIZE>::heapDecreaseKey(NODE_T v, NUM_T alt)
 {
     NODE_T i = _nodesToQ[v];
@@ -133,7 +133,7 @@ void Distance<NUM_T, INTERFACE_T, SIZE>::heapDecreaseKey(NODE_T v, NUM_T alt)
 } // heap_decrease_key
 
 // Heap Remove Frist
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 void Distance<NUM_T, INTERFACE_T, SIZE>::heapRemoveFirst()
 {
     this->_numberOfNodes -= 1;
@@ -142,7 +142,7 @@ void Distance<NUM_T, INTERFACE_T, SIZE>::heapRemoveFirst()
 } // heap_remove_first
 
 // Heapify
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 void Distance<NUM_T, INTERFACE_T, SIZE>::heapify(NODE_T i)
 {
     assert(i % this->fields() == 0);
@@ -172,7 +172,7 @@ void Distance<NUM_T, INTERFACE_T, SIZE>::heapify(NODE_T i)
 } // end heapify
 
 // Swap Heap
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE> inline
 void Distance<NUM_T, INTERFACE_T, SIZE>::swapHeap(NODE_T i, NODE_T j)
 {
     std::swap(to(i), to(j));
