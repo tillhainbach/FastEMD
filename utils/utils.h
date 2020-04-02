@@ -36,15 +36,13 @@ uint calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
                            const int THRESHOLD, const int COST_MULT_FACTOR)
 {
     uint maxCost = 0;
-    uint j = 0;
-    for (unsigned int c1 = 0; c1 < im1_C; ++c1)
+    for (unsigned int c1 = 0, j = 0; c1 < im1_C; ++c1)
     {
-        for (unsigned int r1=0; r1<im1_R; ++r1, ++j)
+        for (unsigned int r1 = 0; r1<im1_R; ++r1, ++j)
         {
-            uint i = 0;
-            for (unsigned int c2 = 0; c2 < im1_C; ++c2)
+            for (unsigned int c2 = 0, i = 0; c2 < im1_C; ++c2)
             {
-                for (unsigned int r2=0; r2<im1_R; ++r2, ++i)
+                for (unsigned int r2 = 0; r2<im1_R; ++r2, ++i)
                 {
                     
                     double L1 = sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2));
@@ -109,18 +107,16 @@ uint calculateCostMatrix(cv::InputArray _src1, cv::InputArray _src2,
     cv::Mat costMat = _costMat.getMat();
     
     uint maxCost = 0;
-    uint j = 0;
     uint im1_C = src1.cols;
     uint im1_R = src1.rows;
     uint im2_C = src2.cols;
     uint im2_R = src2.rows;
     uint COST_MULT_FACTOR = 1000;
-    for (unsigned int c1 = 0; c1 < im1_C; ++c1)
+    for (unsigned int c1 = 0, j = 0; c1 < im1_C; ++c1)
     {
         for (unsigned int r1 = 0; r1 < im1_R; ++r1, ++j)
         {
-            uint i = 0;
-            for (unsigned int c2 = 0; c2 < im2_C; ++c2)
+            for (unsigned int c2 = 0, i = 0; c2 < im2_C; ++c2)
             {
                 for (unsigned int r2 = 0; r2 < im2_R; ++r2, ++i)
                 {
