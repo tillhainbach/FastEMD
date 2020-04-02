@@ -38,6 +38,13 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
     
     //-------------------------------------------------------
     assert(Q.size() == P.size());
+    NODE_T N = static_cast<NODE_T>(Q.size() * 2 + 2);
+    if(vertexWeights.size() <= N)
+    {
+        vertexWeights.resize(N);
+        nonZeroWeightSourceNodes.resize(Q.size());
+        nonZeroWeightSinkNodes.resize(Q.size());
+    }
     //-------------------------------------------------------
     if(maxC == -1)
     {

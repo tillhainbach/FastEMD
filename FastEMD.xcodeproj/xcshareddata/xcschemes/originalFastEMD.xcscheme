@@ -37,6 +37,11 @@
                BlueprintName = "TestFastEMD"
                ReferencedContainer = "container:FastEMD.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "TestEMDHat/testZOpenCVInterface">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
