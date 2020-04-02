@@ -2,7 +2,7 @@
 
 #include "emd_hat.hpp"
 #include "emd_hat_signatures_interface.hpp"
-#include "tictoc.hpp"
+#include "utils/tictoc.hpp"
 #include <vector>
 #include <iostream>
 #include <fstream>

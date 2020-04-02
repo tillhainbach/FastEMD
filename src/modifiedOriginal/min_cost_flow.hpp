@@ -108,7 +108,8 @@ public:
                 x[it->_to].push_back(  edge0<NUM_T> (from, -it->_cost,0) );
             }} // it
         }} // from
-        
+
+#if PRINT && DEBUGMODE
         std::cout << "Flow Network:" << std::endl;
          std::cout << "vertex: [to : reduced cost]" << std::endl;
         for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -120,6 +121,7 @@ public:
             }
             std::cout << std::endl;
         }
+#endif
         
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
         // Note that for forward edges the residual capacity is infinity
@@ -129,7 +131,8 @@ public:
                     r_cost_forward[from].push_back( edge1<NUM_T>(it->_to,it->_cost) );
             }}
         }}
-        
+
+#if PRINT && DEBUGMODE
         std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
          std::cout << "vertex: [to : reduced cost]" << std::endl;
         for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -141,6 +144,7 @@ public:
             }
             std::cout << std::endl;
         }
+#endif
         
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
@@ -150,7 +154,8 @@ public:
                     r_cost_cap_backward[ it->_to ].push_back( edge2<NUM_T>(from,-it->_cost,0) );
             }} // it
         }} // from
-        
+ 
+#if PRINT && DEBUGMODE
         std::cout << "Reduced Costs And Capacity For Backward Edges Network:" << std::endl;
          std::cout << "vertex: [to : reduced cost : residual capacity]" << std::endl;
         for (NODE_T from = 0; from < _num_nodes; ++from)
@@ -163,6 +168,7 @@ public:
             }
             std::cout << std::endl;
         }
+#endif
         
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand,supply
@@ -191,14 +197,10 @@ public:
                 if (maxSupply==0) break;
                 delta= maxSupply;
 
-//            std::cout << "comput shortest path" << std::endl;
                 NODE_T l;
                 //tictoc_shortest_path.tic();
                 compute_shortest_path(d,prev, k,r_cost_forward,r_cost_cap_backward , e,l); 
-                //tictoc_shortest_path.toc(); 
-                
-//            std::cout << "l = " << l << std::endl;
-
+                //tictoc_shortest_path.toc();
                 
                 //---------------------------------------------------------------
                 // find delta (minimum on the path from k to l)
@@ -223,20 +225,10 @@ public:
 
                 //---------------------------------------------------------------
                 // augment delta flow from k to l (backwards actually...)
-//            std::cout << "delta = " << delta << std::endl;
-//            std::cout << "k == " << k << ", l == " << l << std::endl;
-//            std::cout << "d: ";
-//            for (NODE_T i=0; i<d.size(); ++i) std::cout << d[i]<< " ";
-//            std::cout << std::endl;
-//            std::cout << "prev: ";
-//            for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-//            std::cout << std::endl;
-//            std::cout << "path: " << l << " ";
                 to = l;
                 do {
                     NODE_T from = prev[to];
-//                    std::cout << from << " ";
-//                    std::cout << "from == k : " << (from == k) << std::endl;
+
                     assert(from != to);
                                         
                     // TODO: might do here O(n) can be done in O(1)
@@ -256,9 +248,6 @@ public:
                     // update e
                     e[to] += delta;
                     e[from] -= delta;
-//                    std::cout << "e: ";
-//                    for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
-//                    std::cout << std::endl;
                     to = from;
                 } while (to != k);
 //            std::cout << std::endl;
@@ -283,16 +272,6 @@ public:
                 }} // it
             }} // from
         
-//        for (NODE_T from = 0; from < _num_nodes; ++from)
-//        {
-//            std::cout << from << ": ";
-//            for (auto it : x[from])
-//            {
-//                std::cout << "{" << it._to << " : " << it._cost << " : " << it._flow << "} ";
-//            } // it
-//            std::cout << std::endl;
-//        }
-            
             
             //tictoc_all_function.toc();
             //cout << "operator() time==" << tictoc_all_function.totalTimeSec() << endl;
@@ -319,14 +298,11 @@ private:
         // Making heap (all inf except 0, so we are saving comparisons...)
         //----------------------------------------------------------------
         std::vector<  edge3<NUM_T>  > Q(_num_nodes);
-        std::array<  edge3<NUM_T>, 50 > Qq;
 //        std::cout << "from: " << from << std::endl;
         
         Q[0]._to= from;
-        Qq[0]._to= from;
         _nodes_to_Q[from] = 0;
         Q[0]._dist= 0;
-        Qq[0]._dist= 0;
 
                 
         NODE_T j = 1;
@@ -335,100 +311,45 @@ private:
         for (NODE_T i = 0; i<from; ++i)
         {
             Q[j]._to= i;
-            Qq[j]._to= i;
             _nodes_to_Q[i]= j;
             Q[j]._dist= std::numeric_limits<NUM_T>::max();
-            Qq[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
         }
 
         for (NODE_T i=from+1; i<_num_nodes; ++i) {
             Q[j]._to= i;
-            Qq[j]._to= i;
             _nodes_to_Q[i]= j;
             Q[j]._dist= std::numeric_limits<NUM_T>::max();
-            Qq[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
         }
-        
-//        std::cout << "nodes to Q: ";
-//        for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//        std::cout << std::endl;
-//
-//        std::cout << "distance: vertex: [to : distance]" << std::endl;
-//        for (NODE_T i=0; i < Q.size(); ++i)
-//        {
-//            std::cout << "[" << Q[i]._to << " : ";
-//            if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
-//                std::cout << "INF] ";
-//            else std::cout << Q[i]._dist << "] ";
-//        }
-//        std::cout << std::endl;
 
         //----------------------------------------------------------------
         // main loop
         //----------------------------------------------------------------
         std::vector<NODE_T> finalNodesFlg(_num_nodes, false);
-//        std::cout << "path_c; ";
-        int Qsize = static_cast<int>(Q.size());
         do {
-//            for (NODE_T i=0; i < Q.size(); ++i) std::cout << "{" << Q[i]._to << " : " << Q[i]._dist << "} ";
-//            std::cout << std::endl;
             NODE_T u = Q[0]._to;
-//            std::cout << u << std::endl;
             d[u]= Q[0]._dist; // final distance
-//            std::for_each(d.begin(), d.end(), [](NUM_T n) {std::cout << n << " ";});
-//            std::cout << std::endl;
+
             finalNodesFlg[u] = true;
             if (e[u]<0) {
-//                std::cout << "[" << from << " : " << u << "] " << std::endl;
                 l = u;
                 break;
             }
-//            for (auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//            std::cout << std::endl;
-//            std::cout << "nodes to Q: ";
-//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//            std::cout << std::endl;
-            heap_remove_first(Q, _nodes_to_Q, Qsize);
-//            std::cout << "nodes to Q: ";
-//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//            std::cout << std::endl;
-//            std::cout << "nodes to Q: ";
-//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//            std::cout << std::endl;
-//
-//            std::cout << "distance: vertex: [to : distance]" << std::endl;
-//            for (NODE_T i=0; i < Q.size(); ++i)
-//            {
-//                std::cout << "[" << Q[i]._to << " : ";
-//                if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
-//                    std::cout << "INF] ";
-//                else std::cout << Q[i]._dist << "] ";
-//            }
-//            std::cout << std::endl;
+
+            heap_remove_first(Q, _nodes_to_Q)
             
             // neighbors of u
-//            std::cout << "cost_forward" << std::endl;
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
                 assert (it->_reduced_cost>=0);
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
                 if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
-//                    std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
-//                    std::cout << "nodes to Q: ";
-//                    for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//                    std::cout << std::endl;
-                    
-
                     prev[v]= u;
-//                    std::cout << "prev: ";
-//                    for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-//                    std::cout << std::endl;
                 }
             }} //it
-//            std::cout << "cost_backward" << std::endl;
+
             {for (typename std::list< edge2<NUM_T> >::const_iterator it= cost_backward[u].begin(); it!=cost_backward[u].end(); ++it) {
                 if (it->_residual_capacity>0) {
                     assert (it->_reduced_cost>=0);
@@ -437,38 +358,17 @@ private:
                     if ( (_nodes_to_Q[v]<Qsize) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
 //                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
-//                        std::cout << "nodes to Q: ";
-//                        for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//                        std::cout << std::endl;
                         prev[v] = u;
-//                        std::cout << "prev: ";
-//                        for (NODE_T i=0; i<prev.size(); ++i) std::cout << prev[i]<< " ";
-//                        std::cout << std::endl;
                     }
                 }
             }} //it
-//            std::cout << "nodes to Q: ";
-//            for(auto &elem : _nodes_to_Q) std::cout << elem << " ";
-//            std::cout << std::endl;
-//
-//            std::cout << "distance: vertex: [to : distance]" << std::endl;
-//            for (NODE_T i=0; i < Q.size(); ++i)
-//            {
-//                std::cout << "[" << Q[i]._to << " : ";
-//                if (Q[i]._dist == std::numeric_limits<NUM_T>::max())
-//                    std::cout << "INF] ";
-//                else std::cout << Q[i]._dist << "] ";
-//            }
-//            std::cout << std::endl;
             
-        } while (!(Qsize == 0));
+        } while (!Q.empty());
 
 //        std::cout <<  std::endl;
         //tmp_tic_toc.tic();
         //---------------------------------------------------------------------------------
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
-        if(std::any_of(d.begin(), d.end(), [](NUM_T n) {return n != 0;}))
-        {
         for (NODE_T from = 0; from < _num_nodes; ++from)
         {
             for (auto &it : cost_forward[from])
@@ -503,7 +403,6 @@ private:
         //tmp_tic_toc.toc();
         
         //----------------------------------------------------------------
-        }
     } // compute_shortest_path
 
     void heap_decrease_key(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q,
@@ -517,12 +416,10 @@ private:
     } // heap_decrease_key
     
     void heap_remove_first(std::vector< edge3<NUM_T> >& Q,
-                           std::vector<NODE_T>& nodes_to_Q, int &Qsize)
+                           std::vector<NODE_T>& nodes_to_Q)
     {
         swap_heap(Q, nodes_to_Q, 0, Qsize - 1);
-//        Q.pop_back();
-        Qsize -= 1;
-//        std::cout << std::endl;
+        Q.pop_back();
         heapify(Q, nodes_to_Q , 0, Qsize);
     } // heap_remove_first
 
