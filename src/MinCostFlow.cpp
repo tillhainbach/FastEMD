@@ -79,7 +79,8 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
                                 
             // residual
             auto it = backwardCost.findIndex(from, to);
-            if (it != backwardCost.fromNode(from)->end())
+            auto end = backwardCost.fromNode(from)->end();
+            if (!utils::isEnd(it, end))
             {
                 if (it[2] < delta) delta = it[2];
             }
@@ -101,10 +102,12 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
             
             // update residual for backward edges
             auto it = backwardCost.findIndex(to, from);
-            if (it != backwardCost.fromNode(to)->end()) it [2] += delta;
+            auto end = backwardCost.fromNode(to)->end();
+            if (!utils::isEnd(it, end)) it [2] += delta;
 
             it = backwardCost.findIndex(from, to);
-            if (it != backwardCost.fromNode(from)->end()) it [2] -= delta;
+            end = backwardCost.fromNode(from)->end();
+            if (!utils::isEnd(it, end)) it [2] -= delta;
 
             // update weigths
             weights[to] += delta;

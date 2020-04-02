@@ -10,6 +10,7 @@
 #include <iostream>
 #include "utils/EMD_DEFS.hpp"
 #include "utils/tictocChrono.hpp"
+#include "utils/utils.h"
 #include "Container.hpp"
 namespace FastEMD
 {
