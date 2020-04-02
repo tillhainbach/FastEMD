@@ -38,8 +38,10 @@
 ///           == WITHOUT_EXTRA_MASS_FLOW - fills F with the flows between all bins, except the flow
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
+namespace FastEMD {
+
 template<typename NUM_T, typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMDArray_Base
+class FastEMD_Base
 {
 public:
     FastEMDArray_Base(NODE_T _N)
@@ -122,7 +124,7 @@ struct emd_hat
                      std::vector< std::vector<NUM_T> >* F = NULL);
         
 };
-
+} //FastEMD
 #include "emdVectorImpl.hpp"
 
 #endif
