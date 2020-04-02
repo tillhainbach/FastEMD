@@ -102,6 +102,16 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     FastEMD::utils::showStringInequality(backwardEdgesString, targetString);
     
     XCTAssert(backwardEdgesString == targetString);
+    
+    unsigned int from = 8, to = 30;
+    auto index = backwardEdges.findIndex(from, to);
+    auto end = backwardEdges.fromNode(from)->end();
+    
+    XCTAssert(&(*index) == &(*end));
+    
+    to = 31;
+    index = backwardEdges.findIndex(from, to);
+    XCTAssert(&(*index) != &(*end));
 }
 
 - (void)testVectorReducedCostbackwardEdgesFill {
@@ -118,9 +128,18 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     FastEMD::utils::showStringInequality(backwardEdgesString, targetString);
 
     XCTAssert(backwardEdgesString == targetString);
+    
+    unsigned int from = 8, to = 30;
+    auto index = backwardEdges.findIndex(from, to);
+    auto end = backwardEdges.fromNode(from)->end();
+    
+    XCTAssert(&(*index) == &(*end));
+    
+    index = backwardEdges.findIndex(from, 31);
+    XCTAssert(&(*index) != &(*end));
 }
 
-- (void)testOpenCVReducedCostbackwardEdgesFill {
+- (void)testZOpenCVReducedCostbackwardEdgesFill {
     typedef FastEMD::types::OPENCV INTERFACE;
     static const unsigned int SIZE = 80;
     FastEMD::CostNetwork<int, INTERFACE, SIZE> const cost(costVector);
@@ -133,8 +152,24 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     backwardEdgesStringStream << backwardEdges;
     std::string backwardEdgesString(backwardEdgesStringStream.str());
     FastEMD::utils::showStringInequality(backwardEdgesString, targetString);
-
+    
     XCTAssert(backwardEdgesString == targetString);
+
+    unsigned int from = 8, to = 30;
+    auto index = backwardEdges.findIndex(from, to);
+    auto end = backwardEdges.fromNode(from)->end();
+    
+    XCTAssert(&(*index) == &(*end));
+    
+    index = backwardEdges.findIndex(from, 31);
+    XCTAssert(&(*index) != &(*end));
+    
+}
+
+-(void) testOpenCVfindIndex {
+
+
+    
 }
 
 @end

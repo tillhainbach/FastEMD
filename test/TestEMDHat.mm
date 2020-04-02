@@ -54,7 +54,7 @@ std::vector<int> const v2 = {98, 95, 141, 134, 102, 97, 120, 181, 117, 126, 150,
     
 }
 
-- (void)testZOpenCVInterface {
+- (void)testOpenCVInterface {
     FastEMD::EMDHat<int, FastEMD::types::OPENCV> fastEMD(static_cast<NODE_T>(v1.size()));
     int emdValues = fastEMD.calcDistance(v1, v2, _costMat, THRESHOLD, NULL, maxC);
     XCTAssert(emdValues == 5014000);
