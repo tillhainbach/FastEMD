@@ -22,9 +22,6 @@
 		2BB708B9241470C600CE4195 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708AC24146E9700CE4195 /* demo_FastEMD.cpp */; };
 		2BC463D32388422F00CBCAFF /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
 		2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */; };
-		2BF8EE05242CEF7800880E99 /* libdbghelper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2BF8EE04242CEF7800880E99 /* libdbghelper.hpp */; };
-		2BF8EE07242CEF7800880E99 /* libdbghelperPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2BF8EE06242CEF7800880E99 /* libdbghelperPriv.hpp */; };
-		2BF8EE09242CEF7800880E99 /* libdbghelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF8EE08242CEF7800880E99 /* libdbghelper.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,10 +155,6 @@
 		2BDF5D16242A1892001C2B63 /* CVMatRowIterator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVMatRowIterator.hpp; sourceTree = "<group>"; };
 		2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCVMatRowIterator.mm; sourceTree = "<group>"; };
 		2BF8EDFA242CDA9100880E99 /* readImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = readImage.hpp; sourceTree = "<group>"; };
-		2BF8EE02242CEF7800880E99 /* liblibdbghelper.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = liblibdbghelper.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BF8EE04242CEF7800880E99 /* libdbghelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = libdbghelper.hpp; sourceTree = "<group>"; };
-		2BF8EE06242CEF7800880E99 /* libdbghelperPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = libdbghelperPriv.hpp; sourceTree = "<group>"; };
-		2BF8EE08242CEF7800880E99 /* libdbghelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = libdbghelper.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,13 +201,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2BC6E90B241C0693002F3797 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2BF8EE00242CEF7800880E99 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -321,7 +307,6 @@
 				2BC460DB238730AF00CBCAFF /* utils */,
 				2BC460D92387308100CBCAFF /* Resources */,
 				2B2DC04E241FBAD70090BD53 /* test */,
-				2BF8EE03242CEF7800880E99 /* libdbghelper */,
 				2BC45E1D23872F7A00CBCAFF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -336,7 +321,6 @@
 				2BB708B8241470B400CE4195 /* vectorFastEMD */,
 				2BC6E90E241C0693002F3797 /* test2 */,
 				2B2DC04D241FBAD70090BD53 /* TestFastEMD.xctest */,
-				2BF8EE02242CEF7800880E99 /* liblibdbghelper.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -401,29 +385,7 @@
 			path = rubner_emd;
 			sourceTree = "<group>";
 		};
-		2BF8EE03242CEF7800880E99 /* libdbghelper */ = {
-			isa = PBXGroup;
-			children = (
-				2BF8EE04242CEF7800880E99 /* libdbghelper.hpp */,
-				2BF8EE06242CEF7800880E99 /* libdbghelperPriv.hpp */,
-				2BF8EE08242CEF7800880E99 /* libdbghelper.cpp */,
-			);
-			path = libdbghelper;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
-
-/* Begin PBXHeadersBuildPhase section */
-		2BF8EDFE242CEF7800880E99 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2BF8EE05242CEF7800880E99 /* libdbghelper.hpp in Headers */,
-				2BF8EE07242CEF7800880E99 /* libdbghelperPriv.hpp in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		2B2DC04C241FBAD70090BD53 /* TestFastEMD */ = {
@@ -546,23 +508,6 @@
 			productReference = 2BC6E90E241C0693002F3797 /* test2 */;
 			productType = "com.apple.product-type.tool";
 		};
-		2BF8EE01242CEF7800880E99 /* libdbghelper */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2BF8EE0A242CEF7800880E99 /* Build configuration list for PBXNativeTarget "libdbghelper" */;
-			buildPhases = (
-				2BF8EDFE242CEF7800880E99 /* Headers */,
-				2BF8EDFF242CEF7800880E99 /* Sources */,
-				2BF8EE00242CEF7800880E99 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = libdbghelper;
-			productName = libdbghelper;
-			productReference = 2BF8EE02242CEF7800880E99 /* liblibdbghelper.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -583,9 +528,6 @@
 					};
 					2BC6E90D241C0693002F3797 = {
 						CreatedOnToolsVersion = 11.3.1;
-					};
-					2BF8EE01242CEF7800880E99 = {
-						CreatedOnToolsVersion = 11.4;
 					};
 				};
 			};
@@ -609,7 +551,6 @@
 				2BB708B0241470B400CE4195 /* vectorFastEMD */,
 				2BC6E90D241C0693002F3797 /* test2 */,
 				2B2DC04C241FBAD70090BD53 /* TestFastEMD */,
-				2BF8EE01242CEF7800880E99 /* libdbghelper */,
 			);
 		};
 /* End PBXProject section */
@@ -706,14 +647,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B2DC058241FC45F0090BD53 /* codeSketchbook.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2BF8EDFF242CEF7800880E99 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2BF8EE09242CEF7800880E99 /* libdbghelper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1705,38 +1638,6 @@
 			};
 			name = Release;
 		};
-		2BF8EE0B242CEF7800880E99 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_CPP_EXCEPTIONS = YES;
-				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		2BF8EE0C242CEF7800880E99 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_CPP_EXCEPTIONS = YES;
-				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1808,15 +1709,6 @@
 			buildConfigurations = (
 				2BC6E912241C0693002F3797 /* Debug */,
 				2BC6E913241C0693002F3797 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2BF8EE0A242CEF7800880E99 /* Build configuration list for PBXNativeTarget "libdbghelper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2BF8EE0B242CEF7800880E99 /* Debug */,
-				2BF8EE0C242CEF7800880E99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
