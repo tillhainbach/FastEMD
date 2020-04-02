@@ -17,8 +17,13 @@
 #include "utils/utils.h"
 
 //------------------------------------------------------------------------------
+namespace FastEMD
+{
+namespace modified
+{
+
 template<typename CONVERT_TO_T>
-class min_cost_flow {
+class MinCostFlow {
 
     NODE_T _num_nodes;
     std::vector< NODE_T > _nodes_to_Qq;
@@ -435,11 +440,11 @@ private:
     
 }; // end min_cost_flow
 
-
+}} //modified // FastEMD
 #endif
 
 // Copyright (c) 2009-2012, Ofir Pele
-// Copyright (c) 2019, Till Hainbach
+// Copyright (c) 2019-2020, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without

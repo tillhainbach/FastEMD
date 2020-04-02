@@ -38,13 +38,16 @@
 ///           == WITHOUT_EXTRA_MASS_FLOW - fills F with the flows between all bins, except the flow
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
-namespace FastEMD {
+namespace FastEMD
+{
+namespace modified
+{
 
 template<typename NUM_T, typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMD_Base
+class EMDHat_Base
 {
 public:
-    FastEMDArray_Base(NODE_T _N)
+    EMDHat_Base(NODE_T _N)
     : mcf(_N)
     , b(_N)
     , nonZeroSourceNodes(_N)
@@ -71,7 +74,7 @@ protected:
                           std::vector< std::vector<CONVERT_TO_T> >* F,
                           CONVERT_TO_T maxC);
     
-    min_cost_flow<CONVERT_TO_T> mcf;
+    MinCostFlow<CONVERT_TO_T> mcf;
     std::vector<CONVERT_TO_T> b;
     std::vector<NODE_T> nonZeroSourceNodes;
     std::vector<NODE_T> nonZeroSinkNodes;
@@ -81,10 +84,10 @@ protected:
 };
 
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMDArray : public FastEMDArray_Base<NUM_T, NUM_T, FLOW_TYPE>
+class EMDHat : public EMDHat_Base<NUM_T, NUM_T, FLOW_TYPE>
 {
 public:
-    FastEMDArray(NODE_T _N) : FastEMDArray_Base<NUM_T, NUM_T, FLOW_TYPE>(_N) {};
+    EMDHat(NODE_T _N) : EMDHat_Base<NUM_T, NUM_T, FLOW_TYPE>(_N) {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
                  const std::vector<NUM_T>& Q,
@@ -96,10 +99,10 @@ public:
 };
 
 template<FLOW_TYPE_T FLOW_TYPE>
-class FastEMDArray <double, FLOW_TYPE> : public FastEMDArray_Base<double, long long int, FLOW_TYPE>
+class EMDHat <double, FLOW_TYPE> : public EMDHat_Base<double, long long int, FLOW_TYPE>
 {
 public:
-    FastEMDArray(NODE_T _N) : FastEMDArray_Base<double, long long int, FLOW_TYPE>(_N) {};
+    EMDHat(NODE_T _N) : EMDHat_Base<double, long long int, FLOW_TYPE>(_N) {};
     
     typedef double NUM_T;
     typedef long long int CONVERT_TO_T;
@@ -112,24 +115,13 @@ public:
     
 };
 
-/// Same as emd_hat_gd_metric, but does not assume metric property for the ground distance (C).
-/// Note that C should still be symmetric and non-negative!
-template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE= NO_FLOW>
-struct emd_hat
-{
-    NUM_T operator()(const std::vector<NUM_T>& P,
-                     const std::vector<NUM_T>& Q,
-                     const std::vector< std::vector<NUM_T> >& C,
-                     NUM_T extra_mass_penalty = -1,
-                     std::vector< std::vector<NUM_T> >* F = NULL);
-        
-};
-} //FastEMD
+}} //modified // FastEMD
 #include "emdVectorImpl.hpp"
 
 #endif
 
 // Copyright (c) 2009-2012, Ofir Pele
+// Copyright (c) 2020, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without

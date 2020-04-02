@@ -112,6 +112,7 @@
 		2B6856592415950800261814 /* MinCostFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MinCostFlow.cpp; sourceTree = "<group>"; };
 		2B68566C24178DC100261814 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		2B7C7C3A242CB10800CBECB4 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		2B8235A424362C33006B5E76 /* modifiedEmdHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHat.hpp; sourceTree = "<group>"; };
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
 		2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostsAndCapacityBackwardEdgesNetwork.mm; sourceTree = "<group>"; };
 		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
@@ -126,9 +127,8 @@
 		2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = newImplementationFastEMD.cpp; sourceTree = "<group>"; };
 		2BB708892414420400CE4195 /* arrayFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = arrayFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BB70892241452EF00CE4195 /* codeSketchbook.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codeSketchbook.cpp; sourceTree = "<group>"; };
-		2BB708AD24146ED000CE4195 /* emdVectorImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emdVectorImpl.hpp; sourceTree = "<group>"; };
-		2BB708AE24146EF100CE4195 /* emdClassVector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = emdClassVector.hpp; sourceTree = "<group>"; };
-		2BB708AF24146F0800CE4195 /* MinCostFlowVector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MinCostFlowVector.hpp; sourceTree = "<group>"; };
+		2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHatImpl.hpp; sourceTree = "<group>"; };
+		2BB708AF24146F0800CE4195 /* modifiedMinCostFlowVector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedMinCostFlowVector.hpp; sourceTree = "<group>"; };
 		2BB708B8241470B400CE4195 /* vectorFastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vectorFastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC45E1C23872F7A00CBCAFF /* FastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC45E3023872F9500CBCAFF /* tictocChrono.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictocChrono.hpp; sourceTree = "<group>"; };
@@ -230,7 +230,7 @@
 			children = (
 				2BC463A82388132800CBCAFF /* modifiedOriginal */,
 				2BC45E2623872F9500CBCAFF /* openCVInterface */,
-				2BB708AB24146E6B00CE4195 /* vectorInterface */,
+				2BB708AB24146E6B00CE4195 /* modifiedInterface */,
 				2BB7087D2414412900CE4195 /* EMDHat.hpp */,
 				2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */,
 				2BB7087F2414412900CE4195 /* MinCostFlow.hpp */,
@@ -282,14 +282,14 @@
 			path = tqdm;
 			sourceTree = "<group>";
 		};
-		2BB708AB24146E6B00CE4195 /* vectorInterface */ = {
+		2BB708AB24146E6B00CE4195 /* modifiedInterface */ = {
 			isa = PBXGroup;
 			children = (
-				2BB708AD24146ED000CE4195 /* emdVectorImpl.hpp */,
-				2BB708AE24146EF100CE4195 /* emdClassVector.hpp */,
-				2BB708AF24146F0800CE4195 /* MinCostFlowVector.hpp */,
+				2B8235A424362C33006B5E76 /* modifiedEmdHat.hpp */,
+				2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */,
+				2BB708AF24146F0800CE4195 /* modifiedMinCostFlowVector.hpp */,
 			);
-			path = vectorInterface;
+			path = modifiedInterface;
 			sourceTree = "<group>";
 		};
 		2BC45E1323872F7A00CBCAFF = {

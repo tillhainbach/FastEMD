@@ -21,12 +21,12 @@
 #include "tictocChrono.hpp"
 #include "MinCostFlowVector.hpp"
 #include "utils/utils.h"
-     
-// Forward declarations 
-template<typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE> struct emd_hat_impl;
-
+namespace FastEMD
+{
+namespace modified
+{
 template<typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE>
-CONVERT_TO_T FastEMDArray<CONVERT_TO_T, FLOW_TYPE>::calcDistance(const std::vector<CONVERT_TO_T>& Pc,
+CONVERT_TO_T EMDHat<CONVERT_TO_T, FLOW_TYPE>::calcDistance(const std::vector<CONVERT_TO_T>& Pc,
                                                      const std::vector<CONVERT_TO_T>& Qc,
                                                      const std::vector< std::vector<CONVERT_TO_T> >& C,
                                                      CONVERT_TO_T extra_mass_penalty,
@@ -41,12 +41,12 @@ CONVERT_TO_T FastEMDArray<CONVERT_TO_T, FLOW_TYPE>::calcDistance(const std::vect
     return FastEMDArray<CONVERT_TO_T, FLOW_TYPE>::calcDistanceInt
     (
         Pc, Qc,Pc,Qc,C,extra_mass_penalty,F, maxC
-     );
+    );
     
 } // FastEMDArray
 
 template<typename NUM_T, typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE>
-CONVERT_TO_T FastEMDArray_Base<NUM_T, CONVERT_TO_T, FLOW_TYPE>::calcDistanceInt(
+CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, FLOW_TYPE>::calcDistanceInt(
                      const std::vector<CONVERT_TO_T>& POrig,
                      const std::vector<CONVERT_TO_T>& QOrig,
                      const std::vector<CONVERT_TO_T>& P,
@@ -366,7 +366,7 @@ CONVERT_TO_T FastEMDArray_Base<NUM_T, CONVERT_TO_T, FLOW_TYPE>::calcDistanceInt(
 //----------------------------------------------------------------------------------------
 
 template<FLOW_TYPE_T FLOW_TYPE>
-double FastEMDArray<double, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
+double EMDHat<double, FLOW_TYPE>::calcDistance(const std::vector<double>& P,
                                                     const std::vector<double>& Q,
                                                     const std::vector< std::vector<double> >& C,
                                                     double extra_mass_penalty,
@@ -445,10 +445,13 @@ double FastEMDArray<double, FLOW_TYPE>::calcDistance(const std::vector<double>& 
     return dist;
 } // emd_hat_impl<double>
 //----------------------------------------------------------------------------------------
+
+
+}} // modified // FastEMD
 #endif
 
 // Copyright (c) 2009-2012, Ofir Pele
-// Copyright (c) 2019, Till Hainbach
+// Copyright (c) 2019-2020, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
