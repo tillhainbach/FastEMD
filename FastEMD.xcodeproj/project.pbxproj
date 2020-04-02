@@ -15,7 +15,7 @@
 		2B45E8B9242B8325007508B1 /* TestCounter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8B8242B8325007508B1 /* TestCounter.mm */; };
 		2B45E8BD242BAC6E007508B1 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B45E8BC242BAC6E007508B1 /* demo_FastEMD.cpp */; };
 		2B8EBD4824349697002CBED8 /* TestReducedCostForwardEdges.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */; };
-		2B8EBD4A24349726002CBED8 /* TestReducedCostBackwardEdges.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4924349726002CBED8 /* TestReducedCostBackwardEdges.mm */; };
+		2B8EBD4A24349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */; };
 		2BB1D7A924338C23000976DC /* TestEMDHat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B3CE74424331B5F0095BB14 /* TestEMDHat.mm */; };
 		2BB708792413C28700CE4195 /* testInterfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708562412BED900CE4195 /* testInterfaces.cpp */; };
 		2BB7088A2414421500CE4195 /* demo_FastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708802414413E00CE4195 /* demo_FastEMD.cpp */; };
@@ -118,7 +118,7 @@
 		2B68566C24178DC100261814 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		2B7C7C3A242CB10800CBECB4 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
-		2B8EBD4924349726002CBED8 /* TestReducedCostBackwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostBackwardEdges.mm; sourceTree = "<group>"; };
+		2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostsAndCapacityBackwardEdgesNetwork.mm; sourceTree = "<group>"; };
 		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
@@ -236,7 +236,7 @@
 				2B45E8B8242B8325007508B1 /* TestCounter.mm */,
 				2B45E8B4242B8056007508B1 /* TestFlowNetwork.mm */,
 				2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */,
-				2B8EBD4924349726002CBED8 /* TestReducedCostBackwardEdges.mm */,
+				2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */,
 				2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */,
 				2BDF5D17242A1B3C001C2B63 /* code snippets.h */,
 				2BB70892241452EF00CE4195 /* main.cpp */,
@@ -655,7 +655,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */,
-				2B8EBD4A24349726002CBED8 /* TestReducedCostBackwardEdges.mm in Sources */,
+				2B8EBD4A24349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm in Sources */,
 				2BB1D7A924338C23000976DC /* TestEMDHat.mm in Sources */,
 				2B8EBD4824349697002CBED8 /* TestReducedCostForwardEdges.mm in Sources */,
 				2B338DCC242E13A7007FE889 /* TestDistanceClass.mm in Sources */,
