@@ -8,6 +8,7 @@
 
 #ifndef utils_hpp
 #define utils_hpp
+#include <opencv2/core.hpp>
 
 namespace FastEMD
 {
@@ -34,7 +35,7 @@ int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
                            std::vector< std::vector<int> >& costmat,
                            const int THRESHOLD, const int COST_MULT_FACTOR)
 {
-    int max_cost_mat = -1;
+    int maxCost = -1;
     int j = -1;
     for (unsigned int c1 = 0; c1 < im1_C; ++c1)
     {
@@ -49,12 +50,12 @@ int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
                     ++i;
                     double L1 = sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2));
                     costmat[i][j] = std::min(THRESHOLD, static_cast<int>(COST_MULT_FACTOR * L1));
-                    if (costmat[i][j] > max_cost_mat) max_cost_mat = costmat[i][j];
+                    if (costmat[i][j] > maxCost) maxCost = costmat[i][j];
                 }
             }
         }
     }
-    return max_cost_mat;
+    return maxCost;
 }
 
 inline
@@ -82,6 +83,59 @@ bool isEnd(_ITER& it, _ITER& end)
 {
     return (&(*it) == &(*end));
 }
+
+bool hasEnding (std::string const &fullString, std::string const &ending)
+{
+    if (fullString.length() >= ending.length())
+    {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    }
+    else
+    {
+        return false;
+    }
+}
+
+uint calculateCostMatrix(cv::InputArray _src1, cv::InputArray _src2,
+                        cv::OutputArray _costMat, int THRESHOLD)
+{
+    cv::Mat src1 = _src1.getMat();
+    cv::Mat src2 = _src2.getMat();
+    
+    if (_costMat.needed())
+    {
+        _costMat.create(src1.total(), src2.total(), CV_32S);
+    }
+    
+    cv::Mat costMat = _costMat.getMat();
+    
+    uint maxCost = 0;
+    uint j = 0;
+    uint im1_C = src1.cols;
+    uint im1_R = src1.rows;
+    uint im2_C = src2.cols;
+    uint im2_R = src2.rows;
+    uint COST_MULT_FACTOR = 1000;
+    for (unsigned int c1 = 0; c1 < im1_C; ++c1)
+    {
+        for (unsigned int r1 = 0; r1 < im1_R; ++r1)
+        {
+            uint i = 0;
+            for (unsigned int c2 = 0; c2 < im2_C; ++c2)
+            {
+                for (unsigned int r2 = 0; r2 < im2_R; ++r2)
+                {
+                    costMat.at<int>(i, j) = std::min(THRESHOLD, static_cast<int>(COST_MULT_FACTOR*sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2))));
+                    if (costMat.at<int>(i, j) > maxCost) maxCost = costMat.at<int>(i, j);
+                    ++i;
+                }
+            }
+            ++j;
+        }
+    }
+    return maxCost;
+}
+
 }}
 
 #endif /* utils_h */
