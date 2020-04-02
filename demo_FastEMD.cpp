@@ -82,24 +82,18 @@ int main( int argc, char* argv[])
     tictoc timer;
     timer.tic();
     FastEMD::EMDHat<int, FastEMD::types::ARRAY, 80> fastEMD(static_cast<NODE_T>(v1.size()));
-//    std::vector<double> v1d(v1.begin(), v1.end());
-//    std::vector<double> v2d(v2.begin(), v2.end());
-//    std::vector< std::vector<double> > cost_matd(cost_mat.size());
-//    for (int r = 0; r < cost_mat.size(); ++r)
-//    {
-//        cost_matd[r].assign(cost_mat[r].begin(), cost_mat[r].end());
-//    }
-//    int emd_hat_gd_metric_val = 0;
+
+    int emd_hat_gd_metric_val = 0;
     for (int i = 0; i < iterations; i++)
 //    for (int i = 60; i < 67; i++)
     {
         std::cout << "iter: " << i << "\r";
 //        changeVectors(v1, v2, numbers, i);
-        emdValues[i] = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
+        emd_hat_gd_metric_val = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
     std::cout << "emd_hat_gd_metric time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
-    std::cerr << "emd_hat_gd_metric_val == " << emdValues[0] << std::endl;
+    std::cerr << "emd_hat_gd_metric_val == " << emd_hat_gd_metric_val << std::endl;
     std::ofstream output;
     output.open("outputMyVersion.txt");
     for (auto &value : emdValues) output << value << std::endl;

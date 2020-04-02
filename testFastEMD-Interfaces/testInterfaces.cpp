@@ -21,52 +21,6 @@
 #include <list>
 #include "original/emd_hat.hpp"
 
-bool hasEnding (std::string const &fullString, std::string const &ending)
-{
-    if (fullString.length() >= ending.length())
-    {
-        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
-    }
-    else
-    {
-        return false;
-    }
-}
-
-int calculateCostMatrix(cv::InputArray _src1, cv::InputArray _src2,
-                        cv::OutputArray _costMat, int THRESHOLD)
-{
-    cv::Mat src1 = _src1.getMat();
-    cv::Mat src2 = _src2.getMat();
-    _costMat.create(src1.total(), src2.total(), CV_32S);
-    cv::Mat costMat = _costMat.getMat();
-    
-    int max_cost_mat = -1;
-    int j = -1;
-    int im1_C = src1.cols;
-    int im1_R = src1.rows;
-    int im2_C = src2.cols;
-    int im2_R = src2.rows;
-    int COST_MULT_FACTOR = 1000;
-    for (unsigned int c1 = 0; c1 < im1_C; ++c1)
-    {
-        for (unsigned int r1 = 0; r1 < im1_R; ++r1)
-        {
-            ++j;
-            int i = -1;
-            for (unsigned int c2 = 0; c2 < im2_C; ++c2) {
-                for (unsigned int r2 = 0; r2 < im2_R; ++r2) {
-                    ++i;
-                    costMat.at<int>(i, j) = std::min(THRESHOLD, static_cast<int>(COST_MULT_FACTOR*sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2))));
-                    if (costMat.at<int>(i, j) > max_cost_mat) max_cost_mat = costMat.at<int>(i, j);
-                   
-                }
-            }
-        }
-    }
-    return max_cost_mat;
-}
-
 int main(int argc, char* argv[])
 {
     // for each image in folder:
