@@ -15,11 +15,12 @@
 #include <iostream>
 #include <fstream>
 #include <experimental/filesystem>
-//#include "utils/tqdm/tqdm.h"
-#include <vector>
 #include <unistd.h>
-#include <list>
 #include "original/emd_hat.hpp"
+#include "utils/utils.h"
+#include "utils/types.h"
+
+using namespace FastEMD;
 
 int main(int argc, char* argv[])
 {
@@ -28,7 +29,7 @@ int main(int argc, char* argv[])
         // resize image to dimension N x N
         // calculate cost matrix
     
-    const cv::String keys =
+    cv::String const keys =
         "{help h usage ?    |       | print this message                            }"
         "{@folderPath       |<none> | the folder containing the test images         }"
         "{@outputPath       |<none> | outputPath for results files                  }"
@@ -46,7 +47,7 @@ int main(int argc, char* argv[])
     
     cv::String inputPath = parser.get<cv::String>("@folderPath");
     cv::String outputPath = parser.get<cv::String>("@outputPath");
-    bool append = parser.get<bool>("@append");
+    bool const append = parser.get<bool>("@append");
     
     if (!parser.check())
     {
@@ -54,13 +55,13 @@ int main(int argc, char* argv[])
         return 0;
     }
     
-    int N = 6;
+    static uint const N = 6;
 
     std::list<cv::String> files;
     for(const auto & entry : std::filesystem::directory_iterator(inputPath))
     {
         cv::String file(entry.path());
-        if (hasEnding(file, ".jpg"))
+        if (utils::hasEnding(file, ".jpg"))
         {
             files.push_back(file);
         }
@@ -84,7 +85,7 @@ int main(int argc, char* argv[])
     
     cv::String firstFile(files.front());
     files.pop_front();
-    cv::Mat image; //definde varible images as cv::Mat
+    cv::Mat image; //define varible images as cv::Mat
     image = cv::imread(firstFile, cv::IMREAD_GRAYSCALE);// Read the file
     for (const auto & file : files)
     {
@@ -97,10 +98,20 @@ int main(int argc, char* argv[])
             cv::resize(image, smallImage, cv::Size(N, N));
             cv::resize(nextImage, smallNextImage, cv::Size(N, N));
             
-            int THRESHOLD = 3000;
+            uint const THRESHOLD = 3000;
             // calculate cost matrix:
-            cv::Mat costMat;
-            int maxC = calculateCostMatrix(smallImage, smallNextImage, costMat, THRESHOLD);
+            cv::Mat1i costMat;
+            int maxC = utils::calculateCostMatrix(smallImage,
+                                                  smallNextImage,
+                                                  costMat,
+                                                  THRESHOLD);
+            
+            types::vector2d<int> costMatrixVector (N * N, std::vector<int>(N*N));
+            utils::cvMat2vector2D(costMatrixVector, costMat);
+            std::vector<int> smallImageVector(N * N);
+            std::vector<int> smallNextImageVector(N * N);
+            utils::cvMat2vector1D(smallImageVector, smallImage);
+            utils::cvMat2vector1D(smallNextImageVector, smallNextImage);
             
             // calculate EMD-distance:
             int dist = emd_hat_gd_metric<int>()(smallImage, smallNextImage,

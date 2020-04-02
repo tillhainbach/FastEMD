@@ -65,65 +65,8 @@ void changeVectors(std::vector<int> & v1, std::vector<int> & v2, std::vector<int
     std::for_each(v2.begin(), v2.end(), [&](int &n) {return n = std::min(255, std::max(0, n + m));});
 }
 
-int calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
-                           std::vector< std::vector<int> >& costmat,
-                           const int THRESHOLD, const int COST_MULT_FACTOR)
-{
-    int max_cost_mat = -1;
-    int j = -1;
-    for (unsigned int c1 = 0; c1 < im1_C; ++c1)
-    {
-        for (unsigned int r1=0; r1<im1_R; ++r1)
-        {
-            ++j;
-            int i = -1;
-            for (unsigned int c2 = 0; c2 < im1_C; ++c2)
-            {
-                for (unsigned int r2=0; r2<im1_R; ++r2)
-                {
-                    ++i;
-                    double L1 = sqrt((r1-r2)*(r1-r2)+(c1-c2)*(c1-c2));
-                    costmat[i][j] = std::min(THRESHOLD, static_cast<int>(COST_MULT_FACTOR * L1));
-                    if (costmat[i][j] > max_cost_mat) max_cost_mat = costmat[i][j];
-                }
-            }
-        }
-    }
-    return max_cost_mat;
-}
 
 
-inline void vector1D2cvMat(std::vector<int>& vector1d, cv::Mat& cvMat)
-{
-    cvMat.create(1, static_cast<int>(vector1d.size()), CV_32SC1);
-    cvMat.data = (uchar*) vector1d.data();
-}
-
-inline void cvMat2vector1D(std::vector<int>& vector1d, cv::Mat& cvMat)
-{
-    if (cvMat.isContinuous())
-    {
-        vector1d.assign(cvMat.ptr<int>(0), cvMat.ptr<int>(0) + cvMat.total());
-    }
-}
-
-inline void vector2d2cvMat(std::vector< std::vector<int> >& vector2d, cv::Mat& cvMat)
-{
-    cvMat.create(static_cast<int>(vector2d.size()), static_cast<int>(vector2d[0].size()), CV_32S);
-    for(auto& row : vector2d)
-    {
-        cv::Mat matRow(1, static_cast<int>(row.size()), CV_32SC1, row.data());
-        cvMat.push_back(matRow);
-    }
-}
-
-inline void cvMat2vector2D(std::vector< std::vector<int> >& vector2d, cv::Mat1i& cvMat)
-{
-    for(unsigned int r = 0; r < cvMat.rows; ++r)
-    {
-        vector2d[r].assign(cvMat.ptr<int>(r), cvMat.ptr<int>(r) + cvMat.cols);
-    }
-}
 
 
 /*

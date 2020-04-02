@@ -31,7 +31,7 @@ auto getMaxCost(const _T& costMatrix, const NODE_T N)
 }
 
 inline
-uint calculateCostMatVector(int im1_R, int im1_C, int im2_R, int im2_C,
+uint calculateCostMatrix(int im1_R, int im1_C, int im2_R, int im2_C,
                            std::vector< std::vector<int> >& costmat,
                            const int THRESHOLD, const int COST_MULT_FACTOR)
 {
@@ -127,6 +127,38 @@ uint calculateCostMatrix(cv::InputArray _src1, cv::InputArray _src2,
         }
     }
     return maxCost;
+}
+
+inline void vector1D2cvMat(std::vector<int>& vector1d, cv::Mat& cvMat)
+{
+    cvMat.create(1, static_cast<int>(vector1d.size()), CV_32SC1);
+    cvMat.data = (uchar*) vector1d.data();
+}
+
+inline void cvMat2vector1D(std::vector<int>& vector1d, cv::Mat& cvMat)
+{
+    if (cvMat.isContinuous())
+    {
+        vector1d.assign(cvMat.ptr<int>(0), cvMat.ptr<int>(0) + cvMat.total());
+    }
+}
+
+inline void vector2d2cvMat(std::vector< std::vector<int> >& vector2d, cv::Mat& cvMat)
+{
+    cvMat.create(static_cast<int>(vector2d.size()), static_cast<int>(vector2d[0].size()), CV_32S);
+    for(auto& row : vector2d)
+    {
+        cv::Mat matRow(1, static_cast<int>(row.size()), CV_32SC1, row.data());
+        cvMat.push_back(matRow);
+    }
+}
+
+inline void cvMat2vector2D(std::vector< std::vector<int> >& vector2d, cv::Mat1i& cvMat)
+{
+    for(unsigned int r = 0; r < cvMat.rows; ++r)
+    {
+        vector2d[r].assign(cvMat.ptr<int>(r), cvMat.ptr<int>(r) + cvMat.cols);
+    }
 }
 
 }}
