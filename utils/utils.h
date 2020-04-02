@@ -77,6 +77,11 @@ void showStringInequality(std::string const& sample, std::string const& target)
     }
 }
 
+template<class _ITER>
+bool isEnd(_ITER& it, _ITER& end)
+{
+    return (&(*it) == &(*end));
+}
 }}
 
 #endif /* utils_h */
