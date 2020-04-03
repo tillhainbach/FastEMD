@@ -82,6 +82,7 @@
 		2BA169B72437359900925C18 /* checkAllEqual.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = checkAllEqual.py; sourceTree = "<group>"; };
 		2BA169B82437359900925C18 /* outputOriginalVersion.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = outputOriginalVersion.txt; sourceTree = "<group>"; };
 		2BA169BB243766DA00925C18 /* GitVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitVersion.h; sourceTree = "<group>"; };
+		2BA169BC24376C1100925C18 /* Timings.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Timings.txt; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
 		2BB7085A2413AE1700CE4195 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -281,6 +282,7 @@
 				2BA169B32437359900925C18 /* testFastEMDVersions.txt */,
 				2BC45FF423872F9700CBCAFF /* cameraman.txt */,
 				2BC4604523872F9700CBCAFF /* rice.txt */,
+				2BA169BC24376C1100925C18 /* Timings.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -426,7 +428,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%d.%m.%y\")\n\nfilesource=\"//\\n//  GitVersion.h\\n//\\n//  Created by Till Hainbach on $curdate.\\n//\\n\\n#ifndef GitVersion_h\\n#define GitVersion_h\\n\\n#define GIT_SHA_VERSION \\\"$version\\\"\\n\\n#endif\"\n\necho \"$filesource\" > utils/GitVersion.h\ntouch utils/GitVersion.h\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\nlast_version=$(git rev-parse --verify HEAD~ | cut -c 1-7)\ncurdate=$(date +\"%d.%m.%y\")\n\nfilesource=\"//\\n//  GitVersion.h\\n//\\n//  Created by Till Hainbach on $curdate.\\n//\\n\\n#ifndef GitVersion_h\\n#define GitVersion_h\\n\\n#define GIT_SHA_VERSION \\\"$version\\\"\\n\\n#define LAST_GIT_SHA_VERSION \\\"$last_version\\\"\\n\\n#endif\"\n\necho \"$filesource\" > utils/GitVersion.h\ntouch utils/GitVersion.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

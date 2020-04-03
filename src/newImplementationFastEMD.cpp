@@ -122,19 +122,41 @@ int main( int argc, char* argv[])
         distance = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
     }
     timer.toc();
-    emd[2] = distance;
-    timings[2] = timer.totalTime<TIMEUNIT>();
+    emd[numberOfTestFunctions - 1] = distance;
+    timings[numberOfTestFunctions - 1] = timer.totalTime<TIMEUNIT>();
+    
+    for(int i = 0; i < emd.size() - 1; ++i)
+    {
+        assert(emd[numberOfTestFunctions - 1] == emd[i]);
+    }
 #endif
     
-    // print table header
-    std::cout << "Interface\t\t\t" << "EMD\t\t\t" << "Time [µs]" << std::endl;
+    std::string const commitID = GIT_SHA_VERSION;
+    std::string const previousCommitID = LAST_GIT_SHA_VERSION;
+    
+    //MARK: Write output to file
+    if(commitID != previousCommitID)
+    {
+        std::ofstream timingsFile;
+        timingsFile.open("Timings.txt");
+        for(uint i = 0; i < numberOfTestFunctions; ++i)
+        {
+            timingsFile << interfaceNames[i] << ", ";
+            timingsFile << timings[i] << ", ";
+            timingsFile << GIT_SHA_VERSION << std::endl;
+        }
+        timingsFile.close();
+    }
+
+    
+    //MARK: Print Output as table
+    std::cout << "Interface\t\t\t" << "Time [µs]" << std::endl;
     for (uint i = 0; i < 42; ++i) std::cout << "-";
     std::cout << std::endl;
     // print table data
     for(uint i = 0; i < numberOfTestFunctions; ++i)
     {
         std::cout << interfaceNames[i] << "\t\t\t";
-        std::cout << emd[i] << "\t\t";
         std::cout << timings[i] << "\t\t";
         std::cout << GIT_SHA_VERSION << std::endl;
     }
