@@ -6,14 +6,14 @@
 //  Copyright © 2020 Till Hainbach. All rights reserved.
 //
 
-#ifndef RubnerInterface_h
-#define RubnerInterface_h
+#ifndef Signature_h
+#define Signature_h
 #include "emd.h"
 #include "utils/types.h"
 
 namespace Rubner
 {
-
+using namespace FastEMD::types;
 ///@brief Wrapper around the Rubner signature_t struct which cleans up after itself. Class has a destructor so you
 /// don't have to worry about forgetting to free the memory.
 template<typename NUM_T, typename INTERFACE_T, unsigned int SIZE = 0>
