@@ -28,6 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+<<<<<<< HEAD
          <TestableReference
             skipped = "NO">
             <BuildableReference
@@ -74,11 +75,21 @@
    </TestAction>
    <LaunchAction
       buildConfiguration = "Release"
+=======
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+>>>>>>> 1646c5eb9467963531a49c0f9303d7b04f9ff187
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
+<<<<<<< HEAD
       customWorkingDirectory = "/Users/tillhainbach/Github/FastEMD/Resources"
+=======
+      customWorkingDirectory = "/Users/tillhainbach/GitHub/FastEMD/Resources"
+>>>>>>> 1646c5eb9467963531a49c0f9303d7b04f9ff187
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -95,7 +106,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+<<<<<<< HEAD
             argument = "1000"
+=======
+            argument = "1"
+>>>>>>> 1646c5eb9467963531a49c0f9303d7b04f9ff187
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
@@ -103,9 +118,15 @@
    <ProfileAction
       buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "NO"
+<<<<<<< HEAD
       savedToolIdentifier = "Time Profiler"
       useCustomWorkingDirectory = "YES"
       customWorkingDirectory = "/Users/tillhainbach/Github/FastEMD/Resources"
+=======
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "YES"
+      customWorkingDirectory = "/Users/tillhainbach/GitHub/FastEMD/Resources"
+>>>>>>> 1646c5eb9467963531a49c0f9303d7b04f9ff187
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
