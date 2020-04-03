@@ -80,14 +80,13 @@ int main( int argc, char* argv[])
     typedef std::chrono::microseconds TIMEUNIT;
     static FastEMD::NODE_T const SIZE = 80;
     
-    std::vector <long> emdValues(iterations);
-    std::vector<int> emd(numberOfTestFunctions);
+    std::vector<std::string> emd(numberOfTestFunctions);
     std::vector<std::string> const interfaceNames ({"Universal",
                                                     "Modified",
                                                     "Original",
                                                     "Rubner"});
     assert(interfaceNames.size() == numberOfTestFunctions);
-    std::vector<long> timings(numberOfTestFunctions);
+    std::vector<std::string> timings(numberOfTestFunctions);
 
     tictoc timer;
     timer.tic();
@@ -99,8 +98,8 @@ int main( int argc, char* argv[])
         distance = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    emd[0] = distance;
-    timings[0] = timer.totalTime<TIMEUNIT>();
+    emd[0] = std::to_string(distance);
+    timings[0] = std::to_string(timer.totalTime<TIMEUNIT>());
     
     timer.clear();
     timer.tic();
@@ -111,8 +110,8 @@ int main( int argc, char* argv[])
                                                 THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    emd[numberOfTestFunctions - 3] = distance;
-    timings[numberOfTestFunctions - 3] = timer.totalTime<TIMEUNIT>();
+    emd[numberOfTestFunctions - 3] = std::to_string(distance);
+    timings[numberOfTestFunctions - 3] = std::to_string(timer.totalTime<TIMEUNIT>());
     
 #if ORIGINAL
     timer.clear();
@@ -122,8 +121,8 @@ int main( int argc, char* argv[])
         distance = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
     }
     timer.toc();
-    emd[numberOfTestFunctions - 2] = distance;
-    timings[numberOfTestFunctions - 2] = timer.totalTime<TIMEUNIT>();
+    emd[numberOfTestFunctions - 2] = std::to_string(distance);
+    timings[numberOfTestFunctions - 2] = std::to_string(timer.totalTime<TIMEUNIT>());
     
     for(int i = 0; i < emd.size() - 2; ++i)
     {
@@ -141,8 +140,8 @@ int main( int argc, char* argv[])
         distance = static_cast<int>(rubnerEMD.calcEMD(maxC));
     }
     timer.toc();
-    emd[numberOfTestFunctions - 1] = distance;
-    timings[numberOfTestFunctions - 1] = timer.totalTime<TIMEUNIT>();
+    emd[numberOfTestFunctions - 1] = std::to_string(distance);
+    timings[numberOfTestFunctions - 1] = std::to_string(timer.totalTime<TIMEUNIT>());
 #endif
     
     std::string const commitID = GIT_SHA_VERSION;
@@ -166,26 +165,14 @@ int main( int argc, char* argv[])
     //MARK: Print Output as table
     std::vector<std::string> const header ({"Inferface", "EMD",
                                            "Time [µs]", "Commit ID"});
-    for(auto const & name : header)
-    {
-        std::cout << name << FastEMD::utils::padding(name.size());
-    }
-    std::cout << std::endl;
-    size_t headerLength = 16 * (header.size() - 1) + header[header.size() - 1].size();
-    for (uint i = 0; i < headerLength; ++i) std::cout << "-";
-    std::cout << std::endl;
     
-    // print table data
-    for(uint i = 0; i < numberOfTestFunctions; ++i)
-    {
-        std::cout << interfaceNames[i];
-        std::cout << FastEMD::utils::padding(interfaceNames[i].size());
-        std::cout << emd[i];
-        std::cout << FastEMD::utils::padding(std::to_string(emd[i]).size());
-        std::cout << timings[i];
-        std::cout << FastEMD::utils::padding(std::to_string(timings[i]).size());
-        std::cout << GIT_SHA_VERSION << std::endl;
-    }
+    std::vector< std::vector<std::string> > data(header.size());
+    data[0] = interfaceNames;
+    data[1] = emd;
+    data[2] = timings;
+    data[3] = {GIT_SHA_VERSION};
+    
+    FastEMD::utils::makeTable(std::cout, header, data, FastEMD::utils::TextAlignment::rightAligned);
     
     
 } // end main

@@ -16,14 +16,111 @@ namespace FastEMD
 namespace utils
 {
 
-std::string padding(size_t size, uint columnWidth = 4)
+enum class TextAlignment
+{
+    leftAligned,
+    centered,
+    rightAligned
+};
+
+std::string padding(size_t size)
 {
     std::stringstream whitespace;
-    size_t withespaceWidth = 4 * (columnWidth - 1) - size;
-    for(int j = 0; j <= withespaceWidth; ++j) whitespace << " ";
+    for(int j = 0; j <= size; ++j) whitespace << " ";
     whitespace << "\t";
     
     return whitespace.str();
+}
+
+std::ostream& makeHeader(std::ostream& os,
+                         std::vector<std::string> const& header,
+                         TextAlignment alignment,
+                         size_t columnWidth)
+{
+    size_t headerSize = header.size();
+    for(size_t i = 0; i < headerSize; ++i)
+    {
+        std::string name = header[i];
+        size_t whitespace = columnWidth * 4 - name.size();
+        switch (alignment)
+        {
+            case TextAlignment::leftAligned:
+                os << name;
+                if (i < headerSize - 1) os << padding(whitespace);
+                break;
+                    
+            case TextAlignment::rightAligned:
+                os << padding(whitespace);
+                os << name;
+                break;
+                
+            case TextAlignment::centered:
+                
+                size_t leading = whitespace / 2;
+                size_t trailing = whitespace - name.size() - leading;
+                os << padding(leading);
+                os << name;
+                os << padding(trailing);
+                break;
+        }
+    }
+    
+    os << std::endl;
+    return os;
+}
+
+
+std::ostream& makeUnderline(std::ostream& os,
+                            size_t columnWidth,
+                            std::vector<std::string> const& header)
+{
+    size_t tableWidth = 4 * columnWidth * (header.size() - 1);
+    tableWidth += header[header.size() - 1].size();
+    for (uint i = 0; i < tableWidth; ++i) os << "-";
+    os << std::endl;
+    return os;
+}
+
+std::ostream& makeBody(std::ostream& os,
+                       std::vector< std::vector<std::string> > const& data)
+{
+    // print table data
+    size_t numberOfRows = 0;
+    for (auto const & column : data)
+    {
+        if (numberOfRows < column.size()) numberOfRows = column.size();
+    }
+    for (size_t row = 0; row < numberOfRows; ++row)
+    {
+        size_t columnCounter = 0;
+        for (auto const & column : data)
+        {
+            // check if there are enough elements
+            std::string item = column.at(row % column.size());
+            os << item;
+            if (columnCounter < data.size() - 1)
+            {
+                os << padding(item.size());
+            }
+            else os << std::endl;
+            ++columnCounter;
+        }
+    }
+    return os;
+}
+
+std::ostream& makeTable(std::ostream& os,
+                        std::vector<std::string> const & header,
+                        std::vector< std::vector<std::string> > const & data,
+                        TextAlignment alignment = TextAlignment::leftAligned,
+                        size_t columnWidth = 4,
+                        bool underlineHeader = true)
+                        
+{
+    makeHeader(os, header, alignment, columnWidth);
+    if (underlineHeader) makeUnderline (os, columnWidth, header);
+    makeBody(os, data);
+    return os;
 }
 
 template<typename _T> inline
