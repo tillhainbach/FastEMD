@@ -6,7 +6,7 @@
 #include "utils/flow_utils.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
-/// performance. 
+/// performance.
 ///
 /// Required params:
 /// P,Q - Two histograms of size N
@@ -26,7 +26,7 @@
 ///     We assume *F is already allocated and has enough space and is initialized to zeros.
 ///     See also flow_utils.hpp file for flow-related utils.
 ///     Default value: NULL and then FLOW_TYPE must be NO_FLOW.
-///     
+///
 /// Required template params:
 /// NUM_T - the type of the histogram bins count (should be one of: int, long int, long long int, double)
 ///
@@ -65,7 +65,7 @@ struct emd_hat {
 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
-// met: 
+// met:
 //    * Redistributions of source code must retain the above copyright
 //    notice, this list of conditions and the following disclaimer.
 //    * Redistributions in binary form must reproduce the above copyright
