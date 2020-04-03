@@ -18,6 +18,7 @@
 #include "FlowNetwork.hpp"
 #include "ReducedCostsForwardEdgesNetwork.hpp"
 
+
 typedef int NODE_T;
 typedef unsigned char uchar;
 using namespace FastEMD;

@@ -1,10 +1,11 @@
-#ifndef EMD_HAT_HPP
-#define EMD_HAT_HPP
+#ifndef MODIFIED_EMD_HAT_HPP
+#define MODIFIED_EMD_HAT_HPP
 
 #include <vector>
 #include "utils/EMD_DEFS.hpp"
 #include "utils/flow_utils.hpp"
-#include "MinCostFlowVector.hpp"
+#include "utils/types.h"
+#include "modifiedMinCostFlow.hpp"
 
 /// Fastest version of EMD. Also, in my experience metric ground distance yields better
 /// performance. 
@@ -38,19 +39,35 @@
 ///           == WITHOUT_EXTRA_MASS_FLOW - fills F with the flows between all bins, except the flow
 ///              to the extra mass bin.
 ///           Note that if F is the default NULL then FLOW_TYPE must be NO_FLOW.
-template<typename NUM_T, typename CONVERT_TO_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMDArray_Base
+namespace FastEMD
 {
+namespace modified
+{
+using namespace types;
+template<typename NUM_T, typename CONVERT_TO_T,
+        typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
+class EMDHat_Base
+{
+    static_assert(!isOPENCV<INTERFACE_T>, "Usage with Opencv is not supported!");
 public:
-    FastEMDArray_Base(NODE_T _N)
-    : mcf(_N)
-    , b(_N)
-    , nonZeroSourceNodes(_N)
-    , nonZeroSinkNodes(_N)
-    , c(_N, std::vector<CONVERT_TO_T>(2 * _N))
-    , flows_arr(_N, std::vector<CONVERT_TO_T>(3 * _N))
-    , uniqueJs(_N)
+    
+    template<typename I = INTERFACE_T, std::enable_if_t<isARRAY<I>, int> = 0>
+    EMDHat_Base(NODE_T numberOfNodes)
+    : mcf(2 * numberOfNodes + 2)
     {};
+    
+    template<typename I = INTERFACE_T, std::enable_if_t<isVECTOR<I>, int> = 0>
+    EMDHat_Base(NODE_T numberOfNodes)
+    : mcf(2 * numberOfNodes + 2)
+    , vertexWeights(2 * numberOfNodes + 2)
+    , nonZeroWeightSourceNodes(numberOfNodes)
+    , nonZeroWeightSinkNodes(numberOfNodes)
+    , cost(numberOfNodes, std::vector<CONVERT_TO_T>(2 * numberOfNodes))
+    , flow(numberOfNodes, std::vector<CONVERT_TO_T>(3 * numberOfNodes))
+    , sinkNodesGettingFlowNotOnlyFromThreshold(numberOfNodes)
+    {};
+    
+    
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
                      const std::vector<NUM_T>& Q,
@@ -69,20 +86,22 @@ protected:
                           std::vector< std::vector<CONVERT_TO_T> >* F,
                           CONVERT_TO_T maxC);
     
-    min_cost_flow<CONVERT_TO_T> mcf;
-    std::vector<CONVERT_TO_T> b;
-    std::vector<NODE_T> nonZeroSourceNodes;
-    std::vector<NODE_T> nonZeroSinkNodes;
-    std::vector< std::vector< CONVERT_TO_T > > c;
-    std::vector< std::vector< CONVERT_TO_T > > flows_arr;
-    std::vector<NODE_T> uniqueJs;
+    MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE> mcf;
+    typeSelector1d<CONVERT_TO_T, INTERFACE_T, SIZE> vertexWeights;
+    typeSelector1d<NODE_T, INTERFACE_T, SIZE> nonZeroWeightSourceNodes;
+    typeSelector1d<NODE_T, INTERFACE_T, SIZE> nonZeroWeightSinkNodes;
+    typeSelector1d<NODE_T, INTERFACE_T, SIZE> sinkNodesGettingFlowNotOnlyFromThreshold;
+    typeSelector2d<CONVERT_TO_T, INTERFACE_T, SIZE, 2> cost;
+    typeSelector2d<CONVERT_TO_T, INTERFACE_T, SIZE, 3> flow;
+    
 };
 
-template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
-class FastEMDArray : public FastEMDArray_Base<NUM_T, NUM_T, FLOW_TYPE>
+//MARK: Partial Spacialization for EMDHat
+template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE = 0, FLOW_TYPE_T FLOW_TYPE = NO_FLOW>
+class EMDHat : public EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>
 {
 public:
-    FastEMDArray(NODE_T _N) : FastEMDArray_Base<NUM_T, NUM_T, FLOW_TYPE>(_N) {};
+    EMDHat(NODE_T _N) : EMDHat_Base<NUM_T, NUM_T, INTERFACE_T, SIZE, FLOW_TYPE>(_N) {};
     
     virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
                  const std::vector<NUM_T>& Q,
@@ -93,41 +112,30 @@ public:
     
 };
 
-template<FLOW_TYPE_T FLOW_TYPE>
-class FastEMDArray <double, FLOW_TYPE> : public FastEMDArray_Base<double, long long int, FLOW_TYPE>
+template<typename INTERFACE_T, NODE_T SIZE, FLOW_TYPE_T FLOW_TYPE>
+class EMDHat <double, INTERFACE_T, SIZE, FLOW_TYPE> : public EMDHat_Base<double, long long int, INTERFACE_T, SIZE, FLOW_TYPE>
 {
 public:
-    FastEMDArray(NODE_T _N) : FastEMDArray_Base<double, long long int, FLOW_TYPE>(_N) {};
+    EMDHat(NODE_T _N)
+    : EMDHat_Base<double, long long int, INTERFACE_T, SIZE, FLOW_TYPE>(_N)
+    {};
     
-    typedef double NUM_T;
-    typedef long long int CONVERT_TO_T;
-    virtual NUM_T calcDistance(const std::vector<NUM_T>& P,
-                     const std::vector<NUM_T>& Q,
-                     const std::vector< std::vector<NUM_T> >& C,
-                     NUM_T extra_mass_penalty = -1,
-                     std::vector< std::vector<NUM_T> >* F = NULL,
-                     NUM_T maxC = -1) override;
+    virtual double calcDistance(std::vector<double> const& P,
+                     std::vector<double> const& Q,
+                     std::vector< std::vector<double> > const& C,
+                     double extra_mass_penalty = -1,
+                     std::vector< std::vector<double> >* F = NULL,
+                     double maxC = -1) override;
     
 };
 
-/// Same as emd_hat_gd_metric, but does not assume metric property for the ground distance (C).
-/// Note that C should still be symmetric and non-negative!
-template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE= NO_FLOW>
-struct emd_hat
-{
-    NUM_T operator()(const std::vector<NUM_T>& P,
-                     const std::vector<NUM_T>& Q,
-                     const std::vector< std::vector<NUM_T> >& C,
-                     NUM_T extra_mass_penalty = -1,
-                     std::vector< std::vector<NUM_T> >* F = NULL);
-        
-};
-
-#include "emdVectorImpl.hpp"
+}} //modified // FastEMD
+#include "include/modifiedInterface/modifiedEmdHatImpl.hpp"
 
 #endif
 
 // Copyright (c) 2009-2012, Ofir Pele
+// Copyright (c) 2020, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
