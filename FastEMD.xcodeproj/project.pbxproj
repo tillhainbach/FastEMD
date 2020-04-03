@@ -153,7 +153,7 @@
 		2B2DC056241FBF4C0090BD53 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				2BC463A82388132800CBCAFF /* modifiedOriginal */,
+				2BC463A82388132800CBCAFF /* original */,
 				2BC45E2623872F9500CBCAFF /* openCVInterface */,
 				2BB708AB24146E6B00CE4195 /* modifiedInterface */,
 				2BB7087D2414412900CE4195 /* EMDHat.hpp */,
@@ -303,14 +303,14 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
-		2BC463A82388132800CBCAFF /* modifiedOriginal */ = {
+		2BC463A82388132800CBCAFF /* original */ = {
 			isa = PBXGroup;
 			children = (
 				2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */,
 				2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */,
 				2BC463AC2388138900CBCAFF /* emd_hat.hpp */,
 			);
-			path = modifiedOriginal;
+			path = original;
 			sourceTree = "<group>";
 		};
 		2BC463CE2388422F00CBCAFF /* rubner_emd */ = {
