@@ -81,6 +81,7 @@
 		2BA169B62437359900925C18 /* quadruples.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = quadruples.txt; sourceTree = "<group>"; };
 		2BA169B72437359900925C18 /* checkAllEqual.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = checkAllEqual.py; sourceTree = "<group>"; };
 		2BA169B82437359900925C18 /* outputOriginalVersion.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = outputOriginalVersion.txt; sourceTree = "<group>"; };
+		2BA169BB243766DA00925C18 /* GitVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitVersion.h; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
 		2BB7085A2413AE1700CE4195 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -299,6 +300,7 @@
 				2BC463AE2388138900CBCAFF /* tictoc.hpp */,
 				2BC463CE2388422F00CBCAFF /* rubner_emd */,
 				2BB708592413AE1700CE4195 /* tqdm */,
+				2BA169BB243766DA00925C18 /* GitVersion.h */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -351,6 +353,7 @@
 				2BC45E1823872F7A00CBCAFF /* Sources */,
 				2BC45E1923872F7A00CBCAFF /* Frameworks */,
 				2BC45E1A23872F7A00CBCAFF /* CopyFiles */,
+				2BA169BA2437655D00925C18 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -406,6 +409,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2BA169BA2437655D00925C18 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%d.%m.%y\")\n\nfilesource=\"//\\n//  GitVersion.h\\n//\\n//  Created by Till Hainbach on $curdate.\\n//\\n\\n#ifndef GitVersion_h\\n#define GitVersion_h\\n\\n#define GIT_SHA_VERSION \\\"$version\\\"\\n\\n#endif\"\n\necho \"$filesource\" > utils/GitVersion.h\ntouch utils/GitVersion.h\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2B2DC049241FBAD70090BD53 /* Sources */ = {

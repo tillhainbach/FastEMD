@@ -9,6 +9,7 @@
 #include "include/modifiedInterface/modifiedEmdHat.hpp"
 #include "utils/tictocChrono.hpp"
 #include "utils/readImage.hpp"
+#include "utils/GitVersion.h"
 
 #if ORGINAL
 #include "include/original/emd_hat.hpp"
@@ -75,6 +76,7 @@ int main( int argc, char* argv[])
     static uint const numberOfTestFunctions = 3;
 
     typedef FastEMD::types::ARRAY INTERFACE;
+    typedef std::chrono::microseconds TIMEUNIT;
     static FastEMD::NODE_T const SIZE = 80;
     
     std::vector <long> emdValues(iterations);
@@ -96,7 +98,7 @@ int main( int argc, char* argv[])
     }
     timer.toc();
     emd[0] = distance;
-    timings[0] = timer.totalTime<std::chrono::microseconds>();
+    timings[0] = timer.totalTime<TIMEUNIT>();
     
     timer.clear();
     timer.tic();
@@ -108,7 +110,7 @@ int main( int argc, char* argv[])
     }
     timer.toc();
     emd[1] = distance;
-    timings[1] = timer.totalTime<std::chrono::microseconds>();
+    timings[1] = timer.totalTime<TIMEUNIT>();
 
     
 #if ORIGINAL
@@ -120,7 +122,7 @@ int main( int argc, char* argv[])
     }
     timer.toc();
     emd[2] = distance;
-    timings[2] = timer.totalTime<std::chrono::microseconds>();
+    timings[2] = timer.totalTime<TIMEUNIT>();
 #endif
     
     // print table header
@@ -132,7 +134,8 @@ int main( int argc, char* argv[])
     {
         std::cout << interfaceNames[i] << "\t\t\t";
         std::cout << emd[i] << "\t\t";
-        std::cout << timings[i] << std::endl;
+        std::cout << timings[i] << "\t\t";
+        std::cout << GIT_SHA_VERSION << std::endl;
     }
     
     
