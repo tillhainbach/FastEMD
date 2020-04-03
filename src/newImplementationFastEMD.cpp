@@ -1,6 +1,6 @@
 #define PRINT 0
 #define DEBUGMODE 1
-#define COMPUTE_RUBNER_VERSION 0
+#define COMPUTE_RUBNER_VERSION 1
 #define ORIGINAL 1
 
 #include <chrono>
@@ -16,13 +16,13 @@
 #include "include/original/emd_hat.hpp"
 #endif
 #include "include/original/emd_hat.hpp"
-#ifdef COMPUTE_RUBNER_VERSION
+#if COMPUTE_RUBNER_VERSION
 #include "RubnerInterface.hpp"
 #endif
 
 #if COMPUTE_RUBNER_VERSION
 std::vector< std::vector<int> > cost_mat;
-float cost_mat_dist(feature_t *F1, feature_t *F2) { return cost_mat[*F1][*F2]; } // for Rubner's version
+float Rubner::costMatDist(feature_t *F1, feature_t *F2) { return cost_mat[*F1][*F2]; } // for Rubner's version
 #endif
 
 //-------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ int main( int argc, char* argv[])
     std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
     std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
     long iterations = strtol(argv[1], NULL, 10);
-    static uint const numberOfTestFunctions = 34;
+    static uint const numberOfTestFunctions = 3 + COMPUTE_RUBNER_VERSION;
 
     typedef FastEMD::types::ARRAY INTERFACE;
     typedef std::chrono::microseconds TIMEUNIT;
@@ -84,8 +84,8 @@ int main( int argc, char* argv[])
     std::vector<int> emd(numberOfTestFunctions);
     std::vector<std::string> const interfaceNames ({"Universal",
                                                     "Modified",
-                                                    "Rubner",
-                                                    "Original"});
+                                                    "Original",
+                                                    "Rubner"});
     assert(interfaceNames.size() == numberOfTestFunctions);
     std::vector<long> timings(numberOfTestFunctions);
 
@@ -113,23 +113,6 @@ int main( int argc, char* argv[])
     timer.toc();
     emd[numberOfTestFunctions - 3] = distance;
     timings[numberOfTestFunctions - 3] = timer.totalTime<TIMEUNIT>();
-
-#if COMPUTE_RUBNER_VERSION
-    
-    timer.clear();
-    Rubner::RubnerInterface<int, FastEMD::types::VECTOR> rubnerEMD(v1,
-                                                                   v2,
-                                                                   cost_mat);
-    timer.tic();
-    for (int i = 0; i < iterations; i++)
-    {
-        distance = rubnerEMD.calcEMD();
-    }
-    timer.toc();
-    emd[numberOfTestFunctions - 2] = distance;
-    timings[numberOfTestFunctions - 2] = timer.totalTime<TIMEUNIT>();
-    
-#endif
     
 #if ORIGINAL
     timer.clear();
@@ -139,15 +122,29 @@ int main( int argc, char* argv[])
         distance = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
     }
     timer.toc();
-    emd[numberOfTestFunctions - 1] = distance;
-    timings[numberOfTestFunctions - 1] = timer.totalTime<TIMEUNIT>();
+    emd[numberOfTestFunctions - 2] = distance;
+    timings[numberOfTestFunctions - 2] = timer.totalTime<TIMEUNIT>();
     
-    for(int i = 0; i < emd.size() - 1; ++i)
+    for(int i = 0; i < emd.size() - 2; ++i)
     {
-        assert(emd[numberOfTestFunctions - 1] == emd[i]);
+        assert(emd[numberOfTestFunctions - 2] == emd[i]);
     }
 #endif
 
+#if COMPUTE_RUBNER_VERSION
+    
+    timer.clear();
+    Rubner::RubnerInterface rubnerEMD(v1, v2);
+    timer.tic();
+    for (int i = 0; i < iterations; i++)
+    {
+        distance = static_cast<int>(rubnerEMD.calcEMD());
+    }
+    timer.toc();
+    emd[numberOfTestFunctions - 1] = distance;
+    timings[numberOfTestFunctions - 1] = timer.totalTime<TIMEUNIT>();
+    
+#endif
     
     std::string const commitID = GIT_SHA_VERSION;
     std::string const previousCommitID = LAST_GIT_SHA_VERSION;

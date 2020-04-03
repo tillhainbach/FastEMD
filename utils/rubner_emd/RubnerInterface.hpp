@@ -11,27 +11,25 @@
 #include "Signature.hpp"
 
 namespace Rubner {
+// should be implemented in calling file
+float costMatDist(feature_t *F1, feature_t *F2);
 
-template<typename NUM_T, typename INTERFACE_T, uint SIZE>
+template<class _T>
 class RubnerInterface
 {
 public:
-    RubnerInterface(typeselector1d<NUM_T, INTERFACE_T, SIZE>& weightsP,
-                    typeselector1d<NUM_T, INTERFACE_T, SIZE>& weightsQ,
-                    typeselectro2d<NUM_T, INTERFACE_T, SIZE>& costMat)
+    RubnerInterface(_T const & weightsP,
+                    _T const & weightsQ)
     : P(weightsP)
     , Q(weightsQ)
-    , _costMat(costMat) {};
+    {};
     
-    float calcEMD(){ return emd (&P, &Q, costMatDist, NULL, NULL); }
+    float calcEMD(){ return emd (&P.signature, &Q.signature, costMatDist, NULL, NULL); }
  
 private:
-    float costMatDist(feature_t *F1, feature_t *F2) { return _costMat[*F1][*F2]; }
-    
-    Signature P;
-    Signature Q;
-    typeselector2d<NUM_T, INTERFACE_T, SIZE>& _costMat;
-}
+    Signature<_T> P;
+    Signature<_T> Q;
+};
 
 } // Rubner
 

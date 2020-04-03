@@ -15,6 +15,7 @@
 		2B8EBD4824349697002CBED8 /* TestReducedCostForwardEdges.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */; };
 		2B8EBD4A24349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */; };
 		2BA169B924373BE200925C18 /* newImplementationFastEMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */; };
+		2BA169BD24377BE000925C18 /* emd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC463CF2388422F00CBCAFF /* emd.c */; };
 		2BB1D7A924338C23000976DC /* TestEMDHat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B3CE74424331B5F0095BB14 /* TestEMDHat.mm */; };
 		2BDF5D19242A20D5001C2B63 /* TestCVMatRowIterator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */; };
 /* End PBXBuildFile section */
@@ -453,6 +454,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BA169BD24377BE000925C18 /* emd.c in Sources */,
 				2BA169B924373BE200925C18 /* newImplementationFastEMD.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,35 +9,31 @@
 #ifndef Signature_h
 #define Signature_h
 #include "emd.h"
-#include "utils/types.h"
 
 namespace Rubner
 {
-using namespace FastEMD::types;
+
 ///@brief Wrapper around the Rubner signature_t struct which cleans up after itself. Class has a destructor so you
 /// don't have to worry about forgetting to free the memory.
-template<typename NUM_T, typename INTERFACE_T, unsigned int SIZE = 0>
+template<class _T>
 class Signature
 {
     
 public:
-    Signature(typeselector1d<NUM_T, INTERFACE_T, SIZE>& weights);
+    Signature(_T const & weights);
     
     ~Signature() noexcept;
     
-
-private:
     signature_t signature;
     
 };
 
 
 //MARK: Implementations:
-template<typename NUM_T, typename INTERFACE_T, unsigned int SIZE>
-Signature<NUM_T, INTERFACE_T, SIZE>::Signature(
-                                    typeselector<NUM_T, INTERFACE_T, SIZE>& weights)
+template<class _T>
+Signature<_T>::Signature(_T const & weights)
 {
-    int n = P.size()
+    int n = weights.size();
     signature.n = n;
     
     // Dynamically allocate memory for signature feature array
@@ -56,17 +52,17 @@ Signature<NUM_T, INTERFACE_T, SIZE>::Signature(
     signature.Weights = new float[n];
     
     // If the allocation succeded, copy the weights
-    if (Psig->Weights && Qsig->Weights)
+    if (signature.Weights)
     {
         for (unsigned int i = 0; i < n; ++i)
         {
-           signature.Weights[i] = P[i];
+           signature.Weights[i] = weights[i];
         }
     }
 }
 
-template<typename NUM_T, typename INTERFACE_T, unsigned int SIZE>
-Signature<NUM_T, INTERFACE_T, SIZE>::~Signature()
+template<class _T>
+Signature<_T>::~Signature() noexcept
 {
     delete[] signature.Features;
     delete[] signature.Weights;
