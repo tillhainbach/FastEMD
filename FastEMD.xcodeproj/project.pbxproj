@@ -350,10 +350,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2BC45E2323872F7A00CBCAFF /* Build configuration list for PBXNativeTarget "FastEMD" */;
 			buildPhases = (
+				2BA169BA2437655D00925C18 /* ShellScript */,
 				2BC45E1823872F7A00CBCAFF /* Sources */,
 				2BC45E1923872F7A00CBCAFF /* Frameworks */,
 				2BC45E1A23872F7A00CBCAFF /* CopyFiles */,
-				2BA169BA2437655D00925C18 /* ShellScript */,
 			);
 			buildRules = (
 			);
