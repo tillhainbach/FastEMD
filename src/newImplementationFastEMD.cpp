@@ -18,8 +18,8 @@
 #include "emd.h"
 #endif
 
-std::vector< std::vector<int> > cost_mat; // for emd_hat version, defined globally only because of Rubner's version
 #ifdef COMPUTE_RUBNER_VERSION
+std::vector< std::vector<int> > cost_mat;
 float cost_mat_dist(feature_t *F1, feature_t *F2) { return cost_mat[*F1][*F2]; } // for Rubner's version
 #endif
 
@@ -72,51 +72,68 @@ int main( int argc, char* argv[])
     std::vector<int>v1 (im1.begin(), im1.begin() + (N*N));
     std::vector<int>v2(im2.begin(), im2.begin() + (N*N));
     long iterations = strtol(argv[1], NULL, 10);
+    static uint const numberOfTestFunctions = 3;
 
     typedef FastEMD::types::ARRAY INTERFACE;
     static FastEMD::NODE_T const SIZE = 80;
     
-    std::cout << "I am doing stuff for " << iterations << " times..." << std::endl;
     std::vector <long> emdValues(iterations);
+    std::vector<int> emd(numberOfTestFunctions);
+    std::vector<std::string> const interfaceNames ({"Universisal",
+                                                    "Modified",
+                                                    "Original"});
+    assert(interfaceNames.size() == numberOfTestFunctions);
+    std::vector<long> timings(numberOfTestFunctions);
 
     tictoc timer;
     timer.tic();
     FastEMD::EMDHat<int, INTERFACE, SIZE> fastEMD(static_cast<NODE_T>(v1.size()));
 
-    int emdDistanceUniversalInterface = 0;
+    int distance = 0;
     for (int i = 0; i < iterations; i++)
     {
-        emdDistanceUniversalInterface = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
+        distance = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    std::cout << "emdDistanceUniversalInterface time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
-    std::cerr << "emdDistanceUniversalInterface = " << emdDistanceUniversalInterface<< std::endl;
+    emd[0] = distance;
+    timings[0] = timer.totalTime<std::chrono::microseconds>();
     
     timer.clear();
     timer.tic();
     FastEMD::modified::EMDHat<int, INTERFACE, SIZE> modifiedFastEMD(static_cast<NODE_T>(v1.size()));
-
-    int emdDistanceModifiedInterface = 0;
     for (int i = 0; i < iterations; i++)
     {
-        emdDistanceModifiedInterface = modifiedFastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
+        distance = modifiedFastEMD.calcDistance(v1, v2, cost_mat,
+                                                THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    std::cout << "emdDistanceModifiedInterface time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
-    std::cerr << "emdDistanceModifiedInterface = " << emdDistanceModifiedInterface << std::endl;
+    emd[1] = distance;
+    timings[1] = timer.totalTime<std::chrono::microseconds>();
+
     
 #if ORIGINAL
     timer.clear();
     timer.tic();
-    int emdDistanceOrginal;
     for (int i = 0; i < iterations; i++)
     {
-        emdDistanceOrginal = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
+        distance = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
     }
     timer.toc();
-    std::cout << "emdDistanceOriginal time in µs: " << timer.totalTime<std::chrono::microseconds>()  << std::endl;
-    std::cout << "emdDistanceOrginal = " << emdDistanceOrginal << std::endl;
+    emd[2] = distance;
+    timings[2] = timer.totalTime<std::chrono::microseconds>();
 #endif
+    
+    // print table header
+    std::cout << "Interface\t\t\t" << "EMD\t\t\t" << "Time [µs]" << std::endl;
+    for (uint i = 0; i < 42; ++i) std::cout << "-";
+    std::cout << std::endl;
+    // print table data
+    for(uint i = 0; i < numberOfTestFunctions; ++i)
+    {
+        std::cout << interfaceNames[i] << "\t\t\t";
+        std::cout << emd[i] << "\t\t";
+        std::cout << timings[i] << std::endl;
+    }
     
     
 } // end main
