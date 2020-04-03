@@ -2,7 +2,6 @@
 #define MIN_COST_FLOW_HXX
 
 #include <vector>
-#include <array>
 #include <limits>
 #include <list>
 #include <cassert>
@@ -17,8 +16,6 @@ struct edge {
     NODE_T _to;
     NUM_T _cost;
 };
-
-
 
 template<typename NUM_T>
 struct edgeCompareByCost {
@@ -52,15 +49,9 @@ struct edge2 {
 
 template<typename NUM_T>
 struct edge3 {
-    edge3(NODE_T to = 0, NUM_T dist = 0) : _to(to), _dist(dist) {}
+    edge3(NODE_T to=0, NUM_T dist=0) : _to(to), _dist(dist) {}
     NODE_T _to;
     NUM_T _dist;
-};
-template<typename NUM_T>
-struct edgeCompareByDist {
-    bool operator()(const edge3<NUM_T>& a, const edge3<NUM_T>& b) {
-        return a._dist > b._dist;
-    }
 };
 //------------------------------------------------------------------------------
 
@@ -91,14 +82,14 @@ public:
                      const std::vector< std::list< edge<NUM_T> > >& c,
                      std::vector< std::list<  edge0<NUM_T>  > >& x) {
 
-//        for (NODE_T i=0; i<e.size(); ++i) std::cout << e[i]<< " ";
-//        std::cout << std::endl;
+        //for (NODE_T i=0; i<e.size(); ++i) cout << e[i]<< " ";
+        //cout << endl;
         //tictoc_all_function.tic();
                 
         assert(e.size()==c.size());
         assert(x.size()==c.size());
         
-        _num_nodes = static_cast<NODE_T>(e.size());
+        _num_nodes= e.size();
         _nodes_to_Q.resize(_num_nodes);
         
         // init flow
@@ -108,20 +99,6 @@ public:
                 x[it->_to].push_back(  edge0<NUM_T> (from, -it->_cost,0) );
             }} // it
         }} // from
-
-#if PRINT && DEBUGMODE
-        std::cout << "Flow Network:" << std::endl;
-         std::cout << "vertex: [to : reduced cost]" << std::endl;
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            std::cout << from << ":";
-            for (auto &e : x[from])
-            {
-                std::cout << " [" << e._to << " : " << e._cost << " : " << e._flow << "]";
-            }
-            std::cout << std::endl;
-        }
-#endif
         
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
         // Note that for forward edges the residual capacity is infinity
@@ -131,20 +108,6 @@ public:
                     r_cost_forward[from].push_back( edge1<NUM_T>(it->_to,it->_cost) );
             }}
         }}
-
-#if PRINT && DEBUGMODE
-        std::cout << "Reduced Costs For Forward Edges Network:" << std::endl;
-         std::cout << "vertex: [to : reduced cost]" << std::endl;
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            std::cout << from << ": ";
-            for (auto &e : r_cost_forward[from])
-            {
-                std::cout << "[" << e._to << " : " << e._reduced_cost << "] ";
-            }
-            std::cout << std::endl;
-        }
-#endif
         
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
         // Since the flow at the beginning is 0, the residual capacity is also zero
@@ -154,22 +117,6 @@ public:
                     r_cost_cap_backward[ it->_to ].push_back( edge2<NUM_T>(from,-it->_cost,0) );
             }} // it
         }} // from
- 
-#if PRINT && DEBUGMODE
-        std::cout << "Reduced Costs And Capacity For Backward Edges Network:" << std::endl;
-         std::cout << "vertex: [to : reduced cost : residual capacity]" << std::endl;
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            std::cout << from << ": ";
-            for (auto &e : r_cost_cap_backward[from])
-            {
-                std::cout << "[" << e._to << " : " << e._reduced_cost
-                    << " : " << e._residual_capacity << "] ";
-            }
-            std::cout << std::endl;
-        }
-#endif
-        
         
         // Max supply TODO:demand?, given U?, optimization-> min out of demand,supply
         NUM_T U= 0;
@@ -191,16 +138,25 @@ public:
         //tictoc_while_true.tic();
         while (true) { //until we break when S or T is empty
                 
-                NODE_T k = static_cast<NODE_T>(std::distance(e.begin(),
-                                        std::max_element(e.begin(), e.begin() + _num_nodes)));
-                NUM_T maxSupply = e[k];
+                NUM_T maxSupply= 0;
+                NODE_T k=0;
+                for (NODE_T i=0; i<_num_nodes; ++i) {
+                    if (e[i]>0) {
+                        if (maxSupply<e[i]) {
+                            maxSupply= e[i];
+                            k= i;
+                        }
+                    }
+                }
                 if (maxSupply==0) break;
                 delta= maxSupply;
 
                 NODE_T l;
                 //tictoc_shortest_path.tic();
-                compute_shortest_path(d,prev, k,r_cost_forward,r_cost_cap_backward , e,l); 
+                compute_shortest_path(d,prev, k,r_cost_forward,r_cost_cap_backward , e,l);
                 //tictoc_shortest_path.toc();
+                
+
                 
                 //---------------------------------------------------------------
                 // find delta (minimum on the path from k to l)
@@ -208,52 +164,62 @@ public:
                 //if (-e[l]<delta) delta= e[k];
                 NODE_T to= l;
                 do {
-                    NODE_T from = prev[to];
-                    assert(from != to);
+                    NODE_T from= prev[to];
+                    assert(from!=to);
                                         
                     // residual
-                    auto it = std::find_if(r_cost_cap_backward[from].begin(),
-                                           r_cost_cap_backward[from].end(),
-                                           [&](auto &e) {return e._to == to;});
-                    if (it != r_cost_cap_backward[to].end())
-                    {
-                        if (it->_residual_capacity<delta) delta = it->_residual_capacity;
+                    typename std::list< edge2<NUM_T> >::iterator itccb= r_cost_cap_backward[from].begin();
+                    while ( (itccb!=r_cost_cap_backward[from].end()) && (itccb->_to!=to) ) {
+                        ++itccb;
                     }
-                    to = from;
+                    if (itccb!=r_cost_cap_backward[from].end()) {
+                        if (itccb->_residual_capacity<delta) delta= itccb->_residual_capacity;
+                    }
+                    
+                    to= from;
                 } while (to!=k);
                 //---------------------------------------------------------------
 
                 //---------------------------------------------------------------
                 // augment delta flow from k to l (backwards actually...)
-                to = l;
+                to= l;
                 do {
-                    NODE_T from = prev[to];
-
-                    assert(from != to);
+                    NODE_T from= prev[to];
+                    assert(from!=to);
                                         
-                    // TODO: might do here O(n) can be done in O(1)
-                    std::find_if(x[from].begin(), x[from].end(), [&](auto &e) {return e._to == to;})->_flow += delta;
-       
+                    // TODO - might do here O(n) can be done in O(1)
+                    typename std::list<  edge0<NUM_T>  >::iterator itx= x[from].begin();
+                    while (itx->_to!=to) {
+                        ++itx;
+                    }
+                    itx->_flow+= delta;
+                                        
                     // update residual for backward edges
-                    auto it = std::find_if(r_cost_cap_backward[to].begin(),
-                                           r_cost_cap_backward[to].end(),
-                                           [&](auto &e) {return e._to == from;});
-                    if (it != r_cost_cap_backward[to].end()) it->_residual_capacity += delta;
-                    
-                    it = std::find_if(r_cost_cap_backward[from].begin(),
-                                           r_cost_cap_backward[from].end(),
-                                           [&](auto &e) {return e._to == to;});
-                    if (it != r_cost_cap_backward[from].end()) it->_residual_capacity -= delta;
+                    typename std::list< edge2<NUM_T> >::iterator itccb= r_cost_cap_backward[to].begin();
+                    while ( (itccb!=r_cost_cap_backward[to].end()) && (itccb->_to!=from) ) {
+                        ++itccb;
+                    }
+                    if (itccb!=r_cost_cap_backward[to].end()) {
+                        itccb->_residual_capacity+= delta;
+                    }
+                    itccb= r_cost_cap_backward[from].begin();
+                    while ( (itccb!=r_cost_cap_backward[from].end()) && (itccb->_to!=to) ) {
+                        ++itccb;
+                    }
+                    if (itccb!=r_cost_cap_backward[from].end()) {
+                        itccb->_residual_capacity-= delta;
+                    }
 
                     // update e
-                    e[to] += delta;
-                    e[from] -= delta;
-                    to = from;
-                } while (to != k);
-//            std::cout << std::endl;
-//            for (int i = 0; i < 50; ++i) std::cout << "-";
-//            std::cout << std::endl;
+                    e[to]+= delta;
+                    e[from]-= delta;
+                        
+                    to= from;
+                } while (to!=k);
                 //---------------------------------------------------------------------------------
+
+                
+                
             } // while true (until we break when S or T is empty)
             //tictoc_while_true.toc();
             //cout << "while true== " << tictoc_while_true.totalTimeSec() << endl;
@@ -271,7 +237,7 @@ public:
                         dist+= (it->_cost*it->_flow);
                 }} // it
             }} // from
-        
+            
             
             //tictoc_all_function.toc();
             //cout << "operator() time==" << tictoc_all_function.totalTimeSec() << endl;
@@ -279,6 +245,17 @@ public:
             //cout << "tmp_tic_toc== " << tmp_tic_toc.totalTimeSec() << endl;
             return dist;
     } // operator()
+
+
+
+
+
+
+
+
+
+
+
 
 private:
 
@@ -290,54 +267,52 @@ private:
                                std::vector< std::list< edge2<NUM_T> > >& cost_backward,
 
                                const std::vector<NUM_T>& e,
-                               NODE_T& l)
-    {
+                               NODE_T& l) {
         
         
         //----------------------------------------------------------------
         // Making heap (all inf except 0, so we are saving comparisons...)
         //----------------------------------------------------------------
         std::vector<  edge3<NUM_T>  > Q(_num_nodes);
-//        std::cout << "from: " << from << std::endl;
         
         Q[0]._to= from;
-        _nodes_to_Q[from] = 0;
+        _nodes_to_Q[from]= 0;
         Q[0]._dist= 0;
-
                 
-        NODE_T j = 1;
-        NODE_T z = _num_nodes - 1;
+        NODE_T j=1;
         // TODO: both of these into a function?
-        for (NODE_T i = 0; i<from; ++i)
-        {
+        {for (NODE_T i=0; i<from; ++i) {
             Q[j]._to= i;
             _nodes_to_Q[i]= j;
             Q[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
-        }
+        }}
 
-        for (NODE_T i=from+1; i<_num_nodes; ++i) {
+        {for (NODE_T i=from+1; i<_num_nodes; ++i) {
             Q[j]._to= i;
             _nodes_to_Q[i]= j;
             Q[j]._dist= std::numeric_limits<NUM_T>::max();
             ++j;
-        }
+        }}
+        //----------------------------------------------------------------
+        
 
         //----------------------------------------------------------------
         // main loop
         //----------------------------------------------------------------
         std::vector<NODE_T> finalNodesFlg(_num_nodes, false);
         do {
-            NODE_T u = Q[0]._to;
+            NODE_T u= Q[0]._to;
+                        
             d[u]= Q[0]._dist; // final distance
-
-            finalNodesFlg[u] = true;
+            finalNodesFlg[u]= true;
             if (e[u]<0) {
-                l = u;
+                l= u;
                 break;
             }
-
+            
             heap_remove_first(Q, _nodes_to_Q);
+            
             
             // neighbors of u
             {for (typename std::list< edge1<NUM_T> >::const_iterator it= cost_forward[u].begin(); it!=cost_forward[u].end(); ++it) {
@@ -345,64 +320,61 @@ private:
                 NUM_T alt= d[u]+it->_reduced_cost;
                 NODE_T v= it->_to;
                 if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) ) {
+                    //cout << "u to v==" << u << " to " << v << "   " << alt << endl;
                     heap_decrease_key(Q,_nodes_to_Q, v,alt);
                     prev[v]= u;
                 }
             }} //it
-
             {for (typename std::list< edge2<NUM_T> >::const_iterator it= cost_backward[u].begin(); it!=cost_backward[u].end(); ++it) {
                 if (it->_residual_capacity>0) {
                     assert (it->_reduced_cost>=0);
                     NUM_T alt= d[u]+it->_reduced_cost;
-                    NODE_T v = it->_to;
+                    NODE_T v= it->_to;
                     if ( (_nodes_to_Q[v]<Q.size()) && (alt<Q[_nodes_to_Q[v]]._dist) )  {
-//                        std::cout << "u to v==" << u << " to " << v << "   " << alt << std::endl;
+                        //cout << "u to v==" << u << " to " << v << "   " << alt << endl;
                         heap_decrease_key(Q,_nodes_to_Q, v,alt);
-                        prev[v] = u;
+                        prev[v]= u;
                     }
                 }
             }} //it
-            
+
         } while (!Q.empty());
 
-//        std::cout <<  std::endl;
+        
         //tmp_tic_toc.tic();
         //---------------------------------------------------------------------------------
         // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
-        for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            for (auto &it : cost_forward[from])
-            {
-                if (finalNodesFlg[from])
-                {
-                    it._reduced_cost+= d[from] - d[l];
+                                   {for (NODE_T from=0; from<_num_nodes; ++from) {
+                                           {for (typename std::list< edge1<NUM_T> >::iterator it= cost_forward[from].begin();
+                 it!=cost_forward[from].end(); ++it) {
+                if (finalNodesFlg[from]) {
+                    it->_reduced_cost+= d[from] - d[l];
                 }
-                if (finalNodesFlg[it._to])
-                {
-                    it._reduced_cost-= d[it._to] - d[l];
+                if (finalNodesFlg[it->_to]) {
+                    it->_reduced_cost-= d[it->_to] - d[l];
                 }
-            }
-        }
+            } }
+        }}
         
         // reduced costs and capacity for backward edges (c[j,i]-pi[j]+pi[i])
-		for (NODE_T from = 0; from < _num_nodes; ++from)
-        {
-            for (auto &it : cost_backward[from])
-            {
-                if (finalNodesFlg[from])
-                {
-                    it._reduced_cost+= d[from] - d[l];
+                                   {for (NODE_T from=0; from<_num_nodes; ++from) {
+                                           {  for (typename std::list< edge2<NUM_T> >::iterator it= cost_backward[from].begin();
+                 it!=cost_backward[from].end(); ++it) {
+                if (finalNodesFlg[from]) {
+                    it->_reduced_cost+= d[from] - d[l];
+                        }
+                if (finalNodesFlg[it->_to]) {
+                    it->_reduced_cost-= d[it->_to] - d[l];
                 }
-                if (finalNodesFlg[it._to])
-                {
-                    it._reduced_cost-= d[it._to] - d[l];
-                }
-            }// it
-        }
+                               
+            } }// it
+        }}
         //---------------------------------------------------------------------------------
         //tmp_tic_toc.toc();
         
         //----------------------------------------------------------------
+        
+        
     } // compute_shortest_path
 
     void heap_decrease_key(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q,
@@ -415,12 +387,10 @@ private:
         }
     } // heap_decrease_key
     
-    void heap_remove_first(std::vector< edge3<NUM_T> >& Q,
-                           std::vector<NODE_T>& nodes_to_Q)
-    {
+    void heap_remove_first(std::vector< edge3<NUM_T> >& Q, std::vector<NODE_T>& nodes_to_Q) {
+        swap_heap(Q, nodes_to_Q, 0, Q.size()-1);
         Q.pop_back();
-        swap_heap(Q, nodes_to_Q, 0, Q.size());
-        heapify(Q, nodes_to_Q , 0);
+        heapify(Q,nodes_to_Q , 0);
     } // heap_remove_first
 
 
@@ -430,24 +400,22 @@ private:
 
         do {
             // TODO: change to loop
-            NODE_T l = LEFT(i);
-            NODE_T r = RIGHT(i);
+            NODE_T l= LEFT(i);
+            NODE_T r= RIGHT(i);
             NODE_T smallest;
-            if ( (l < Q.size()) && (Q[l]._dist < Q[i]._dist) )
-            {
-                smallest = l;
+            if ( (l<Q.size()) && (Q[l]._dist<Q[i]._dist) ) {
+                smallest= l;
+            } else {
+                smallest= i;
             }
-            else
-            {
-                smallest = i;
+            if ( (r<Q.size())&& (Q[r]._dist<Q[smallest]._dist) ) {
+                smallest= r;
             }
-            if ( (r < Q.size())&& (Q[r]._dist < Q[smallest]._dist) )
-            {
-                smallest = r;
-            }
-            if (smallest == i) return;
+
+            if (smallest==i) return;
+
             swap_heap(Q, nodes_to_Q, i, smallest);
-            i = smallest;
+            i= smallest;
             
         } while (true);
         
@@ -464,19 +432,16 @@ private:
         nodes_to_Q[ Q[i]._to ]= i;
     } // swap_heapify
     
-    NODE_T LEFT(NODE_T i)
-    {
-        return 2 * (i + 1) - 1; // i = 0 -> 1
-    } 
-
-    NODE_T RIGHT(NODE_T i)
-    {
-        return 2 * (i + 1); // 2*(i+1)+1-1 i = 0 -> 2
+    NODE_T LEFT(NODE_T i) {
+        return 2*(i+1)-1;
     }
 
-    NODE_T PARENT(NODE_T i)
-    {
-        return (i - 1) / 2; // i = 0 -> 0;
+    NODE_T RIGHT(NODE_T i) {
+        return 2*(i+1); // 2*(i+1)+1-1
+    }
+
+    NODE_T PARENT(NODE_T i) {
+        return (i-1)/2;
     }
     
 }; // end min_cost_flow
@@ -489,7 +454,7 @@ private:
 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
-// met: 
+// met:
 //    * Redistributions of source code must retain the above copyright
 //    notice, this list of conditions and the following disclaimer.
 //    * Redistributions in binary form must reproduce the above copyright
