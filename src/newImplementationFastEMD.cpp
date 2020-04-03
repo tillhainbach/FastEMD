@@ -1,16 +1,19 @@
 //#define COMPUTE_RUBNER_VERSION
 #define PRINT 0
 #define DEBUGMODE 1
+#define ORIGINAL 1
 
 #include <chrono>
-#include <vector>
 #include <iostream>
-#include <fstream>
 #include "include/EMDHat.hpp"
 #include "include/modifiedInterface/modifiedEmdHat.hpp"
 #include "utils/tictocChrono.hpp"
 #include "utils/readImage.hpp"
 
+#if ORGINAL
+#include "include/modifiedOriginal/emd_hat.hpp"
+#include "utils/tictoc.hpp"
+#endif
 
 #ifdef COMPUTE_RUBNER_VERSION
 #include "emd.h"
@@ -87,7 +90,7 @@ int main( int argc, char* argv[])
         emdDistanceUniversalInterface = fastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    std::cout << "emdDistance time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
+    std::cout << "emdDistanceUniversalInterface time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
     std::cerr << "emdDistanceUniversalInterface = " << emdDistanceUniversalInterface<< std::endl;
     
     timer.clear();
@@ -100,8 +103,22 @@ int main( int argc, char* argv[])
         emdDistanceModifiedInterface = modifiedFastEMD.calcDistance(v1, v2, cost_mat, THRESHOLD, NULL, maxC);
     }
     timer.toc();
-    std::cout << "emdDistance time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
+    std::cout << "emdDistanceModifiedInterface time in µs: " << timer.totalTime<std::chrono::microseconds>() << std::endl;
     std::cerr << "emdDistanceModifiedInterface = " << emdDistanceModifiedInterface << std::endl;
+    
+#if ORIGINAL
+    timer.clear();
+    timer.tic();
+    int emdDistanceOrginal;
+    for (int i = 0; i < iterations; i++)
+    {
+        emdDistanceOrginal = emd_hat_gd_metric<int>()(v1, v2, cost_mat, THRESHOLD);
+    }
+    timer.toc();
+    std::cout << "emdDistanceOriginal time in µs: " << timer.totalTime<std::chrono::microseconds>()  << std::endl;
+    std::cout << "emdDistanceOrginal = " << emdDistanceOrginal << std::endl;
+#endif
+    
     
 } // end main
     
