@@ -11,7 +11,6 @@
 #include <cassert>
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 template<typename NUM_T>
 void fillFWithZeros(std::vector< std::vector<NUM_T> >& F) {
@@ -21,8 +20,8 @@ void fillFWithZeros(std::vector< std::vector<NUM_T> >& F) {
         }
     }
 }
-
-// Forward declarations 
+        
+// Forward declarations
 template<typename NUM_T, FLOW_TYPE_T FLOW_TYPE> struct emd_hat_impl;
 
 template<typename NUM_T,FLOW_TYPE_T FLOW_TYPE>
@@ -35,8 +34,8 @@ NUM_T emd_hat_gd_metric<NUM_T,FLOW_TYPE>::operator()(const std::vector<NUM_T>& P
         
     assert( (F!=NULL) || (FLOW_TYPE==NO_FLOW) );
     
-    std::vector<NUM_T> P = Pc;
-    std::vector<NUM_T> Q = Qc;
+    std::vector<NUM_T> P= Pc;
+    std::vector<NUM_T> Q= Qc;
     
     // Assuming metric property we can pre-flow 0-cost edges
     {for (NODE_T i=0; i<P.size(); ++i) {
@@ -96,7 +95,7 @@ struct emd_hat_impl_integral_types {
         std::vector< std::vector<NUM_T> >* F) {
 
     //-------------------------------------------------------
-    NODE_T N = static_cast<NODE_T>(Pc.size());
+    NODE_T N= Pc.size();
     assert(Qc.size()==N);
 
     // Ensuring that the supplier - P, have more mass.
@@ -143,7 +142,7 @@ struct emd_hat_impl_integral_types {
     // where incoming edges to the threshold node had the cost of the threshold and outgoing
     // edges had the cost of zero)
     // This also makes sum of b zero.
-    b[THRESHOLD_NODE]= -abs_diff_sum_P_sum_Q; 
+    b[THRESHOLD_NODE]= -abs_diff_sum_P_sum_Q;
     b[ARTIFICIAL_NODE]= 0;
     //-------------------------------------------------------
     
@@ -160,8 +159,8 @@ struct emd_hat_impl_integral_types {
    
     
     //=============================================================
-    std::set< NODE_T > sources_that_flow_not_only_to_thresh; 
-    std::set< NODE_T > sinks_that_get_flow_not_only_from_thresh; 
+    std::set< NODE_T > sources_that_flow_not_only_to_thresh;
+    std::set< NODE_T > sinks_that_get_flow_not_only_from_thresh;
     NUM_T pre_flow_cost= 0;
     //=============================================================
 
@@ -204,7 +203,7 @@ struct emd_hat_impl_integral_types {
     }}
     {for (NODE_T j=0; j<N; ++j) {
             c[THRESHOLD_NODE].push_back( edge<NUM_T>(j+N, maxC) );
-    }} 
+    }}
     
     // artificial arcs - Note the restriction that only one edge i,j is artificial so I ignore it...
     {for (NODE_T i=0; i<ARTIFICIAL_NODE; ++i) {
@@ -217,11 +216,11 @@ struct emd_hat_impl_integral_types {
     
 
     
-    //====================================================    
+    //====================================================
     // remove nodes with supply demand of 0
     // and vertexes that are connected only to the
     // threshold vertex
-    //====================================================    
+    //====================================================
     NODE_T current_node_name= 0;
     // Note here it should be vector<int> and not vector<NODE_T>
     // as I'm using -1 as a special flag !!!
@@ -231,7 +230,7 @@ struct emd_hat_impl_integral_types {
     nodes_old_names.reserve(b.size());
     {for (NODE_T i=0; i<N*2; ++i) {
             if (b[i]!=0) {
-             if (sources_that_flow_not_only_to_thresh.find(i)!=sources_that_flow_not_only_to_thresh.end()|| 
+             if (sources_that_flow_not_only_to_thresh.find(i)!=sources_that_flow_not_only_to_thresh.end()||
                 sinks_that_get_flow_not_only_from_thresh.find(i)!=sinks_that_get_flow_not_only_from_thresh.end()) {
                 nodes_new_names[i]= current_node_name;
                 nodes_old_names.push_back(i);
@@ -241,10 +240,9 @@ struct emd_hat_impl_integral_types {
                       pre_flow_cost-= (b[i]*maxC);
                   }
                   b[THRESHOLD_NODE]+= b[i]; // add mass(i<N) or deficit (i>=N)
-             } 
+             }
             }
     }} //i
-
     nodes_new_names[THRESHOLD_NODE]= current_node_name;
     nodes_old_names.push_back(THRESHOLD_NODE);
     ++current_node_name;
@@ -271,38 +269,12 @@ struct emd_hat_impl_integral_types {
         }}
     }}
     //====================================================
-//    std::cout << "Vertex Weights:" << std::endl;
-//    std::cout << "vertex: [weight]" << std::endl;
-//    std::for_each(b.begin(), b.end(), [](int n) {std::cout << "["<< n << "]";});
-//    std::cout << std::endl;
-//        
-//    std::cout << "Vertex Weights:" << std::endl;
-//    std::cout << "vertex: [weight]" << std::endl;
-//    std::for_each(bb.begin(), bb.end(), [](int n) {std::cout << "["<< n << "]";});
-//    std::cout << std::endl;
-//    std::cout << bb.size() << std::endl;
-#ifdef DEBUGMODE
+
+    #ifndef NDEBUG
     NUM_T DEBUG_sum_bb= 0;
     for (NODE_T i=0; i<bb.size(); ++i) DEBUG_sum_bb+= bb[i];
     assert(DEBUG_sum_bb==0);
-#endif
-
-#if PRINT && DEBUGMODE
-//    std::cout << "CostNetwork:" << std::endl;
-//    std::cout << "vertex: [to : cost]" << std::endl;
-    for (NODE_T i = 0; i < cc.size(); ++i)
-    {
-        std::cout << "{";
-        for (auto &edge : cc[i])
-        {
-            std::cout << edge._to << ", " << edge._cost;
-            if (i != (cc.size() - 1) && edge._cost != 3001) std::cout << ", ";
-            if (i == (cc.size() - 1) && edge._to != 30) std::cout << ", ";
-        }
-        if (i != (cc.size() - 1)) std::cout << "}," << std::endl;
-        else  std::cout << "}" << std::endl;
-    }
-#endif
+    #endif
 
     //-------------------------------------------------------
     min_cost_flow<NUM_T> mcf;
@@ -311,7 +283,8 @@ struct emd_hat_impl_integral_types {
     
     std::vector< std::list<  edge0<NUM_T>  > > flows(bb.size());
 
-
+    //std::cout << bb.size() << std::endl;
+    //std::cout << cc.size() << std::endl;
 
     //tictoc timer;
     //timer.tic();
@@ -328,7 +301,7 @@ struct emd_hat_impl_integral_types {
                 bool reverseEdge= it->_to<new_name_from;
                 if (!reverseEdge) {
                     i= nodes_old_names[new_name_from];
-                    j= nodes_old_names[it->_to]-N; 
+                    j= nodes_old_names[it->_to]-N;
                 } else {
                     i= nodes_old_names[it->_to];
                     j= nodes_old_names[new_name_from]-N;
@@ -347,8 +320,7 @@ struct emd_hat_impl_integral_types {
     }
     
     if (FLOW_TYPE==WITHOUT_EXTRA_MASS_FLOW) transform_flow_to_regular(*F,POrig,QOrig);
-//    std::cout << pre_flow_cost << " + " << mcf_dist << " + " << (abs_diff_sum_P_sum_Q * extra_mass_penalty) << std::endl;
-
+    
     my_dist=
         pre_flow_cost + // pre-flowing on cases where it was possible
         mcf_dist + // solution of the transportation problem
@@ -441,7 +413,7 @@ struct emd_hat_impl<double,FLOW_TYPE> {
     // Note that it can be problematic to check it because
     // of overflow problems. I simply checked it with Linux calc
     // which has arbitrary precision.
-    const double MULT_FACTOR= 1000000; 
+    const double MULT_FACTOR= 1000000;
 
     // Constructing the input
     const NODE_T N= P.size();
@@ -511,7 +483,7 @@ struct emd_hat_impl<double,FLOW_TYPE> {
 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
-// met: 
+// met:
 //    * Redistributions of source code must retain the above copyright
 //    notice, this list of conditions and the following disclaimer.
 //    * Redistributions in binary form must reproduce the above copyright
