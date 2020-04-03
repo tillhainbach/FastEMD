@@ -138,7 +138,7 @@ int main( int argc, char* argv[])
     if(commitID != previousCommitID)
     {
         std::ofstream timingsFile;
-        timingsFile.open("Timings.txt");
+        timingsFile.open("Timings.txt", std::ofstream::app);
         for(uint i = 0; i < numberOfTestFunctions; ++i)
         {
             timingsFile << interfaceNames[i] << ", ";
