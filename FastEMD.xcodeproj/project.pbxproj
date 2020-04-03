@@ -116,6 +116,21 @@
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
 		2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostsAndCapacityBackwardEdgesNetwork.mm; sourceTree = "<group>"; };
 		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
+		2BA169AA2437359800925C18 /* cat1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat1.jpg; sourceTree = "<group>"; };
+		2BA169AB2437359800925C18 /* cat0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat0.jpg; sourceTree = "<group>"; };
+		2BA169AC2437359800925C18 /* cat2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat2.jpg; sourceTree = "<group>"; };
+		2BA169AD2437359800925C18 /* cat3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat3.jpg; sourceTree = "<group>"; };
+		2BA169AE2437359800925C18 /* cat7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat7.jpg; sourceTree = "<group>"; };
+		2BA169AF2437359800925C18 /* cat6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat6.jpg; sourceTree = "<group>"; };
+		2BA169B02437359800925C18 /* cat4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat4.jpg; sourceTree = "<group>"; };
+		2BA169B12437359800925C18 /* cat5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat5.jpg; sourceTree = "<group>"; };
+		2BA169B22437359800925C18 /* cat8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat8.jpg; sourceTree = "<group>"; };
+		2BA169B32437359900925C18 /* testFastEMDVersions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = testFastEMDVersions.txt; sourceTree = "<group>"; };
+		2BA169B42437359900925C18 /* output.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = output.txt; sourceTree = "<group>"; };
+		2BA169B52437359900925C18 /* outputMyVersion.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = outputMyVersion.txt; sourceTree = "<group>"; };
+		2BA169B62437359900925C18 /* quadruples.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = quadruples.txt; sourceTree = "<group>"; };
+		2BA169B72437359900925C18 /* checkAllEqual.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = checkAllEqual.py; sourceTree = "<group>"; };
+		2BA169B82437359900925C18 /* outputOriginalVersion.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = outputOriginalVersion.txt; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
 		2BB7085A2413AE1700CE4195 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -273,6 +288,22 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		2BA169A92437359800925C18 /* cats */ = {
+			isa = PBXGroup;
+			children = (
+				2BA169AA2437359800925C18 /* cat1.jpg */,
+				2BA169AB2437359800925C18 /* cat0.jpg */,
+				2BA169AC2437359800925C18 /* cat2.jpg */,
+				2BA169AD2437359800925C18 /* cat3.jpg */,
+				2BA169AE2437359800925C18 /* cat7.jpg */,
+				2BA169AF2437359800925C18 /* cat6.jpg */,
+				2BA169B02437359800925C18 /* cat4.jpg */,
+				2BA169B12437359800925C18 /* cat5.jpg */,
+				2BA169B22437359800925C18 /* cat8.jpg */,
+			);
+			path = cats;
+			sourceTree = "<group>";
+		};
 		2BB708592413AE1700CE4195 /* tqdm */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,6 +367,13 @@
 		2BC460D92387308100CBCAFF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2BA169A92437359800925C18 /* cats */,
+				2BA169B72437359900925C18 /* checkAllEqual.py */,
+				2BA169B42437359900925C18 /* output.txt */,
+				2BA169B52437359900925C18 /* outputMyVersion.txt */,
+				2BA169B82437359900925C18 /* outputOriginalVersion.txt */,
+				2BA169B62437359900925C18 /* quadruples.txt */,
+				2BA169B32437359900925C18 /* testFastEMDVersions.txt */,
 				2BC45FF423872F9700CBCAFF /* cameraman.txt */,
 				2BC4604523872F9700CBCAFF /* rice.txt */,
 			);
