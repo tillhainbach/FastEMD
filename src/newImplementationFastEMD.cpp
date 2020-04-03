@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <fstream>
 #include "include/EMDHat.hpp"
 #include "include/modifiedInterface/modifiedEmdHat.hpp"
 #include "utils/tictocChrono.hpp"
@@ -81,7 +82,7 @@ int main( int argc, char* argv[])
     
     std::vector <long> emdValues(iterations);
     std::vector<int> emd(numberOfTestFunctions);
-    std::vector<std::string> const interfaceNames ({"Universisal",
+    std::vector<std::string> const interfaceNames ({"Universal",
                                                     "Modified",
                                                     "Original"});
     assert(interfaceNames.size() == numberOfTestFunctions);
