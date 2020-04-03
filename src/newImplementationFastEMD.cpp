@@ -21,11 +21,7 @@ std::vector< std::vector<int> > cost_mat; // for emd_hat version, defined global
 float cost_mat_dist(feature_t *F1, feature_t *F2) { return cost_mat[*F1][*F2]; } // for Rubner's version
 #endif
 
-//--------------------------------------------------------------------------------------------
-// Read images of the format:
-// im_rows_num im_columns_num
-// im_pixels ...
-
+//-------------------------------------------------------------------------------
 
 int main( int argc, char* argv[])
 {
@@ -111,7 +107,7 @@ int main( int argc, char* argv[])
     
     
 // Copyright (c) 2009-2012, Ofir Pele
-// Copyright (c) 2019, Till Hainbach
+// Copyright (c) 2019-2020, Till Hainbach
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
