@@ -1,6 +1,10 @@
+Interface, Time [µs], Commit ID
 Universal, 711, 3c18e9f
 Modified, 273, 3c18e9f
 Original, 1980, 3c18e9f
 Universal, 1028, 3c18e9f
 Modified, 370, 3c18e9f
 Original, 2622, 3c18e9f
+Universal, 1020, 2bffe59
+Modified, 372, 2bffe59
+Original, 2660, 2bffe59
