@@ -170,7 +170,7 @@ int main( int argc, char* argv[])
 //        emd_hat_gd_metric_val!=emd_hat_signatures_interface_val
 //        #ifdef COMPUTE_RUBNER_VERSION
 //        || emd_hat_gd_metric_val!=emd_rubner_val
-//        #endif
+//        #endif(
 //        ) {
 //        std::cerr << "EMDs that were computed with different interfaces are different!" << std::endl;
 //        std::cerr << "emd_hat_gd_metric_val==" << emd_hat_gd_metric_val << std::endl;

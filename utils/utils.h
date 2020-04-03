@@ -9,11 +9,22 @@
 #ifndef utils_hpp
 #define utils_hpp
 #include <opencv2/core.hpp>
+#include <iostream>
 
 namespace FastEMD
 {
 namespace utils
 {
+
+std::string padding(size_t size, uint columnWidth = 4)
+{
+    std::stringstream whitespace;
+    size_t withespaceWidth = 4 * (columnWidth - 1) - size;
+    for(int j = 0; j <= withespaceWidth; ++j) whitespace << " ";
+    whitespace << "\t";
+    
+    return whitespace.str();
+}
 
 template<typename _T> inline
 auto getMaxCost(const _T& costMatrix, const NODE_T N)

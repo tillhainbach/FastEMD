@@ -22,13 +22,26 @@ public:
                     _T const & weightsQ)
     : P(weightsP)
     , Q(weightsQ)
-    {};
+    {
+        sumP = std::accumulate(weightsP.begin(), weightsP.end(), 0);
+        sumQ = std::accumulate(weightsQ.begin(), weightsQ.end(), 0);
+        if (sumP < sumQ)
+        {
+            std::swap(sumP, sumQ);
+        }
+    };
     
-    float calcEMD(){ return emd (&P.signature, &Q.signature, costMatDist, NULL, NULL); }
+    int calcEMD(int maxCost)
+    {
+        float rubnerEMD = emd(&P.signature, &Q.signature, costMatDist, NULL, NULL);
+        return (sumP - sumQ) * maxCost + static_cast<int>(sumP * rubnerEMD);
+                
+    }
  
 private:
     Signature<_T> P;
     Signature<_T> Q;
+    int sumP, sumQ;
 };
 
 } // Rubner

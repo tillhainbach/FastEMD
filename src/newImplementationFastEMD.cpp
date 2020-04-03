@@ -138,12 +138,11 @@ int main( int argc, char* argv[])
     timer.tic();
     for (int i = 0; i < iterations; i++)
     {
-        distance = static_cast<int>(rubnerEMD.calcEMD());
+        distance = static_cast<int>(rubnerEMD.calcEMD(maxC));
     }
     timer.toc();
     emd[numberOfTestFunctions - 1] = distance;
     timings[numberOfTestFunctions - 1] = timer.totalTime<TIMEUNIT>();
-    
 #endif
     
     std::string const commitID = GIT_SHA_VERSION;
@@ -165,14 +164,26 @@ int main( int argc, char* argv[])
 
     
     //MARK: Print Output as table
-    std::cout << "Interface\t\t\t" << "Time [µs]" << std::endl;
-    for (uint i = 0; i < 42; ++i) std::cout << "-";
+    std::vector<std::string> const header ({"Inferface", "EMD",
+                                           "Time [µs]", "Commit ID"});
+    for(auto const & name : header)
+    {
+        std::cout << name << FastEMD::utils::padding(name.size());
+    }
     std::cout << std::endl;
+    size_t headerLength = 16 * (header.size() - 1) + header[header.size() - 1].size();
+    for (uint i = 0; i < headerLength; ++i) std::cout << "-";
+    std::cout << std::endl;
+    
     // print table data
     for(uint i = 0; i < numberOfTestFunctions; ++i)
     {
-        std::cout << interfaceNames[i] << "\t\t\t";
-        std::cout << timings[i] << "\t\t";
+        std::cout << interfaceNames[i];
+        std::cout << FastEMD::utils::padding(interfaceNames[i].size());
+        std::cout << emd[i];
+        std::cout << FastEMD::utils::padding(std::to_string(emd[i]).size());
+        std::cout << timings[i];
+        std::cout << FastEMD::utils::padding(std::to_string(timings[i]).size());
         std::cout << GIT_SHA_VERSION << std::endl;
     }
     
