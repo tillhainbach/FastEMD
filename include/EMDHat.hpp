@@ -1,5 +1,5 @@
-#ifndef EMD_HAT_HPP
-#define EMD_HAT_HPP
+#ifndef EMDHat_hpp
+#define EMDHat_hpp
 
 #include <vector>
 #include "utils/EMD_DEFS.hpp"

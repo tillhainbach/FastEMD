@@ -306,9 +306,9 @@
 		2BC463A82388132800CBCAFF /* original */ = {
 			isa = PBXGroup;
 			children = (
+				2BC463AC2388138900CBCAFF /* emd_hat.hpp */,
 				2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */,
 				2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */,
-				2BC463AC2388138900CBCAFF /* emd_hat.hpp */,
 			);
 			path = original;
 			sourceTree = "<group>";
@@ -704,17 +704,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				HEADER_SEARCH_PATHS = (
-					usr/local/include/opencv4,
-					/usr/local/Cellar/opencv/4.1.0_2/include/opencv4,
 					"$(SRCROOT)",
+					/usr/local/include/opencv4,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_CPLUSPLUSFLAGS = "";
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
-					"-I/usr/local/Cellar/opencv/4.1.0_2/include/opencv4/opencv",
-					"-I/usr/local/Cellar/opencv/4.1.0_2/include/opencv4",
-					"-L/usr/local/Cellar/opencv/4.1.0_2/lib",
+					"-I/usr/local/include/opencv4/opencv",
+					"-I/usr/local/include/opencv4",
+					"-L/usr/local/lib",
 					"-lopencv_gapi",
 					"-lopencv_stitching",
 					"-lopencv_aruco",
@@ -777,15 +776,14 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				HEADER_SEARCH_PATHS = (
-					usr/local/include/opencv4,
-					/usr/local/Cellar/opencv/4.1.0_2/include/opencv4,
 					"$(SRCROOT)",
+					/usr/local/include/opencv4,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_LDFLAGS = (
-					"-I/usr/local/Cellar/opencv/4.1.0_2/include/opencv4/opencv",
-					"-I/usr/local/Cellar/opencv/4.1.0_2/include/opencv4",
-					"-L/usr/local/Cellar/opencv/4.1.0_2/lib",
+					"-I/usr/local/include/opencv4/opencv",
+					"-I/usr/local/include/opencv4",
+					"-L/usr/local/lib",
 					"-lopencv_gapi",
 					"-lopencv_stitching",
 					"-lopencv_aruco",

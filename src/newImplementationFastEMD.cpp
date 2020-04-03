@@ -11,10 +11,9 @@
 #include "utils/readImage.hpp"
 
 #if ORGINAL
-#include "include/modifiedOriginal/emd_hat.hpp"
-#include "utils/tictoc.hpp"
+#include "include/original/emd_hat.hpp"
 #endif
-
+#include "include/original/emd_hat.hpp"
 #ifdef COMPUTE_RUBNER_VERSION
 #include "emd.h"
 #endif

@@ -1,5 +1,5 @@
-#ifndef MIN_COST_FLOW_HXX
-#define MIN_COST_FLOW_HXX
+#ifndef MinCostFlow_hpp
+#define MinCostFlow_hpp
 
 #include <vector>
 #include <limits>

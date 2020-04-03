@@ -1,5 +1,5 @@
-#ifndef EMD_HAT_IMPL_HPP
-#define EMD_HAT_IMPL_HPP
+#ifndef EMDHatImpl_hpp
+#define EMDHatImpl_hpp
 #define TIME 0
 
 
