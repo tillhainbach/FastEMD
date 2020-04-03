@@ -19,6 +19,11 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>libdbghelper.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>originalFastEMD.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -37,7 +42,7 @@
 		<key>testFastEMD.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>5</integer>
 		</dict>
 		<key>vectorFastEMD.xcscheme_^#shared#^_</key>
 		<dict>

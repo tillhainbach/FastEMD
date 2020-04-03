@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 // Should be integral and 0 should convert automatically to the type
 // Did not check if can be changed to other types.
-typedef int NODE_T;
+typedef unsigned int NODE_T;
 //------------------------------------------------------------------------------
 
 #endif 
