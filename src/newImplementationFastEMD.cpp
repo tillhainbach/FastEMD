@@ -174,6 +174,9 @@ int main( int argc, char* argv[])
     
     FastEMD::utils::makeTable(std::cout, header, data, FastEMD::utils::TextAlignment::rightAligned);
     
+    std::string columnSeparator = "\t";
+    std::cout << columnSeparator.size() << std::endl;
+    
     
 } // end main
     

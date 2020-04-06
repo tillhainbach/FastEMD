@@ -27,7 +27,6 @@ std::string padding(size_t size)
 {
     std::stringstream whitespace;
     for(int j = 0; j <= size; ++j) whitespace << " ";
-    whitespace << "\t";
     
     return whitespace.str();
 }
@@ -35,7 +34,8 @@ std::string padding(size_t size)
 std::ostream& makeHeader(std::ostream& os,
                          std::vector<std::string> const& header,
                          TextAlignment alignment,
-                         size_t columnWidth)
+                         size_t columnWidth,
+                         std::string& columnSeparator)
 {
     size_t headerSize = header.size();
     for(size_t i = 0; i < headerSize; ++i)
@@ -63,6 +63,7 @@ std::ostream& makeHeader(std::ostream& os,
                 os << padding(trailing);
                 break;
         }
+        os << columnSeparator;
     }
     
     os << std::endl;
@@ -71,11 +72,8 @@ std::ostream& makeHeader(std::ostream& os,
 
 
 std::ostream& makeUnderline(std::ostream& os,
-                            size_t columnWidth,
-                            std::vector<std::string> const& header)
+                            size_t tableWidth)
 {
-    size_t tableWidth = 4 * columnWidth * (header.size() - 1);
-    tableWidth += header[header.size() - 1].size();
     for (uint i = 0; i < tableWidth; ++i) os << "-";
     os << std::endl;
     return os;
@@ -113,12 +111,15 @@ std::ostream& makeTable(std::ostream& os,
                         std::vector<std::string> const & header,
                         std::vector< std::vector<std::string> > const & data,
                         TextAlignment alignment = TextAlignment::leftAligned,
-                        size_t columnWidth = 4,
-                        bool underlineHeader = true)
+                        size_t columnWidth = 3,
+                        bool underlineHeader = true,
+                        std::string columnSeparator = "\t")
                         
 {
-    makeHeader(os, header, alignment, columnWidth);
-    if (underlineHeader) makeUnderline (os, columnWidth, header);
+    makeHeader(os, header, alignment, columnWidth, columnSeparator);
+    size_t numberOfColumns = header.size();
+    size_t tableWidth = 4 * columnWidth * numberOfColumns;
+    if (underlineHeader) makeUnderline (os, tableWidth);
     makeBody(os, data);
     return os;
 }
