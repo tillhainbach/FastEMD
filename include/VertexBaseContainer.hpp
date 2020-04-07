@@ -61,7 +61,7 @@ public:
     //MARK: setters
     inline void resize(NODE_T newNumberOfNodes) override;
     
-protected:
+private:
     NODE_T _thresholdNodeIndex;
     NODE_T _artificialNodeIndex;
     
