@@ -32,30 +32,39 @@ public:
     
     NUM_T calcDist() const;
     
-private:
-    inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-                         NODE_T from, NODE_T i,
-                         Counter<NODE_T, INTERFACE_T, SIZE>& counters) override;
+    inline
+    void fill(CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost,
+              Counter<NUM_T, INTERFACE_T, SIZE>& counters);
+    
 };
 
 //MARK: FlowNetwork implementation
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-inline void FlowNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-                                                            NODE_T from, NODE_T i,
-                    Counter<NODE_T, INTERFACE_T, SIZE>& counters)
+inline
+void FlowNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
+                                CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost,
+                                Counter<NUM_T, INTERFACE_T, SIZE>& counters)
 {
-    NODE_T const to = static_cast<NODE_T const>(costFrom[i]);
-    NUM_T const cost = costFrom[i + 1];
-    (*this)[from][counters[from]] = to;
-    (*this)[from][counters[from] + 1] = cost;
-    (*this)[from][counters[from] + 2] = 0;
-    (*this)[to][counters[to]] = from;
-    (*this)[to][counters[to] + 1] = -cost;
-    (*this)[to][counters[to] + 2] = 0;
-    counters[from] += this->fields();
-    counters[to] += this->fields();
+    NODE_T from = 0;
+    for (auto const & fromNode : cost)
+    {
+        for (NODE_T i = 0; i < cost.cols(); i += cost.fields())
+        {
+            NODE_T const to = static_cast<NODE_T const>(fromNode[i]);
+            NUM_T const cost = fromNode[i + 1];
+            (*this)[from][counters[from]] = to;
+            (*this)[from][counters[from] + 1] = cost;
+            (*this)[from][counters[from] + 2] = 0;
+            (*this)[to][counters[to]] = from;
+            (*this)[to][counters[to] + 1] = -cost;
+            (*this)[to][counters[to] + 2] = 0;
+            counters[from] += this->fields();
+            counters[to] += this->fields();
+            if (this->breakCondition(from, to)) break;
+        }
+        ++from;
+    }
+    
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>

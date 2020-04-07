@@ -46,13 +46,6 @@ public:
         std::cout << *this << std::endl;
     }
     
-private:
-    inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom, NODE_T from, NODE_T i,
-                    Counter<NUM_T, INTERFACE_T, SIZE>& counters)
-    override {std::cout << "not in use!" << std::endl;};
-    
-
 };
 
 //MARK: Implementation

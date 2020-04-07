@@ -30,22 +30,29 @@ public:
                                                        {"to", "reduced cost"})
     {};
     
-private:
-    inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-                         NODE_T from, NODE_T i,
-                         Counter<NUM_T, INTERFACE_T, SIZE>& counters) override;
+    inline
+    void fill(CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost);
     
 };
 
 //MARK: Implementation
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-inline void ReducedCostsForwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom, NODE_T from, NODE_T i,
-                    Counter<NUM_T, INTERFACE_T, SIZE>& counters)
+inline
+void ReducedCostsForwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
+                        CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost)
 {
-    (*this)[from][i] = costFrom[i];
-    (*this)[from][i + 1] = costFrom[i + 1];
+    NODE_T from = 0;
+    for (auto const & row : cost)
+    {
+        for (NODE_T i = 0; i < cost.cols(); i += cost.fields())
+        {
+            NODE_T to = row[i];
+            (*this)[from][i] = row[i];
+            (*this)[from][i + 1] = row[i + 1];
+            if (this->breakCondition(from, to)) break;
+        }
+        ++from;
+    }
 }
 } // namespace FastEMD
 

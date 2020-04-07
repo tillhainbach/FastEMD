@@ -30,7 +30,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // reduced costs for forward edges (c[i,j]-pi[i]+pi[j])
     // Note that for forward edges the residual capacity is
     // infinity
-    forwardCost.fill(cost, counters);
+    forwardCost.fill(cost);
     
 #if PRINT && DEBUG
     std::cout << forwardCost << std::endl;

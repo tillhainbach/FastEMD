@@ -31,24 +31,32 @@ public:
                             {"to", "reduced cost", "residual capacity"})
     {};
 
-private:
-    inline void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-                         NODE_T from, NODE_T i,
-                         Counter<NUM_T, INTERFACE_T, SIZE>& counters) override;
+    inline
+    void fill(CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost,
+              Counter<NUM_T, INTERFACE_T, SIZE>& counters);
 };
 
 //MARK: Implementations
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE>
-inline void ReducedCostsAndCapacityBackwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fillCore(
-            typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-            NODE_T from, NODE_T i, Counter<NUM_T, INTERFACE_T, SIZE>& counters)
+inline
+void ReducedCostsAndCapacityBackwardEdgesNetwork<NUM_T, INTERFACE_T, SIZE>::fill(
+                            CostNetwork<NUM_T, INTERFACE_T, SIZE> const& cost,
+                            Counter<NUM_T, INTERFACE_T, SIZE>& counters)
 {
-    NODE_T to = static_cast<NODE_T>(costFrom[i]);
-    (*this)[to][counters[to]] = from;
-    (*this)[to][counters[to] + 1] = -costFrom[i + 1];;
-    (*this)[to][counters[to] + 2] = 0;
-    counters[to] += this->fields();
+    NODE_T from = 0;
+    for (auto const & row : cost)
+    {
+        for (NODE_T i = 0; i < cost.cols(); i += cost.fields())
+        {
+            NODE_T to = static_cast<NODE_T>(row[i]);
+            (*this)[to][counters[to]] = from;
+            (*this)[to][counters[to] + 1] = -row[i + 1];;
+            (*this)[to][counters[to] + 2] = 0;
+            counters[to] += this->fields();
+            if (this->breakCondition(from, to)) break;
+        }
+        ++from;
+    }
 }
 
 } // namespace FastEMD

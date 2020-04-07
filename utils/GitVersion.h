@@ -7,8 +7,8 @@
 #ifndef GitVersion_h
 #define GitVersion_h
 
-#define GIT_SHA_VERSION "b985d26"
+#define GIT_SHA_VERSION "aea781f"
 
-#define LAST_GIT_SHA_VERSION "dcdd1d6"
+#define LAST_GIT_SHA_VERSION "c615208"
 
 #endif

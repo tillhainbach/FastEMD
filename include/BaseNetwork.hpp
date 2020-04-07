@@ -48,9 +48,6 @@ public:
 //        {return *CVMatRowIterator(this->data, nodeIndex);}
     
     // MARK: public member functions
-    template<uchar _F, typename... Args> inline
-    void fill(const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input, Args&&... args);
-    
     template <class F> inline
     void forEach(F&& func);
     
@@ -73,11 +70,11 @@ public:
                                    const BaseNetwork<_T, _I, _S, _F>& network);
 
     
-private:
-    inline virtual void fillCore(
-                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-                                 NODE_T from, NODE_T i,
-                    Counter<NODE_T, INTERFACE_T, SIZE>& counters) = 0;
+//private:
+//    inline virtual void fillCore(
+//                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
+//                                 NODE_T from, NODE_T i,
+//                    Counter<NODE_T, INTERFACE_T, SIZE>& counters) = 0;
 
 };
 
@@ -104,7 +101,6 @@ template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 template<class F> inline
 void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
 {
-    // init flow
     NODE_T from = 0;
     for (auto const & row : *this)
     {
@@ -117,22 +113,6 @@ void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
         ++from;
     }
 }
- 
-        
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<uchar _F, typename... Args> inline
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::fill(
-                                                const BaseNetwork<NUM_T, INTERFACE_T, SIZE, _F>& input,
-                                                         Args&&... args)
-{
-    auto f = std::bind(&BaseNetwork::fillCore,
-                       this, std::placeholders::_1,
-                       std::placeholders::_2,
-                       std::placeholders::_3,
-                       std::forward<Args>(args)...);
-    return input.forEach(f);
-};
-        
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::findIndex(NODE_T node, NODE_T value)
