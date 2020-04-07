@@ -51,8 +51,10 @@ public:
     
     ///@brief Calculates the residual costs for all edges in the Network.
     /// Calls "forEach" with "reduceCostCore"
-    template<typename... Args> inline
-    void reduceCost(Args&&... args);
+    inline
+    void reduceCost(const Counter<NUM_T, INTERFACE_T, SIZE>& d,
+                    const Counter<bool, INTERFACE_T, SIZE>& finalNodesFlg,
+                    const NODE_T l);
 };
 
 //MARK: Implementations
@@ -71,17 +73,33 @@ inline void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCostCor
 }
 
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<typename... Args> inline
-void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCost(Args&&... args)
+inline
+void ReducedCostsNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::reduceCost(
+                            const Counter<NUM_T, INTERFACE_T, SIZE>& d,
+                            const Counter<bool, INTERFACE_T, SIZE>& finalNodesFlg,
+                            const NODE_T l)
 {
-    auto f = std::bind(
-            &ReducedCostsNetwork::reduceCostCore,
-            this,
-            std::placeholders::_1,
-            std::placeholders::_2,
-            std::placeholders::_3,
-            std::forward<Args>(args)...);
-    return this->forEach(f);
+//    auto f = std::bind(
+//            &ReducedCostsNetwork::reduceCostCore,
+//            this,
+//            std::placeholders::_1,
+//            std::placeholders::_2,
+//            std::placeholders::_3,
+//            std::forward<Args>(args)...);
+//    return this->forEach(f);
+    NODE_T from = 0;
+    for (auto& row : *this)
+    {
+        for (NODE_T i = 0; i < this->cols(); i += this->fields())
+        {
+            NODE_T to = row[i];
+            auto it = &row[i];
+            if (finalNodesFlg[from]) it[1] += d[from] - d[l];
+            if (finalNodesFlg[*it]) it[1] -= d[*it] - d[l];
+            if (this->breakCondition(from, to)) break;
+        }
+        ++from;
+    }
 }
 
 
