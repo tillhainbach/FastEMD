@@ -70,7 +70,7 @@ public:
         }
     };
     
-    // for VECTOR
+    // For VECTOR
     template< class T = INTERFACE_T, std::enable_if_t<DIMENSIONS == 1 && isVECTOR<T>, int> = 0>
     BaseContainer(NODE_T numberOfNodes,
                   std::string containerName,
