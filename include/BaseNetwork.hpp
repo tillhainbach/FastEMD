@@ -56,13 +56,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os,
                                    const BaseNetwork<_T, _I, _S, _F>& network);
 
-    
-//private:
-//    inline virtual void fillCore(
-//                    typeSelector1d<NUM_T, INTERFACE_T, SIZE, 2> const & costFrom,
-//                                 NODE_T from, NODE_T i,
-//                    Counter<NODE_T, INTERFACE_T, SIZE>& counters) = 0;
-
 };
 
 //MARK: Implentations
