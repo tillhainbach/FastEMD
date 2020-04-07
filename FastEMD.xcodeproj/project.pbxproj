@@ -62,6 +62,7 @@
 		2B45E8BE242BCC9B007508B1 /* Container.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		2B6856592415950800261814 /* MinCostFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MinCostFlow.cpp; sourceTree = "<group>"; };
 		2B68566C24178DC100261814 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		2B7C4C75243C6D46004153AC /* Table.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Table.hpp; sourceTree = "<group>"; };
 		2B7C7C3A242CB10800CBECB4 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		2B8235A424362C33006B5E76 /* modifiedEmdHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHat.hpp; sourceTree = "<group>"; };
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
@@ -291,6 +292,7 @@
 		2BC460DB238730AF00CBCAFF /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				2B7C4C75243C6D46004153AC /* Table.hpp */,
 				2B7C7C3A242CB10800CBECB4 /* utils.h */,
 				2B45E8BB242BAC3C007508B1 /* EMD_DEFS.hpp */,
 				2BF8EDFA242CDA9100880E99 /* readImage.hpp */,

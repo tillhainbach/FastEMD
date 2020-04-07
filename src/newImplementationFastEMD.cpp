@@ -11,6 +11,7 @@
 #include "utils/tictocChrono.hpp"
 #include "utils/readImage.hpp"
 #include "utils/GitVersion.h"
+#include "utils/Table.hpp"
 
 #if ORGINAL
 #include "include/original/emd_hat.hpp"
@@ -172,10 +173,14 @@ int main( int argc, char* argv[])
     data[2] = timings;
     data[3] = {GIT_SHA_VERSION};
     
-    FastEMD::utils::makeTable(std::cout, header, data, FastEMD::utils::TextAlignment::rightAligned);
+    FastEMD::utils::Table outputTable(header, data);
+    std::cout << outputTable << std::endl;
     
-    std::string columnSeparator = "\t";
-    std::cout << columnSeparator.size() << std::endl;
+    outputTable.setTextAlignment(FastEMD::utils::TextAlignment::rightAligned);
+    std::cout << outputTable << std::endl;
+
+    outputTable.setTextAlignment(FastEMD::utils::TextAlignment::centered);
+    std::cout << outputTable << std::endl;
     
     
 } // end main
