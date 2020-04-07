@@ -40,20 +40,7 @@ public:
     inline auto fromNode(NODE_T nodeIndex) const
         {return this->begin() + nodeIndex;}
     
-//    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-//    inline auto& fromNode(NODE_T nodeIndex)
-//        {return *CVMatRowIterator(this->data, nodeIndex);}
-//    template<typename T = INTERFACE_T, std::enable_if_t<isOPENCV<T>, int> = 0>
-//    inline auto& fromNode(NODE_T nodeIndex) const
-//        {return *CVMatRowIterator(this->data, nodeIndex);}
-    
     // MARK: public member functions
-    template <class F> inline
-    void forEach(F&& func);
-    
-    template <class F> inline
-    void forEach(F&& func) const;
-   
     // break condition for inner loop
     inline bool breakCondition(NODE_T fromIndex, NODE_T toIndex) const
         {return ((fromIndex < this->artificialNodeIndex()
@@ -79,41 +66,6 @@ public:
 };
 
 //MARK: Implentations
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<class F> inline
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func)
-{
-    // init flow
-    NODE_T from = 0;
-    for (auto& row : *this)
-    {
-        for (NODE_T i = 0; i < this->cols(); i += this->fields())
-        {
-            NODE_T to = row[i];
-            func(row, from, i);
-            if (this->breakCondition(from, to)) break;
-        }
-        ++from;
-    }
-}
-    
-template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
-template<class F> inline
-void BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::forEach(F&& func) const
-{
-    NODE_T from = 0;
-    for (auto const & row : *this)
-    {
-        for (NODE_T i = 0; i < this->cols(); i += this->fields())
-        {
-            NODE_T to = row[i];
-            func(row, from, i);
-            if (this->breakCondition(from, to)) break;
-        }
-        ++from;
-    }
-}
-
 template<typename NUM_T, typename INTERFACE_T, NODE_T SIZE, uchar FIELDS>
 inline auto BaseNetwork<NUM_T, INTERFACE_T, SIZE, FIELDS>::findIndex(NODE_T node, NODE_T value)
 {
