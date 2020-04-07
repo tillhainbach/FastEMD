@@ -10,6 +10,7 @@
 #define ReducedCostsNetwork_h
 
 #include "BaseNetwork.hpp"
+#include "CostNetwork.hpp"
 namespace FastEMD
 {
 using namespace types;
