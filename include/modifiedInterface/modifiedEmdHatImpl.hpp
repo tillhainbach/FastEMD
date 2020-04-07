@@ -282,7 +282,7 @@ CONVERT_TO_T EMDHat_Base<NUM_T, CONVERT_TO_T, INTERFACE_T,
 
         //====================================================
 
-#ifndef NDEBUG
+#if DEBUG
 #if PRINT
         msg = "vertexWeights: ";
         printArray<CONVERT_TO_T, std::vector<CONVERT_TO_T> >(vertexWeights, msg, ccSize);

@@ -1,8 +1,3 @@
-#define PRINT 0
-#define DEBUGMODE 1
-#define COMPUTE_RUBNER_VERSION 1
-#define ORIGINAL 1
-
 #include <chrono>
 #include <iostream>
 #include <fstream>
@@ -60,7 +55,7 @@ int main( int argc, char* argv[])
     const int COST_MULT_FACTOR = 1000;
     const int THRESHOLD = 3 * COST_MULT_FACTOR; //1.412*COST_MULT_FACTOR;
     
-#define N 6
+#define N 3
     im1_R = N;
     im1_C = N;
     im2_R = N;

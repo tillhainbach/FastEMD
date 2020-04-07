@@ -438,7 +438,7 @@ NUM_T FastEMD<NUM_T,FLOW_TYPE>::calcDistance(
 #endif
         //====================================================
 
-#ifndef NDEBUG
+#if DEBUG
 #if PRINT
         msg = "b: ";
         printArray<NODE_T, MAX_SIG_SIZE>(b, msg, ccSize);
@@ -860,7 +860,7 @@ struct emd_hat_impl_integral_types
 #endif
         //====================================================
 
-#ifndef NDEBUG
+#if DEBUG
 #if PRINT
         msg = "b: ";
         printArray<NODE_T, MAX_SIG_SIZE>(b, msg, ccSize);

@@ -270,7 +270,7 @@ struct emd_hat_impl_integral_types {
     }}
     //====================================================
 
-    #ifndef NDEBUG
+    #if DEBUG
     NUM_T DEBUG_sum_bb= 0;
     for (NODE_T i=0; i<bb.size(); ++i) DEBUG_sum_bb+= bb[i];
     assert(DEBUG_sum_bb==0);

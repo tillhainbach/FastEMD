@@ -23,7 +23,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     std::fill(counters.begin(), counters.end(), 0);
     flow.fill(cost, counters);
 
-#if PRINT && DEBUGMODE
+#if PRINT && DEBUG
     std::cout << flow << std::endl;
 #endif
     
@@ -32,7 +32,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     // infinity
     forwardCost.fill(cost, counters);
     
-#if PRINT && DEBUGMODE
+#if PRINT && DEBUG
     std::cout << forwardCost << std::endl;
 #endif
         
@@ -43,7 +43,7 @@ CONVERT_TO_T MinCostFlow<CONVERT_TO_T, INTERFACE_T, SIZE>::operator()(
     std::fill(counters.begin(), counters.end(), 0);
     backwardCost.fill(cost, counters);
     
-#if PRINT && DEBUGMODE
+#if PRINT && DEBUG
     std::cout << backwardCost << std::endl;
 #endif
     
