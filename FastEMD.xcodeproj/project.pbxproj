@@ -92,7 +92,7 @@
 		2BB7087D2414412900CE4195 /* EMDHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHat.hpp; sourceTree = "<group>"; };
 		2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHatImpl.hpp; sourceTree = "<group>"; };
 		2BB7087F2414412900CE4195 /* MinCostFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MinCostFlow.hpp; sourceTree = "<group>"; };
-		2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = newImplementationFastEMD.cpp; sourceTree = "<group>"; };
+		2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newImplementationFastEMD.cpp; sourceTree = "<group>"; };
 		2BB70892241452EF00CE4195 /* codeSketchbook.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codeSketchbook.cpp; sourceTree = "<group>"; };
 		2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHatImpl.hpp; sourceTree = "<group>"; };
 		2BB708AF24146F0800CE4195 /* modifiedMinCostFlow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedMinCostFlow.hpp; sourceTree = "<group>"; };

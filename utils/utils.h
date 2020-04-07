@@ -16,7 +16,23 @@ namespace FastEMD
 namespace utils
 {
 
-
+inline std::string truncate(std::string str,
+                            size_t width,
+                            bool showEllipsis = true)
+{
+    if (str.length() > width)
+    {
+        if (showEllipsis)
+        {
+            return str.substr(0, width - 3) + "...";
+        }
+        else
+        {
+            return str.substr(0, width);
+        }
+    }
+    return str;
+}
 
 template<typename _T> inline
 auto getMaxCost(const _T& costMatrix, const NODE_T N)

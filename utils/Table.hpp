@@ -113,6 +113,8 @@ Table::Table(std::vector<std::string> const& _header,
 void Table::setColumnSeparator(std::string separator)
 {
     columnSeparator = separator;
+    columnSeparatorWidth = (separator == "\t") ? 4 : columnSeparator.size();
+    tableWidth = (columnSeparatorWidth + columnWidth) * numberOfColumns - columnSeparatorWidth;
 }
 
 void Table::setTextAlignment(TextAlignment alignment)
@@ -123,6 +125,7 @@ void Table::setTextAlignment(TextAlignment alignment)
 void Table::setColumnWidth(size_t width)
 {
     columnWidth = width;
+    tableWidth = (columnSeparatorWidth + columnWidth) * numberOfColumns - columnSeparatorWidth;
 }
 
 void Table::setHeaderUnderline(bool setUnderline)
@@ -175,9 +178,9 @@ inline std::ostream& Table::printHeader(std::ostream& os)
 {
     for(size_t i = 0; i < numberOfColumns; ++i)
     {
-        std::string name = header[i];
+        std::string name = truncate(header[i], columnWidth);
         alignText(os, name);
-        if (i < numberOfColumns) os << columnSeparator;
+        if (i < numberOfColumns - 1) os << columnSeparator;
     }
     
     os << std::endl;
@@ -188,6 +191,7 @@ inline std::ostream& Table::underlineHeader(std::ostream& os)
 {
     for (uint i = 0; i < tableWidth; ++i) os << headerUnderlineStyle;
     os << std::endl;
+    
     return os;
 }
 
@@ -200,9 +204,10 @@ inline std::ostream& Table::printTableBody(std::ostream& os)
         for (auto const & column : data)
         {
             // check if there are enough elements
-            std::string item = column.at(row % column.size());
+            std::string item = truncate(column.at(row % column.size()),
+                                        columnWidth);
             alignText(os, item);
-            if (columnCounter < numberOfColumns) os << columnSeparator;
+            if (columnCounter < numberOfColumns - 1) os << columnSeparator;
             ++columnCounter;
         }
         os << std::endl;

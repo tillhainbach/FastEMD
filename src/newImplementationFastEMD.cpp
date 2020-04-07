@@ -165,7 +165,7 @@ int main( int argc, char* argv[])
     
     //MARK: Print Output as table
     std::vector<std::string> const header ({"Inferface", "EMD",
-                                           "Time [µs]", "Commit ID"});
+                                           "Time [mus]", "Commit ID"});
     
     std::vector< std::vector<std::string> > data(header.size());
     data[0] = interfaceNames;
@@ -174,14 +174,8 @@ int main( int argc, char* argv[])
     data[3] = {GIT_SHA_VERSION};
     
     FastEMD::utils::Table outputTable(header, data);
+    outputTable.setColumnSeparator(" | ");
     std::cout << outputTable << std::endl;
-    
-    outputTable.setTextAlignment(FastEMD::utils::TextAlignment::rightAligned);
-    std::cout << outputTable << std::endl;
-
-    outputTable.setTextAlignment(FastEMD::utils::TextAlignment::centered);
-    std::cout << outputTable << std::endl;
-    
     
 } // end main
     
