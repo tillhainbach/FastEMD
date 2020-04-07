@@ -43,9 +43,9 @@ public:
     // MARK: public member functions
     // break condition for inner loop
     inline bool breakCondition(NODE_T fromIndex, NODE_T toIndex) const
-        {return ((fromIndex < this->artificialNodeIndex()
-                  && toIndex == this->artificialNodeIndex()) ||
-                (fromIndex == this->artificialNodeIndex() && toIndex == this->thresholdNodeIndex()));}
+        {return ((fromIndex < this->_artificialNodeIndex
+                  && toIndex == this->_artificialNodeIndex) ||
+                (fromIndex == this->_artificialNodeIndex && toIndex == this->_thresholdNodeIndex));}
     
     // returns an iterator to "value" in row "node"
     inline auto findIndex(NODE_T node, NODE_T value);
