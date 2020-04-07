@@ -472,3 +472,7 @@ Universal, 501, aea781f
 Modified, 164, aea781f
 Original, 841, aea781f
 Rubner, 118, aea781f
+Universal, 3373255, 65cb03b
+Modified, 3663562, 65cb03b
+Original, , 65cb03b
+Rubner, 3860339, 65cb03b
