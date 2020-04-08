@@ -4,6 +4,7 @@ codeSnippets/
 *.trace/
 
 # Xcode user files
+GitVersion.h
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
