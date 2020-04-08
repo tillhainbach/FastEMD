@@ -1,9 +1,5 @@
 #ifndef MODIFIED_MIN_COST_FLOW_HXX
 #define MODIFIED_MIN_COST_FLOW_HXX
-#define USE_ARRAY 1
-#define USE_EDGE 0
-#define USE_ARR 1
-#define MAX_SIG_SIZE 80
 
 #include <vector>
 #include <limits>
