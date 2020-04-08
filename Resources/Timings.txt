@@ -476,3 +476,7 @@ Universal, 3373255, 65cb03b
 Modified, 3663562, 65cb03b
 Original, , 65cb03b
 Rubner, 3860339, 65cb03b
+Universal, 274, 5da4c10
+Modified, 113, 5da4c10
+Original, 713, 5da4c10
+Rubner, 117, 5da4c10

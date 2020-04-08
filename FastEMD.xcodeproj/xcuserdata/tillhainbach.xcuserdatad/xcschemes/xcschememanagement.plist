@@ -9,10 +9,25 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>TestFastEMD.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>TestFastEMD.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>6</integer>
+		</dict>
+		<key>TestTestFastEMD.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>Time FastEMD.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 		<key>libdbghelper.xcscheme_^#shared#^_</key>
 		<dict>
@@ -28,6 +43,21 @@
 			<true/>
 		</dict>
 		<key>2B6856632416A28400261814</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2B9E4A33243DF33000291310</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2B9E4A4F243DFBD200291310</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2B9E4A70243E0F4A00291310</key>
 		<dict>
 			<key>primary</key>
 			<true/>

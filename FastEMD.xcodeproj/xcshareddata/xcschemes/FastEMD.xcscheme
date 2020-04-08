@@ -37,6 +37,32 @@
                BlueprintName = "TestFastEMD"
                ReferencedContainer = "container:FastEMD.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "TestCVMatRowIterator">
+               </Test>
+               <Test
+                  Identifier = "TestCounter">
+               </Test>
+               <Test
+                  Identifier = "TestDistanceClass">
+               </Test>
+               <Test
+                  Identifier = "TestEMDHat">
+               </Test>
+               <Test
+                  Identifier = "TestFlowNetwork">
+               </Test>
+               <Test
+                  Identifier = "TestReducedCostForwardEdges">
+               </Test>
+               <Test
+                  Identifier = "TestReducedCostsAndCapacityBackwardEdgesNetwork">
+               </Test>
+               <Test
+                  Identifier = "TestVertexWeight">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
