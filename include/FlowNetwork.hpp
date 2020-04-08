@@ -9,6 +9,7 @@
 #ifndef FlowNetwork_h
 #define FlowNetwork_h
 #include "BaseNetwork.hpp"
+#include "CostNetwork.hpp"
 
 namespace FastEMD
 {
