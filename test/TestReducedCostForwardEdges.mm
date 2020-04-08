@@ -94,7 +94,7 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     FastEMD::CostNetwork<int, INTERFACE, SIZE> cost(costVector);
     FastEMD::ReducedCostsForwardEdgesNetwork<int, INTERFACE, SIZE> forwardEdges(cost.size());
     FastEMD::Counter<int,  INTERFACE, SIZE> counter(cost.size(), "counter", true);
-    forwardEdges.fill(cost, counter);
+    forwardEdges.fill(cost);
     
     std::stringstream forwardEdgesStringStream;
     forwardEdgesStringStream << forwardEdges;
@@ -110,7 +110,7 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     FastEMD::CostNetwork<int, INTERFACE, SIZE> const cost(costVector);
     FastEMD::ReducedCostsForwardEdgesNetwork<int, INTERFACE, SIZE> forwardEdges(cost.size());
     FastEMD::Counter<int,  INTERFACE, SIZE> counter(cost.size(), "counter", true);
-    forwardEdges.fill(cost, counter);
+    forwardEdges.fill(cost);
     
     std::stringstream forwardEdgesStringStream;
     forwardEdgesStringStream << forwardEdges;
@@ -127,7 +127,7 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     FastEMD::ReducedCostsForwardEdgesNetwork<int, INTERFACE, SIZE> forwardEdges(cost.size());
     FastEMD::Counter<int,  INTERFACE, SIZE> counter(cost.size(), "counter", true);
 
-    forwardEdges.fill(cost, counter);
+    forwardEdges.fill(cost);
 
     std::stringstream forwardEdgesStringStream;
     forwardEdgesStringStream << forwardEdges;
