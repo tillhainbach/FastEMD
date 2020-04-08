@@ -3,6 +3,8 @@ codeSnippets/
 *venv/
 *.trace/
 
+# Xcode user files
+*.xcuserstate
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
