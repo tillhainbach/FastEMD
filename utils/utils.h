@@ -112,6 +112,7 @@ bool hasEnding (std::string const &fullString, std::string const &ending)
     }
 }
 
+static
 uint calculateCostMatrix(cv::InputArray _src1, cv::InputArray _src2,
                         cv::OutputArray _costMat, int THRESHOLD)
 {
