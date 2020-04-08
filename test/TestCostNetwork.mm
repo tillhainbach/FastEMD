@@ -1,6 +1,6 @@
 //
-//  TestFastEMD.m
-//  TestFastEMD
+//  TestCostNetwork.mm
+//  TestCostNetwork
 //
 //  Created by Till Hainbach on 16.03.20.
 //  Copyright © 2020 Till Hainbach. All rights reserved.
@@ -8,9 +8,9 @@
 
 #import <XCTest/XCTest.h>
 #include <iostream>
-#include "Counter.hpp"
-#include "VertexWeights.hpp"
-#include "CostNetwork.hpp"
+#include "include/Counter.hpp"
+#include "include/VertexWeights.hpp"
+#include "include/CostNetwork.hpp"
 #include "utils/utils.h"
 
 @interface TestCostNetwork : XCTestCase
@@ -61,7 +61,7 @@ static const int COST_MULT_FACTOR = 1000;
 static const int THRESHOLD = 3 * COST_MULT_FACTOR;
 std::vector< std::vector<int> > cost_mat(N * N, std::vector<int> (N * N));
 
-int const maxC = FastEMD::utils::calculateCostMatVector(N, N, N, N, cost_mat,
+int const maxC = FastEMD::utils::calculateCostMatrix(N, N, N, N, cost_mat,
                                               THRESHOLD, COST_MULT_FACTOR);
 
 

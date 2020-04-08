@@ -8,8 +8,8 @@
 
 #import <XCTest/XCTest.h>
 #include <iostream>
-#include "ReducedCostsAndCapacityBackwardEdgesNetwork.hpp"
-#include "CostNetwork.hpp"
+#include "include/ReducedCostsAndCapacityBackwardEdgesNetwork.hpp"
+#include "include/CostNetwork.hpp"
 #include "utils/utils.h"
 
 @interface TestReducedCostsAndCapacityBackwardEdgesNetwork : XCTestCase
@@ -139,7 +139,7 @@ std::vector< std::vector<int> > const costVector ({{27, 1414, 30, 0, 31, 3001},
     XCTAssert(&(*index) != &(*end));
 }
 
-- (void)testZOpenCVReducedCostbackwardEdgesFill {
+- (void)testOpenCVReducedCostbackwardEdgesFill {
     typedef FastEMD::types::OPENCV INTERFACE;
     static const unsigned int SIZE = 80;
     FastEMD::CostNetwork<int, INTERFACE, SIZE> const cost(costVector);

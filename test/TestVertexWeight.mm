@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#include "VertexWeights.hpp"
+#include "include/VertexWeights.hpp"
 #include <iostream>
 #include "utils/utils.h"
 
