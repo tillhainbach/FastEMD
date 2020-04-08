@@ -94,12 +94,13 @@ void showStringInequality(std::string const& sample, std::string const& target)
     }
 }
 
-template<class _ITER>
+template<class _ITER> inline
 bool isEnd(_ITER& it, _ITER& end)
 {
     return (&(*it) == &(*end));
 }
 
+inline
 bool hasEnding (std::string const &fullString, std::string const &ending)
 {
     if (fullString.length() >= ending.length())
