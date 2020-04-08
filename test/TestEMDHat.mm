@@ -22,7 +22,7 @@ static const int COST_MULT_FACTOR = 1000;
 static const int THRESHOLD = 3 * COST_MULT_FACTOR;
 std::vector< std::vector<int> > _costMat(N * N, std::vector<int> (N * N));
 
-int const maxC = FastEMD::utils::calculateCostMatVector(N, N, N, N, _costMat,
+int const maxC = FastEMD::utils::calculateCostMatrix(N, N, N, N, _costMat,
                                               THRESHOLD, COST_MULT_FACTOR);
 
 std::vector<int> const v1 = {157, 158, 160, 163, 165, 168, 170, 171, 175, 179,
