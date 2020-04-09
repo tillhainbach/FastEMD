@@ -67,6 +67,7 @@
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
 		2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostsAndCapacityBackwardEdgesNetwork.mm; sourceTree = "<group>"; };
 		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
+		2B9A67E4243F3CAC00C38D1B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2B9E4A71243E0F4A00291310 /* TestFastEMD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestFastEMD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA169AA2437359800925C18 /* cat1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat1.jpg; sourceTree = "<group>"; };
 		2BA169AB2437359800925C18 /* cat0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat0.jpg; sourceTree = "<group>"; };
@@ -100,9 +101,7 @@
 		2BC45E3023872F9500CBCAFF /* tictocChrono.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictocChrono.hpp; sourceTree = "<group>"; };
 		2BC45FF423872F9700CBCAFF /* cameraman.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cameraman.txt; sourceTree = "<group>"; };
 		2BC45FF623872F9700CBCAFF /* cvFastEMD.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cvFastEMD.hpp; sourceTree = "<group>"; };
-		2BC4601B23872F9700CBCAFF /* CHANGES.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGES.txt; sourceTree = "<group>"; };
-		2BC4603F23872F9700CBCAFF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		2BC4604223872F9700CBCAFF /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		2BC4604223872F9700CBCAFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		2BC4604523872F9700CBCAFF /* rice.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rice.txt; sourceTree = "<group>"; };
 		2BC463A92388135000CBCAFF /* testCVFastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testCVFastEMD.cpp; sourceTree = "<group>"; };
 		2BC463AC2388138900CBCAFF /* emd_hat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat.hpp; sourceTree = "<group>"; };
@@ -239,10 +238,9 @@
 		2BC45E1323872F7A00CBCAFF = {
 			isa = PBXGroup;
 			children = (
+				2B9A67E4243F3CAC00C38D1B /* README.md */,
 				2B82359D24361F19006B5E76 /* src */,
-				2BC4601B23872F9700CBCAFF /* CHANGES.txt */,
-				2BC4603F23872F9700CBCAFF /* README.txt */,
-				2BC4604223872F9700CBCAFF /* LICENSE.txt */,
+				2BC4604223872F9700CBCAFF /* LICENSE */,
 				2B82359424361534006B5E76 /* code snippets */,
 				2B2DC056241FBF4C0090BD53 /* include */,
 				2BC460DB238730AF00CBCAFF /* utils */,

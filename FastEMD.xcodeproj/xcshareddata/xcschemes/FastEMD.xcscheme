@@ -32,37 +32,11 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2B2DC04C241FBAD70090BD53"
+               BlueprintIdentifier = "2B9E4A70243E0F4A00291310"
                BuildableName = "TestFastEMD.xctest"
                BlueprintName = "TestFastEMD"
                ReferencedContainer = "container:FastEMD.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "TestCVMatRowIterator">
-               </Test>
-               <Test
-                  Identifier = "TestCounter">
-               </Test>
-               <Test
-                  Identifier = "TestDistanceClass">
-               </Test>
-               <Test
-                  Identifier = "TestEMDHat">
-               </Test>
-               <Test
-                  Identifier = "TestFlowNetwork">
-               </Test>
-               <Test
-                  Identifier = "TestReducedCostForwardEdges">
-               </Test>
-               <Test
-                  Identifier = "TestReducedCostsAndCapacityBackwardEdgesNetwork">
-               </Test>
-               <Test
-                  Identifier = "TestVertexWeight">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
