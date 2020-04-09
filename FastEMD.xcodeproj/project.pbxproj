@@ -47,7 +47,6 @@
 		2B352820242905540063A500 /* FlowNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FlowNetwork.hpp; sourceTree = "<group>"; };
 		2B352821242905600063A500 /* CostNetwork.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CostNetwork.hpp; sourceTree = "<group>"; };
 		2B3CE74424331B5F0095BB14 /* TestEMDHat.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestEMDHat.mm; sourceTree = "<group>"; };
-		2B3E8B362398014D00CE5FAF /* compareImplementations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compareImplementations.cpp; sourceTree = "<group>"; };
 		2B3E9D6A2424D4CB00FF0E0A /* BaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BaseContainer.hpp; sourceTree = "<group>"; };
 		2B3E9D6B2424E40800FF0E0A /* VertexBaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBaseContainer.hpp; sourceTree = "<group>"; };
 		2B45E8B2242B5B13007508B1 /* Signature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Signature.hpp; sourceTree = "<group>"; };
@@ -84,7 +83,6 @@
 		2BA169BB243766DA00925C18 /* GitVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitVersion.h; sourceTree = "<group>"; };
 		2BA169BC24376C1100925C18 /* Timings.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Timings.txt; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
-		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
 		2BB7087D2414412900CE4195 /* EMDHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHat.hpp; sourceTree = "<group>"; };
 		2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHatImpl.hpp; sourceTree = "<group>"; };
 		2BB7087F2414412900CE4195 /* MinCostFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MinCostFlow.hpp; sourceTree = "<group>"; };
@@ -172,8 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */,
-				2B3E8B362398014D00CE5FAF /* compareImplementations.cpp */,
-				2BB708562412BED900CE4195 /* testInterfaces.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
