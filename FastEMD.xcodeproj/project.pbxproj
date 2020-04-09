@@ -50,8 +50,6 @@
 		2B3E8B362398014D00CE5FAF /* compareImplementations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compareImplementations.cpp; sourceTree = "<group>"; };
 		2B3E9D6A2424D4CB00FF0E0A /* BaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BaseContainer.hpp; sourceTree = "<group>"; };
 		2B3E9D6B2424E40800FF0E0A /* VertexBaseContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBaseContainer.hpp; sourceTree = "<group>"; };
-		2B40A90524212FC30046360F /* preFlow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = preFlow.cpp; sourceTree = "<group>"; };
-		2B40A90624212FC30046360F /* preFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preFlow.hpp; sourceTree = "<group>"; };
 		2B45E8B2242B5B13007508B1 /* Signature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Signature.hpp; sourceTree = "<group>"; };
 		2B45E8B3242B657C007508B1 /* RubnerInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RubnerInterface.hpp; sourceTree = "<group>"; };
 		2B45E8B4242B8056007508B1 /* TestFlowNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestFlowNetwork.mm; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 		2B8235A424362C33006B5E76 /* modifiedEmdHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHat.hpp; sourceTree = "<group>"; };
 		2B8EBD4724349697002CBED8 /* TestReducedCostForwardEdges.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostForwardEdges.mm; sourceTree = "<group>"; };
 		2B8EBD4924349726002CBED8 /* TestReducedCostsAndCapacityBackwardEdgesNetwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestReducedCostsAndCapacityBackwardEdgesNetwork.mm; sourceTree = "<group>"; };
-		2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVSTLConversionWrapper.h; sourceTree = "<group>"; };
 		2B9A67E4243F3CAC00C38D1B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2B9E4A71243E0F4A00291310 /* TestFastEMD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestFastEMD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA169AA2437359800925C18 /* cat1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat1.jpg; sourceTree = "<group>"; };
@@ -88,31 +85,24 @@
 		2BA169BC24376C1100925C18 /* Timings.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Timings.txt; sourceTree = "<group>"; };
 		2BB7085524117F5700CE4195 /* utils_archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils_archive.h; sourceTree = "<group>"; };
 		2BB708562412BED900CE4195 /* testInterfaces.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testInterfaces.cpp; sourceTree = "<group>"; };
-		2BB7085A2413AE1700CE4195 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
-		2BB7085B2413AE1700CE4195 /* tqdm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tqdm.h; sourceTree = "<group>"; };
 		2BB7087D2414412900CE4195 /* EMDHat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHat.hpp; sourceTree = "<group>"; };
 		2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EMDHatImpl.hpp; sourceTree = "<group>"; };
 		2BB7087F2414412900CE4195 /* MinCostFlow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MinCostFlow.hpp; sourceTree = "<group>"; };
 		2BB708802414413E00CE4195 /* newImplementationFastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newImplementationFastEMD.cpp; sourceTree = "<group>"; };
-		2BB70892241452EF00CE4195 /* codeSketchbook.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codeSketchbook.cpp; sourceTree = "<group>"; };
 		2BB708AD24146ED000CE4195 /* modifiedEmdHatImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedEmdHatImpl.hpp; sourceTree = "<group>"; };
 		2BB708AF24146F0800CE4195 /* modifiedMinCostFlow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = modifiedMinCostFlow.hpp; sourceTree = "<group>"; };
 		2BC45E1C23872F7A00CBCAFF /* FastEMD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FastEMD; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC45E3023872F9500CBCAFF /* tictocChrono.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tictocChrono.hpp; sourceTree = "<group>"; };
 		2BC45FF423872F9700CBCAFF /* cameraman.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cameraman.txt; sourceTree = "<group>"; };
-		2BC45FF623872F9700CBCAFF /* cvFastEMD.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cvFastEMD.hpp; sourceTree = "<group>"; };
 		2BC4604223872F9700CBCAFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		2BC4604523872F9700CBCAFF /* rice.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rice.txt; sourceTree = "<group>"; };
-		2BC463A92388135000CBCAFF /* testCVFastEMD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testCVFastEMD.cpp; sourceTree = "<group>"; };
 		2BC463AC2388138900CBCAFF /* emd_hat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat.hpp; sourceTree = "<group>"; };
 		2BC463AE2388138900CBCAFF /* tictoc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tictoc.hpp; sourceTree = "<group>"; };
 		2BC463B0238813A200CBCAFF /* flow_utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = flow_utils.hpp; sourceTree = "<group>"; };
 		2BC463CF2388422F00CBCAFF /* emd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = emd.c; sourceTree = "<group>"; };
 		2BC463D02388422F00CBCAFF /* emd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emd.h; sourceTree = "<group>"; };
-		2BCE4CBD238E910F00990A02 /* cvFastEMDimpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cvFastEMDimpl.hpp; sourceTree = "<group>"; };
 		2BCE4CBE238E916600990A02 /* emd_hat_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emd_hat_impl.hpp; sourceTree = "<group>"; };
 		2BCE4CBF238E924300990A02 /* min_cost_flow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = min_cost_flow.hpp; sourceTree = "<group>"; };
-		2BCE4CC0238E925B00990A02 /* cvMinCostFlow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cvMinCostFlow.hpp; sourceTree = "<group>"; };
 		2BDF5D16242A1892001C2B63 /* CVMatRowIterator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVMatRowIterator.hpp; sourceTree = "<group>"; };
 		2BDF5D18242A20D5001C2B63 /* TestCVMatRowIterator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCVMatRowIterator.mm; sourceTree = "<group>"; };
 		2BF8EDFA242CDA9100880E99 /* readImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = readImage.hpp; sourceTree = "<group>"; };
@@ -157,7 +147,6 @@
 			isa = PBXGroup;
 			children = (
 				2BC463A82388132800CBCAFF /* original */,
-				2BC45E2623872F9500CBCAFF /* openCVInterface */,
 				2BB708AB24146E6B00CE4195 /* modifiedInterface */,
 				2BB7087D2414412900CE4195 /* EMDHat.hpp */,
 				2BB7087E2414412900CE4195 /* EMDHatImpl.hpp */,
@@ -177,17 +166,6 @@
 				2B45E8BE242BCC9B007508B1 /* Container.hpp */,
 			);
 			path = include;
-			sourceTree = "<group>";
-		};
-		2B82359424361534006B5E76 /* code snippets */ = {
-			isa = PBXGroup;
-			children = (
-				2BB70892241452EF00CE4195 /* codeSketchbook.cpp */,
-				2B40A90524212FC30046360F /* preFlow.cpp */,
-				2B40A90624212FC30046360F /* preFlow.hpp */,
-				2B9088A2242397AE0053512D /* OpenCVSTLConversionWrapper.h */,
-			);
-			path = "code snippets";
 			sourceTree = "<group>";
 		};
 		2B82359D24361F19006B5E76 /* src */ = {
@@ -216,15 +194,6 @@
 			path = cats;
 			sourceTree = "<group>";
 		};
-		2BB708592413AE1700CE4195 /* tqdm */ = {
-			isa = PBXGroup;
-			children = (
-				2BB7085A2413AE1700CE4195 /* utils.h */,
-				2BB7085B2413AE1700CE4195 /* tqdm.h */,
-			);
-			path = tqdm;
-			sourceTree = "<group>";
-		};
 		2BB708AB24146E6B00CE4195 /* modifiedInterface */ = {
 			isa = PBXGroup;
 			children = (
@@ -241,7 +210,6 @@
 				2B9A67E4243F3CAC00C38D1B /* README.md */,
 				2B82359D24361F19006B5E76 /* src */,
 				2BC4604223872F9700CBCAFF /* LICENSE */,
-				2B82359424361534006B5E76 /* code snippets */,
 				2B2DC056241FBF4C0090BD53 /* include */,
 				2BC460DB238730AF00CBCAFF /* utils */,
 				2BC460D92387308100CBCAFF /* Resources */,
@@ -257,17 +225,6 @@
 				2B9E4A71243E0F4A00291310 /* TestFastEMD.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		2BC45E2623872F9500CBCAFF /* openCVInterface */ = {
-			isa = PBXGroup;
-			children = (
-				2BC463A92388135000CBCAFF /* testCVFastEMD.cpp */,
-				2BCE4CBD238E910F00990A02 /* cvFastEMDimpl.hpp */,
-				2BCE4CC0238E925B00990A02 /* cvMinCostFlow.hpp */,
-				2BC45FF623872F9700CBCAFF /* cvFastEMD.hpp */,
-			);
-			path = openCVInterface;
 			sourceTree = "<group>";
 		};
 		2BC460D92387308100CBCAFF /* Resources */ = {
@@ -302,7 +259,6 @@
 				2BC45E3023872F9500CBCAFF /* tictocChrono.hpp */,
 				2BC463AE2388138900CBCAFF /* tictoc.hpp */,
 				2BC463CE2388422F00CBCAFF /* rubner_emd */,
-				2BB708592413AE1700CE4195 /* tqdm */,
 				2BA169BB243766DA00925C18 /* GitVersion.h */,
 			);
 			path = utils;
