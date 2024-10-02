@@ -17,7 +17,7 @@ Example code can be found in the src folder.
 Calculation of Flow has not been implemented yet. Additionally, this implementation always assumes metric property for the ground distance!
 
 ## License
-Where not stated differently in the source code, this repository is licensed under the BSD-3 Clause license. See lincense file for details. 
+Where not stated differently in the source code, this repository is licensed under the BSD-3 Clause license. See license file for details. 
 
 ## References
 Please cite these papers if you use this code:
